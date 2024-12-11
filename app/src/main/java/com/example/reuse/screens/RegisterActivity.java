@@ -49,8 +49,8 @@ public class RegisterActivity extends AppCompatActivity {
         password=findViewById(R.id.password_input);
         nome=findViewById(R.id.nome_input);
         cognome=findViewById(R.id.cognome_input);
-        cap=findViewById(R.id.cap_input);
         indirizzo=findViewById(R.id.indirizzo_input);
+        cap=findViewById(R.id.cap_input);
         EditText dateEditText = findViewById(R.id.dateEditText);
         auth= FirebaseAuth.getInstance();
 
@@ -60,10 +60,10 @@ public class RegisterActivity extends AppCompatActivity {
                 String txt_email=email.getText().toString();
                 String txt_password=password.getText().toString();
                 String txt_username=username.getText().toString();
-                String txt_nome=username.getText().toString();
-                String txt_cognome=username.getText().toString();
-                Integer txt_cap=Integer.parseInt(username.getText().toString());
-                String txt_indirizzo=username.getText().toString();
+                String txt_nome=nome.getText().toString();
+                String txt_cognome=cognome.getText().toString();
+                String txt_indirizzo=indirizzo.getText().toString();
+                Integer txt_cap=Integer.parseInt(cap.getText().toString());
                 String txt_date=dateEditText.getText().toString();
 
                 if(TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)){
@@ -71,16 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if(txt_password.length()<6){
                     Toast.makeText(RegisterActivity.this, "Password too short", Toast.LENGTH_SHORT).show();
                 } else {
-
-                    /*HashMap<String, Object> map = new HashMap<>();
-                    map.put("Username", username);
-                    map.put("Nome", nome);
-                    map.put("Cognome", cognome);
-                    map.put("CAP", cap);
-                    map.put("Indirizzo", indirizzo);
-                    map.put("Data di nascita", date);
-                    FirebaseDatabase.getInstance().getReference().child("Users").child(auth.getCurrentUser().getUid()).updateChildren(map);*/
-                    registerUser(txt_email, txt_password);
+                    registerUser(txt_email, txt_password, txt_username, txt_nome, txt_cognome, txt_cap, txt_date);
                 }
             }
         });
@@ -114,12 +105,20 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUser(String email, String password) {
+    private void registerUser(String email, String password, String username, String nome, String cognome, Integer cap, String date) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(RegisterActivity.this, "Register user successful", Toast.LENGTH_SHORT).show();
+                    HashMap<String, Object> map = new HashMap<>();
+                    map.put("Username", username);
+                    map.put("Nome", nome);
+                    map.put("Cognome", cognome);
+                    map.put("CAP", cap);
+                    map.put("Indirizzo", indirizzo);
+                    map.put("Data di nascita", date);
+                    FirebaseDatabase.getInstance().getReference().child("Users").child(auth.getCurrentUser().getUid()).updateChildren(map);
                     startActivity(new Intent(RegisterActivity.this, HomePage.class));
                 }else{
                     Toast.makeText(RegisterActivity.this,"Register failed", Toast.LENGTH_SHORT).show();
