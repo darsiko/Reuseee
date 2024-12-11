@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.EditProfileScreen">
+    <LinearLayout
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_marginTop="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginBottom="25dp"
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:id="@+id/goBackProfile"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:layout_marginLeft="20dp"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <ImageView
+
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_arrow_back_ios_new_24"/>
+                <TextView
+                    android:text="Indietro "
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+            <TextView
+                android:layout_gravity="center"
+                android:layout_width="150dp"
+                android:layout_marginLeft="50dp"
+                android:textSize="24dp"
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:text="Edit Profile"/>
+        </LinearLayout>
+
+        <ImageView
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/user"
+            android:elevation="5dp"
+            />
+        <ImageView
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-20dp"
+            android:layout_marginLeft="50dp"
+            android:elevation="4dp"
+            android:src="@drawable/baseline_add_a_photo_24"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:textSize="18dp"
+            android:text="Name"
+            android:textStyle="bold"
+            android:layout_gravity="start"
+            />
+
+        <EditText
+            android:id="@+id/name_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Amanda"
+            android:background="@drawable/edit_text_background"
+            android:layout_gravity="start"
+            android:layout_marginLeft="30dp"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textEmailAddress" />
+        <TextView
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+
+            android:layout_marginLeft="30dp"
+            android:layout_gravity="start"
+            android:text="Email"/>
+        <EditText
+            android:id="@+id/email_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Email"
+            android:layout_marginRight="30dp"
+            android:background="@drawable/edit_text_background"
+            android:layout_gravity="start"
+            android:layout_marginLeft="30dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textEmailAddress" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="30dp"
+            android:textSize="18dp"
+            android:text="Password"
+            android:textStyle="bold"
+            android:layout_gravity="start"
+            />
+
+        <EditText
+            android:id="@+id/password_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Amanda"
+
+            android:layout_marginRight="30dp"
+            android:background="@drawable/edit_text_background"
+            android:layout_gravity="start"
+            android:layout_marginLeft="30dp"
+            android:layout_marginBottom="16dp"
+            android:inputType="textPassword" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:orientation="horizontal">
+            <TextView
+                android:textSize="18dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:layout_marginLeft="30dp"
+                android:text="Date of Birth"/>
+            <ImageView
+                android:id="@+id/calendar_edit_profile"
+                android:src="@drawable/baseline_calendar_month_24"
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginLeft="30dp"
+            android:id="@+id/calendar_edit_text"
+            android:layout_gravity="start"
+            android:text="24/01/1977"/>
+        <TextView
+            android:textSize="18dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginLeft="30dp"
+            android:layout_gravity="start"
+            android:textStyle="bold"
+            android:text="Country/Region"/>
+        <EditText
+            android:id="@+id/country_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Andorra"
+            android:background="@drawable/edit_text_background"
+            android:layout_gravity="start"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="30dp"
+            android:inputType="textEmailAddress" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="25dp"
+            android:orientation="vertical"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:text="Salva"
+                android:id="@+id/save_edit_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+</FrameLayout>

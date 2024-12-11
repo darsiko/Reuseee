@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="10dp"
+    android:padding="8dp"
+    android:background="@color/primary">
+
+    <!-- Immagine del prodotto -->
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/shoes" />
+
+    <!-- Nome del prodotto e prezzo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="fill"
+        android:paddingTop="8dp">
+
+        <TextView
+            android:id="@+id/productName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome prodotto"
+            android:textColor="@color/light"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/productPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$0.00"
+            android:textColor="@color/primary"
+            android:textSize="16sp" />
+    </LinearLayout>
+
+    <!-- Dettagli del venditore -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="start|center_vertical"
+        android:paddingTop="4dp">
+
+        <ImageView
+            android:id="@+id/sellerImage"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/user"
+            android:scaleType="centerCrop"
+            android:background="@drawable/circle_shape" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sellerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Nome venditore"
+                android:textSize="14sp"
+                android:textColor="@color/light"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/sellerStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 product online"
+                android:textSize="12sp"
+                android:textColor="@color/light" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- Azioni (modifica/elimina) -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        android:paddingTop="8dp">
+
+        <ImageView
+            android:id="@+id/editProduct"
+            android:layout_width="24dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_height="24dp"
+            android:layout_marginEnd="16dp"
+            android:src="@drawable/baseline_edit_note_24"
+            android:contentDescription="Edit"
+            app:tint="@color/light" />
+
+        <ImageView
+            android:id="@+id/deleteProduct"
+            android:layout_width="24dp"
+            android:focusable="true"
+            android:layout_height="24dp"
+            android:src="@drawable/baseline_delete_24"
+            android:contentDescription="Delete"
+            app:tint="@color/light" />
+    </LinearLayout>
+</LinearLayout>

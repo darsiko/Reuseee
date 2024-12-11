@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.AccountScreen">
+<LinearLayout
+    android:gravity="center"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="-30dp"
+        android:layout_marginBottom="25dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_marginLeft="20dp"
+                android:id="@+id/editProfile"
+                android:layout_width="wrap_content"
+                android:focusable="true"
+                android:background="?android:attr/selectableItemBackground"
+                android:clickable="true"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="30dp"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_edit_note_24"/>
+                />
+                <TextView
+                    android:text="Modifica"
+                    android:layout_gravity="start"
+                    android:layout_marginLeft="10dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/logOut"
+            android:clickable="true"
+            android:focusable="true"
+            android:layout_marginLeft="240dp"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_marginLeft="25dp"
+                android:layout_height="wrap_content"
+                android:src="@drawable/baseline_logout_24"/>
+            <TextView
+                android:text="Log out "
+                android:layout_gravity="start"
+                android:layout_marginLeft="10dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+        </LinearLayout>
+
+    </LinearLayout>
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginBottom="16dp"
+        android:src="@drawable/user"
+        android:elevation="5dp"
+        />
+    <TextView
+        android:text="Melissa Henders"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/baseline_fmd_good_24"/>
+        <TextView
+            android:text=" Lagos, Nigeria"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+        </TextView>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:textSize="18dp"
+        android:text="Name"
+        android:textStyle="bold"
+        android:layout_gravity="start"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="30dp"
+        android:layout_gravity="start"
+        android:text="Melissa Henders"/>
+    <TextView
+        android:textSize="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        android:layout_marginLeft="30dp"
+        android:layout_gravity="start"
+        android:text="Email"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_gravity="start"
+        android:layout_marginBottom="16dp"
+        android:text="Camilla.Henderson@gmail.com"/>
+    <TextView
+        android:textSize="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:textStyle="bold"
+        android:layout_marginLeft="30dp"
+        android:layout_gravity="start"
+        android:text="Date of Birth"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="30dp"
+        android:layout_gravity="start"
+        android:text="24/01/1977"/>
+    <TextView
+        android:textSize="18dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:layout_marginLeft="30dp"
+        android:layout_gravity="start"
+        android:textStyle="bold"
+        android:text="Country/Region"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_gravity="start"
+        android:text="Nigeria"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="25dp"
+        android:orientation="vertical"
+        android:textAlignment="center"
+        android:gravity="center"
+        android:layout_height="wrap_content">
+
+        <Button
+            android:id="@+id/productBrought"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Visualizza i miei prodotti in vendita" />
+
+        <Button
+            android:id="@+id/myProducts"
+            android:text="Visualizza i miei prodotti aquistati"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           />
+
+    </LinearLayout>
+</LinearLayout>
+
+
+
+</FrameLayout>

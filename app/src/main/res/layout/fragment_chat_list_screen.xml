@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".screens.ChatListScreen">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_marginTop="25dp"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:id="@+id/goBackPreviusPage"
+            android:focusable="true"
+            android:background="?android:attr/selectableItemBackground"
+            android:clickable="true"
+            android:layout_marginLeft="0dp"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+
+
+        </LinearLayout>
+        <TextView
+            android:id="@+id/productName"
+            android:layout_gravity="center"
+            android:layout_width="match_parent"
+            android:textAlignment="center"
+
+            android:textSize="24dp"
+            android:textStyle="bold"
+            android:layout_height="wrap_content"
+            android:text="Chat Con Venditori"/>
+    </LinearLayout>
+    <!-- Search Bar -->
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/search_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp">
+
+            <!-- Search Input -->
+            <EditText
+                android:id="@+id/editTextText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Search"
+                android:inputType="text"
+                android:drawablePadding="8dp"
+                android:background="@android:color/transparent"
+                android:textSize="16sp"
+                android:padding="12dp"
+                android:textColor="@color/secondary" />
+
+            <!-- Menu Button -->
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/chatList"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"></androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+</FrameLayout>

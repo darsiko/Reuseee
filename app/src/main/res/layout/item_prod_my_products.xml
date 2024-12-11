@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="10dp"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@color/primary">
+
+    <!-- Sezione Immagine del Prodotto -->
+    <ImageView
+        android:id="@+id/productImage"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerCrop"
+        android:contentDescription="imageProd" />
+
+    <!-- Nome del Prodotto e Prezzo -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:gravity="fill">
+
+        <TextView
+            android:id="@+id/productName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Product Name"
+            android:textColor="@color/light"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/productPrice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="$0.00"
+            android:textColor="@color/light"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <!-- Stato del prodotto -->
+    <TextView
+        android:id="@+id/productStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Status: Shipped"
+        android:textColor="@color/light"
+        android:textSize="14sp"
+        android:paddingTop="4dp" />
+
+    <!-- Informazioni sul venditore -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:gravity="center_vertical">
+
+        <ImageView
+            android:id="@+id/sellerImage"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/user"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/circle_shape" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/sellerName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Seller Name"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="@color/light" />
+
+            <TextView
+                android:id="@+id/sellerProductsCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5 products online"
+                android:textSize="12sp"
+                android:textColor="@color/light" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>
