@@ -39,8 +39,8 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
 
 
         userList = new ArrayList<>();
-        userList.add(new User("Dario", "16/08/1977", "dario.sponchiado@gmail.com", "pass1234", "Italy", R.drawable.user));
-        userList.add(new User("Marta", "16/08/1991", "marta.montalto@gmail.com", "pass1234", "Italy", R.drawable.user));
+        userList.add(new User("Darsiko", "Dario", "Rossi", 32011, "Via rossi 1", "1/1/2001"));
+        userList.add(new User("Martella", "Marta", "Verdi", 31012, "Via verdi 2", "2/2/2002"));
         // Add more products as needed...
 
         // Set the adapter for both RecyclerViews
@@ -56,12 +56,12 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
     @Override
     public void onItemClick(User user) {
         // For example, navigate to the product details page or display a Toast
-        Toast.makeText(getContext(), "Clicked on: " + user.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Clicked on: " + user.getUsername(), Toast.LENGTH_SHORT).show();
 
         // You can now pass the product data to a new fragment or activity, e.g.
         Bundle bundle = new Bundle();
-        bundle.putString("name", user.getName());
-        bundle.putInt("userAvatarResId", user.getUserAvatarResId());
+        bundle.putString("name", user.getUsername());
+        //modifica momentanea bundle.putInt("userAvatarResId", user.getUserAvatarResId());
 
 
         ChatScreen chatScreen = new ChatScreen();

@@ -17,11 +17,15 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.reuse.R;
+import com.example.reuse.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.FirebaseUser;
+import android.util.Log;
 
 public class RegisterActivity extends AppCompatActivity {
     Button signUp;
@@ -57,6 +61,7 @@ public class RegisterActivity extends AppCompatActivity {
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 String txt_email=email.getText().toString();
                 String txt_password=password.getText().toString();
                 String txt_username=username.getText().toString();
@@ -71,7 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else if(txt_password.length()<6){
                     Toast.makeText(RegisterActivity.this, "Password too short", Toast.LENGTH_SHORT).show();
                 } else {
-                    registerUser(txt_email, txt_password, txt_username, txt_nome, txt_cognome, txt_cap, txt_date);
+                    registerUser(txt_email, txt_password, txt_username, txt_nome, txt_cognome, txt_cap, txt_indirizzo, txt_date);
                 }
             }
         });
@@ -105,21 +110,19 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUser(String email, String password, String username, String nome, String cognome, Integer cap, String date) {
+    private void registerUser(String email, String password, String username, String nome, String cognome, Integer cap, String indirizzo, String date) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(RegisterActivity.this, "Register user successful", Toast.LENGTH_SHORT).show();
-                    HashMap<String, Object> map = new HashMap<>();
-                    map.put("Username", username);
-                    map.put("Nome", nome);
-                    map.put("Cognome", cognome);
-                    map.put("CAP", cap);
-                    map.put("Indirizzo", indirizzo);
-                    map.put("Data di nascita", date);
-                    FirebaseDatabase.getInstance().getReference().child("Users").child(auth.getCurrentUser().getUid()).updateChildren(map);
+
                     startActivity(new Intent(RegisterActivity.this, HomePage.class));
+                    FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+                    String uid = currentUser.getUid();
+                    DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
+                    User user=new User(username, nome, cognome, cap, indirizzo, date);
+                    databaseReference.child(uid).setValue(user);
                 }else{
                     Toast.makeText(RegisterActivity.this,"Register failed", Toast.LENGTH_SHORT).show();
                 }

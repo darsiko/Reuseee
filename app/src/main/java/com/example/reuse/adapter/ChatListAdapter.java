@@ -40,8 +40,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
     public void onBindViewHolder(@NonNull ChatListAdapter.ChatListViewHolder holder, int position) {
         User user = userList.get(position);
 
-        holder.userName.setText(user.getName());
-        holder.userAvatar.setImageResource(user.getUserAvatarResId());
+        holder.userName.setText(user.getUsername());
+        //holder.userAvatar.setImageResource(user.getUserAvatarResId());
 
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(user));
     }

@@ -1,77 +1,69 @@
 package com.example.reuse.models;
 
+
 public class User {
+    private String username;
+    private String nome;
+    private String cognome;
+    private Integer cap;
+    private String indirizzo;
+    private String data;
 
-    private String name;
-    private String date_of_birth;
-    private String email;
-    private String password;
-    private String country_region;
-    private int imageResId;
-    private int userAvatarResId;
-
-    public User(String name, String date_of_birth, String email, String password, String country_region, int userAvatarResId) {
-        this.name = name;
-        this.date_of_birth = date_of_birth;
-        this.email = email;
-        this.password = password;
-        this.country_region = country_region;
-        this.userAvatarResId = userAvatarResId;
+    public User(){}
+    public User(String username, String nome, String cognome, Integer cap, String indirizzo, String data){
+        this.username=username;
+        this.nome=nome;
+        this.cognome=cognome;
+        this.cap=cap;
+        this.indirizzo=indirizzo;
+        this.data=data;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getDate_of_birth() {
-        return date_of_birth;
+    public String getNome() {
+        return nome;
     }
 
-    public void setDate_of_birth(String date_of_birth) {
-        this.date_of_birth = date_of_birth;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getEmail() {
-        return email;
+    public String getCognome() {
+        return cognome;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setCognome(String cognome) {
+        this.cognome = cognome;
     }
 
-    public String getPassword() {
-        return password;
+    public Integer getCap() {
+        return cap;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setCap(Integer cap) {
+        this.cap = cap;
     }
 
-    public String getCountry_region() {
-        return country_region;
+    public String getIndirizzo() {
+        return indirizzo;
     }
 
-    public void setCountry_region(String country_region) {
-        this.country_region = country_region;
+    public void setIndirizzo(String indirizzo) {
+        this.indirizzo = indirizzo;
     }
 
-    public int getImageResId() {
-        return imageResId;
+    public String getData() {
+        return data;
     }
 
-    public void setImageResId(int imageResId) {
-        this.imageResId = imageResId;
-    }
-
-    public int getUserAvatarResId() {
-        return userAvatarResId;
-    }
-
-    public void setUserAvatarResId(int userAvatarResId) {
-        this.userAvatarResId = userAvatarResId;
+    public void setData(String data) {
+        this.data = data;
     }
 }
