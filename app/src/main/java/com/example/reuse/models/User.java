@@ -1,5 +1,6 @@
 package com.example.reuse.models;
-import java.util.HashSet;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class User {
@@ -9,7 +10,7 @@ public class User {
     private Integer cap;
     private String indirizzo;
     private String data;
-    //HashSet<Long> lista_acquisti = new HashSet<>();
+    private List<Product> productsForSale;
 
     public User(){}
     public User(String username, String nome, String cognome, Integer cap, String indirizzo, String data){
@@ -19,6 +20,19 @@ public class User {
         this.cap=cap;
         this.indirizzo=indirizzo;
         this.data=data;
+        this.productsForSale = new ArrayList<>();
+    }
+
+    public List<Product> getProductsForSale() {
+        return productsForSale;
+    }
+    // Metodo per aggiungere un prodotto
+    public void addProduct(Product product) {
+        productsForSale.add(product);
+    }
+    // Metodo per rimuovere un prodotto
+    public void removeProduct(Product product) {
+        productsForSale.remove(product);
     }
 
     public String getUsername() {

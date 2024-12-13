@@ -22,10 +22,14 @@ import android.widget.Toast;
 
 import com.example.reuse.R;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class AddProductScreen extends Fragment {
@@ -108,6 +112,37 @@ public class AddProductScreen extends Fragment {
         databaseRef.child(productId).setValue(prodotto).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Toast.makeText(getContext(), "aggiunto", Toast.LENGTH_SHORT).show();
+
+
+
+                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
+                databaseReference.get().addOnCompleteListener(task2 -> {
+                    if (task2.isSuccessful()) {
+                        // Recupera i dati esistenti (se presenti)
+                        List<String> productsForSale = new ArrayList<>();
+                        if (task2.getResult().exists()) {
+                            productsForSale = (List<String>) task2.getResult().getValue();
+                        }
+
+                        // Aggiungi il nuovo productId alla lista
+                        productsForSale.add(productId);
+
+                        // Aggiorna la lista nel database
+                        databaseReference.setValue(productsForSale)
+                                .addOnCompleteListener(updateTask -> {
+                                    if (updateTask.isSuccessful()) {
+                                        System.out.println("Product added successfully!");
+                                    } else {
+                                        System.out.println("Failed to add product: " + updateTask.getException().getMessage());
+                                    }
+                                });
+                    } else {
+                        System.out.println("Error getting data: " + task2.getException().getMessage());
+                    }
+                });
+
+
+
                 getParentFragmentManager().popBackStack();
             } else {
                 Toast.makeText(getContext(), "Errore nell'aggiunta del prodotto", Toast.LENGTH_SHORT).show();
