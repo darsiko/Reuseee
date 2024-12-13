@@ -1,4 +1,6 @@
 package com.example.reuse.models;
+import android.net.Uri;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,9 +14,10 @@ public class User {
     private String indirizzo;
     private String data;
     private List<Product> productsForSale;
+    private Uri imageUri;
 
     public User(){}
-    public User(String username, String nome, String cognome, Integer cap, String indirizzo, String data){
+    public User(String username, String nome, String cognome, Integer cap, String indirizzo, String data, Uri imageUri){
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -22,6 +25,7 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale = new ArrayList<>();
+        this.imageUri=imageUri;
     }
 
     public List<Product> getProductsForSale() {
@@ -82,5 +86,13 @@ public class User {
 
     public void setData(String data) {
         this.data = data;
+    }
+
+    public Uri getImageUri() {
+        return imageUri;
+    }
+
+    public void setImageUri(Uri imageUri) {
+        this.imageUri = imageUri;
     }
 }
