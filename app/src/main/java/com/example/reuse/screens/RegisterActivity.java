@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import android.app.DatePickerDialog;
@@ -20,12 +21,22 @@ import com.example.reuse.R;
 import com.example.reuse.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseUser;
 import android.util.Log;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import android.net.Uri;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import java.util.UUID;
+import com.bumptech.glide.Glide;
+
 
 public class RegisterActivity extends AppCompatActivity {
     Button signUp;
@@ -39,6 +50,11 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText cap;
     private EditText indirizzo;
     private FirebaseAuth auth;
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri imageUri;
+    private Button buttonSelectImage;
+    private ImageView imageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +73,19 @@ public class RegisterActivity extends AppCompatActivity {
         cap=findViewById(R.id.cap_input);
         EditText dateEditText = findViewById(R.id.dateEditText);
         auth= FirebaseAuth.getInstance();
+
+        buttonSelectImage = findViewById(R.id.buttonSelectImage);
+        imageView = findViewById(R.id.imageView);
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                openFilePicker();
+            }
+        });
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +149,7 @@ public class RegisterActivity extends AppCompatActivity {
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                     String uid = currentUser.getUid();
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-                    User user=new User(username, nome, cognome, cap, indirizzo, date);
+                    User user=new User(username, nome, cognome, cap, indirizzo, date, imageUri);
                     databaseReference.child(uid).setValue(user);
                 }else{
                     Toast.makeText(RegisterActivity.this,"Register failed", Toast.LENGTH_SHORT).show();
@@ -128,4 +157,38 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void openFilePicker() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*"); // Limita la selezione ai file immagine
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        startActivityForResult(intent, PICK_IMAGE_REQUEST);
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_REQUEST) {
+            if (data != null) {
+                imageUri = data.getData();
+                // Visualizza l'immagine selezionata nell'ImageView
+                Glide.with(this).load(imageUri).into(imageView);
+
+                FirebaseStorage storage = FirebaseStorage.getInstance();
+                StorageReference storageRef = storage.getReference();
+
+                // Crea un nome unico per il file usando UUID
+                StorageReference fileRef = storageRef.child("images/" + UUID.randomUUID().toString());
+                fileRef.child("ProfilePictures").putFile(imageUri).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()){
+                        System.out.println("Immagine caricata!");
+                    }else{
+                        System.out.println("Immagine non caricata");
+                    }
+
+                });
+            }
+        }
+    }
+
+
 }

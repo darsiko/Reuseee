@@ -39,8 +39,8 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
 
 
         userList = new ArrayList<>();
-        userList.add(new User("Darsiko", "Dario", "Rossi", 32011, "Via rossi 1", "1/1/2001"));
-        userList.add(new User("Martella", "Marta", "Verdi", 31012, "Via verdi 2", "2/2/2002"));
+        //rimosso userList.add(new User("Darsiko", "Dario", "Rossi", 32011, "Via rossi 1", "1/1/2001"));
+        //rimosso userList.add(new User("Martella", "Marta", "Verdi", 31012, "Via verdi 2", "2/2/2002"));
         // Add more products as needed...
 
         // Set the adapter for both RecyclerViews
