@@ -39,11 +39,11 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
     public void onBindViewHolder(@NonNull MyProductsAdapter.ProductViewHolder holder, int position) {
         Product product = productList.get(position);
 
-        holder.productImage.setImageResource(product.getImageResId());
-        holder.productName.setText(product.getName());
-        holder.productPrice.setText(product.getPrice());
-        holder.userAvatar.setImageResource(product.getUserAvatarResId());
-        holder.userName.setText(product.getUserName());
+        //rimosso holder.productImage.setImageResource(product.getImageResId());
+        holder.productName.setText(product.getNome());
+        //rimosso holder.productPrice.setText(product.getPrezzo());
+        //rimosso holder.userAvatar.setImageResource(product.getUserAvatarResId());
+        //rimosso holder.userName.setText(product.getUserName());
 
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(product));
     }

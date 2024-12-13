@@ -45,8 +45,8 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
 
         // Initialize product list with sample data
         productList = new ArrayList<>();
-        productList.add(new Product(R.drawable.shoes, "Sneakers Verdi", "$100", "Melissa Peters", "5 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));
-        productList.add(new Product(R.drawable.shoes, "Sneakers Neri", "$120", "John Doe", "3 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));   // Add more products as needed...
+        //rimosso productList.add(new Product(R.drawable.shoes, "Sneakers Verdi", "$100", "Melissa Peters", "5 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));
+        //rimasso productList.add(new Product(R.drawable.shoes, "Sneakers Neri", "$120", "John Doe", "3 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));   // Add more products as needed...
 
         // Set the adapter for both RecyclerViews
         adapter = new ProductAdapter(getContext(), productList, this);
@@ -60,13 +60,13 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
     public void onItemClick(Product product) {
         // Handle the product click here
         // For example, navigate to the product details page or display a Toast
-        Toast.makeText(getContext(), "Clicked on: " + product.getName(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), "Clicked on: " + product.getNome(), Toast.LENGTH_SHORT).show();
 
         // You can now pass the product data to a new fragment or activity, e.g.
         Bundle bundle = new Bundle();
-        bundle.putString("product_name", product.getName());
-        bundle.putString("product_price", product.getPrice());
-        bundle.putInt("product_image", product.getImageResId()); // For ImageView
+        bundle.putString("product_name", product.getNome());
+        //rimosso bundle.putString("product_price", product.getPrezzo());
+        //rimosso bundle.putInt("product_image", product.getImageResId()); // For ImageView
         // Add other product details to the bundle
 
         DetailProdScreen productDetailFragment = new DetailProdScreen();

@@ -52,8 +52,8 @@ public class MyProductsScreen extends Fragment implements MyProductsAdapter.OnIt
 
         // Initialize product list with sample data
         productList = new ArrayList<>();
-        productList.add(new Product(R.drawable.shoes, "Sneakers Verdi", "$100", "Melissa Peters", "5 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));
-        productList.add(new Product(R.drawable.shoes, "Sneakers Neri", "$120", "John Doe", "3 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));
+        //rimosso productList.add(new Product(R.drawable.shoes, "Sneakers Verdi", "$100", "Melissa Peters", "5 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));
+        //rimosso productList.add(new Product(R.drawable.shoes, "Sneakers Neri", "$120", "John Doe", "3 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));
         // Add more products as needed...
 
         // Set the adapter for both RecyclerViews

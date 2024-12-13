@@ -42,12 +42,12 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Product product = productList.get(position);
 
         // Bind the product data to the UI elements in the ViewHolder
-        holder.productName.setText(product.getName());
-        holder.productPrice.setText(product.getPrice());
-        holder.productImage.setImageResource(product.getImageResId());
-        holder.userAvatar.setImageResource(product.getUserAvatarResId());
-        holder.userName.setText(product.getUserName());
-        holder.userStatus.setText(product.getUserStatus());
+        holder.productName.setText(product.getNome());
+        //rimosso holder.productPrice.setText(product.getPrezzo());
+        //rimosso holder.productImage.setImageResource(product.getImageResId());
+        //rimosso holder.userAvatar.setImageResource(product.getUserAvatarResId());
+        //rimosso holder.userName.setText(product.getUserName());
+        //rimosso holder.userStatus.setText(product.getUserStatus());
 
         // Set the click listener for the item view
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(product));

@@ -71,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
                 Integer txt_cap=Integer.parseInt(cap.getText().toString());
                 String txt_date=dateEditText.getText().toString();
 
-                if(TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_password)){
+                if(TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_date) || TextUtils.isEmpty(txt_indirizzo) || TextUtils.isEmpty(txt_cognome) || TextUtils.isEmpty(txt_password) || TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_nome)){
                     Toast.makeText(RegisterActivity.this, "Empty credentials", Toast.LENGTH_SHORT).show();
                 } else if(txt_password.length()<6){
                     Toast.makeText(RegisterActivity.this, "Password too short", Toast.LENGTH_SHORT).show();
@@ -116,7 +116,6 @@ public class RegisterActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(RegisterActivity.this, "Register user successful", Toast.LENGTH_SHORT).show();
-
                     startActivity(new Intent(RegisterActivity.this, HomePage.class));
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                     String uid = currentUser.getUid();

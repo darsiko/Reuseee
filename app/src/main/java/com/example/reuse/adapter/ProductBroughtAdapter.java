@@ -37,16 +37,16 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
         Product product = productList.get(position);
 
-        holder.productImage.setImageResource(product.getImageResId());
-        holder.productName.setText(product.getName());
-        holder.productPrice.setText(product.getPrice());
-        holder.userAvatar.setImageResource(product.getUserAvatarResId());
-        holder.userName.setText(product.getUserName());
-        holder.userStatus.setText(product.getUserStatus());
+        //rimosso holder.productImage.setImageResource(product.getImageResId());
+        holder.productName.setText(product.getNome());
+        //rimosso holder.productPrice.setText(product.getPrezzo());
+        //rimosso holder.userAvatar.setImageResource(product.getUserAvatarResId());
+        //rimosso holder.userName.setText(product.getUserName());
+        //rimosso holder.userStatus.setText(product.getUserStatus());
 
         // Set click listeners
         holder.editProduct.setOnClickListener(view ->{
-            Toast.makeText(view.getContext(), "Item: " + product.getName(), Toast.LENGTH_SHORT);
+            Toast.makeText(view.getContext(), "Item: " + product.getNome(), Toast.LENGTH_SHORT);
             onItemClickListener.onEditProductClick(product);
             }
         );

@@ -1,4 +1,5 @@
 package com.example.reuse.models;
+import java.util.HashSet;
 
 
 public class User {
@@ -8,6 +9,7 @@ public class User {
     private Integer cap;
     private String indirizzo;
     private String data;
+    //HashSet<Long> lista_acquisti = new HashSet<>();
 
     public User(){}
     public User(String username, String nome, String cognome, Integer cap, String indirizzo, String data){

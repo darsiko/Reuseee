@@ -3,54 +3,59 @@ package com.example.reuse.models;
 import java.io.Serializable;
 import java.util.List;
 
-public class Product implements Serializable {
+public class Product {
+    private String idVenditore;
+    private String nome;
+    private String descrizione;
+    private double prezzo;
+    private boolean baratto;
 
-    private int imageResId; // Resource ID for the product image
-    private String name;    // Product name
-    private String price;   // Product price
-    private String userName; // User name
-    private String userStatus; // User status
-    private int userAvatarResId; // Resource ID for the user avatar
-    private List<String> tags;
-    public Product(int imageResId, String name, String price, String userName, String userStatus, int userAvatarResId, List<String> tags ) {
-        this.imageResId = imageResId;
-        this.name = name;
-        this.price = price;
-        this.userName = userName;
-        this.userStatus = userStatus;
-        this.userAvatarResId = userAvatarResId;
-        this.tags = tags;
+    public Product(){}
+    public Product(String idVenditore, String nome, String descrizione, double prezzo, boolean baratto){
+        this.idVenditore=idVenditore;
+        this.nome=nome;
+        this.descrizione=descrizione;
+        this.prezzo=prezzo;
+        this.baratto=baratto;
     }
 
-    public List<String> getTags() {
-        return tags;
+    public String getIdVenditore() {
+        return idVenditore;
     }
 
-    public void setTags(List<String> tags) {
-        this.tags = tags;
+    public void setIdVenditore(String idVenditore) {
+        this.idVenditore = idVenditore;
     }
 
-    public int getImageResId() {
-        return imageResId;
+    public String getNome() {
+        return nome;
     }
 
-    public String getName() {
-        return name;
+    public void setNome(String nome) {
+        this.nome = nome;
     }
 
-    public String getPrice() {
-        return price;
+    public String getDescrizione() {
+        return descrizione;
     }
 
-    public String getUserName() {
-        return userName;
+    public void setDescrizione(String descrizione) {
+        this.descrizione = descrizione;
     }
 
-    public String getUserStatus() {
-        return userStatus;
+    public double getPrezzo() {
+        return prezzo;
     }
 
-    public int getUserAvatarResId() {
-        return userAvatarResId;
+    public void setPrezzo(double prezzo) {
+        this.prezzo = prezzo;
+    }
+
+    public boolean isBaratto() {
+        return baratto;
+    }
+
+    public void setBaratto(boolean baratto) {
+        this.baratto = baratto;
     }
 }
