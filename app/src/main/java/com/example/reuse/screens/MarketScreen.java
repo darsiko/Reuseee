@@ -46,7 +46,7 @@ public class MarketScreen extends Fragment {
         }
 
         mapView.onCreate(savedInstanceState);
-        handleAndroidPermissions();
+        //handleAndroidPermissions();
         return view;
     }
 

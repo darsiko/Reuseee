@@ -1,6 +1,7 @@
 package com.example.reuse.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +40,7 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
 
         //rimosso holder.productImage.setImageResource(product.getImageResId());
         holder.productName.setText(product.getNome());
-        //rimosso holder.productPrice.setText(product.getPrezzo());
+        holder.productPrice.setText(""+product.getPrezzo());
         //rimosso holder.userAvatar.setImageResource(product.getUserAvatarResId());
         //rimosso holder.userName.setText(product.getUserName());
         //rimosso holder.userStatus.setText(product.getUserStatus());

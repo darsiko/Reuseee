@@ -7,7 +7,7 @@ public class Product {
     private String idVenditore;
     private String nome;
     private String descrizione;
-    private double prezzo;
+    private Double prezzo;
     private boolean baratto;
 
     public Product(){}
@@ -43,7 +43,7 @@ public class Product {
         this.descrizione = descrizione;
     }
 
-    public double getPrezzo() {
+    public Double getPrezzo() {
         return prezzo;
     }
 

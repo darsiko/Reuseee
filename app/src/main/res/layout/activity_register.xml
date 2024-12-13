@@ -7,14 +7,6 @@
     android:padding="16dp">
 
     <!-- Logo -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:text="Re Use"
-        android:textSize="38dp"
-        android:fontFamily="sans-serif-smallcaps"
-        android:layout_marginTop="80dp"
-        android:layout_centerHorizontal="true"
-        android:layout_height="wrap_content"></TextView>
     <!-- Form Container -->
     <LinearLayout
         android:id="@+id/form_container"
@@ -23,6 +15,7 @@
         android:layout_centerVertical="true"
         android:layout_marginTop="40dp"
         android:orientation="vertical"
+        android:layout_margin="5dp"
         android:padding="16dp"
         android:background="#FFFFFF"
         android:layout_marginHorizontal="16dp"
@@ -43,7 +36,7 @@
             android:layout_height="wrap_content"
             android:hint="Username"
             android:background="@drawable/edit_text_background"
-            android:padding="12dp"
+            android:padding="5dp"
             android:inputType="text" />
 
         <!-- Email Field -->
@@ -53,7 +46,7 @@
             android:layout_height="wrap_content"
             android:text="Email"
             android:textColor="#000"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
 
         <EditText
@@ -62,7 +55,7 @@
             android:layout_height="wrap_content"
             android:hint="nome@mail.it"
             android:background="@drawable/edit_text_background"
-            android:padding="12dp"
+            android:padding="5dp"
             android:inputType="textEmailAddress" />
 
         <!-- Password Field -->
@@ -72,7 +65,7 @@
             android:layout_height="wrap_content"
             android:text="Password"
             android:textColor="#000"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
 
         <EditText
@@ -81,9 +74,8 @@
             android:layout_height="wrap_content"
             android:hint="Password"
             android:background="@drawable/edit_text_background"
-            android:padding="12dp"
+            android:padding="5dp"
             android:inputType="textPassword" />
-
 
         <!-- Nome Field -->
         <TextView
@@ -92,7 +84,7 @@
             android:layout_height="wrap_content"
             android:text="Nome"
             android:textColor="#000"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
 
         <EditText
@@ -101,7 +93,7 @@
             android:layout_height="wrap_content"
             android:hint="Mario"
             android:background="@drawable/edit_text_background"
-            android:padding="12dp"
+            android:padding="5dp"
             android:inputType="textPersonName" />
 
         <!-- Cognome Field -->
@@ -111,7 +103,7 @@
             android:layout_height="wrap_content"
             android:text="Cognome"
             android:textColor="#000"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
 
         <EditText
@@ -120,73 +112,127 @@
             android:layout_height="wrap_content"
             android:hint="Rossi"
             android:background="@drawable/edit_text_background"
-            android:padding="12dp"
+            android:padding="5dp"
             android:inputType="textPersonName" />
 
         <!-- Data di nascita Field -->
-        <TextView
-            android:id="@+id/data_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Data di nascita"
-            android:textColor="#000"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp" />
-
-        <EditText
-            android:id="@+id/dateEditText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Seleziona una data"
-            android:focusable="false"
-            android:inputType="none" />
 
         <!-- CAP -->
-        <TextView
-            android:id="@+id/cap_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="CAP"
-            android:textColor="#000"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp" />
 
-        <EditText
-            android:id="@+id/cap_input"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="31021"
-            android:background="@drawable/edit_text_background"
-            android:padding="12dp"
-            android:inputType="number" />
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/data_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="Data di nascita"
+                    android:textColor="#000" />
+
+                <EditText
+                    android:id="@+id/dateEditText"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="Seleziona una data"
+                    android:inputType="none" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/cap_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="4dp"
+                    android:text="CAP"
+                    android:textColor="#000" />
+
+                <EditText
+                    android:id="@+id/cap_input"
+                    android:layout_width="158dp"
+                    android:layout_height="45dp"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="31021"
+                    android:inputType="number"
+                    android:padding="5dp" />
+
+            </LinearLayout>
+        </LinearLayout>
 
         <!-- Indirizzo -->
-        <TextView
-            android:id="@+id/indirizzo_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Indirizzo"
-            android:textColor="#000"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="4dp" />
-
-        <EditText
-            android:id="@+id/indirizzo_input"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Via Rossi, 2"
-            android:background="@drawable/edit_text_background"
-            android:padding="12dp"
-            android:inputType="text" />
+            android:layout_height="100dp"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
+                <TextView
+                    android:id="@+id/indirizzo_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Indirizzo"
+                    android:textColor="#000"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="4dp" />
+
+                <EditText
+                    android:id="@+id/indirizzo_input"
+                    android:layout_width="158dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="Via Rossi, 2"
+                    android:inputType="text"
+                    android:padding="5dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/numero_label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Numero Telefono"
+                    android:textColor="#000"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="4dp" />
+
+                <EditText
+                    android:id="@+id/numero_input"
+                    android:layout_width="158dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/edit_text_background"
+                    android:hint="+39"
+                    android:inputType="text"
+                    android:padding="5dp" />
+            </LinearLayout>
+
+        </LinearLayout>
         <!-- Sign In Button -->
         <Button
             android:id="@+id/sign_up"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:text="Sign Up"
-
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:background="@color/secondary"
             android:textColor="#FFF" />
 
@@ -194,17 +240,16 @@
         <Button
             android:id="@+id/go_back"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:text="Go Back"
             android:layout_marginTop="8dp"
             android:background="@color/secondary"
             android:textColor="#FFF"
             android:elevation="2dp" />
 
+        <!-- Forgot Password -->
+        <!-- Guest Login -->
+
     </LinearLayout>
-
-    <!-- Forgot Password -->
-
-    <!-- Guest Login -->
 
 </RelativeLayout>
