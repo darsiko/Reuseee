@@ -18,7 +18,7 @@
                                 <PersistentState>
                                   <option name="values">
                                     <map>
-                                      <entry key="url" value="file:$PROJECT_DIR$/../Library/Android/sdk/icons/material/materialicons/thumb_up/baseline_thumb_up_24.xml" />
+                                      <entry key="url" value="file:$PROJECT_DIR$/../Library/Android/sdk/icons/material/materialicons/turn_right/baseline_turn_right_24.xml" />
                                     </map>
                                   </option>
                                 </PersistentState>
@@ -28,7 +28,7 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="outputName" value="baseline_thumb_up_24" />
+                            <entry key="outputName" value="baseline_turn_right_24" />
                           </map>
                         </option>
                       </PersistentState>
