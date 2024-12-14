@@ -17,7 +17,7 @@ public class User {
     private String username;
     private String nome;
     private String cognome;
-    private Integer cap;
+    private int cap;
     private String indirizzo;
     private String data;
     private String telefono;
@@ -51,7 +51,7 @@ public class User {
     }
 
     //costruttore per creazione User
-    public User(String username, String nome, String cognome, String telefono, Integer cap, String indirizzo, String data){
+    public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data){
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -64,7 +64,7 @@ public class User {
     }
 
     //costruttore
-    public User(String username, String nome, String cognome, String telefono, Integer cap, String indirizzo, String data, String imageUrl, List<String> productsForSale){
+    public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale){
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -194,11 +194,11 @@ public class User {
         this.cognome = cognome;
     }
 
-    public Integer getCap() {
+    public int getCap() {
         return cap;
     }
 
-    public void setCap(Integer cap) {
+    public void setCap(int cap) {
         this.cap = cap;
     }
 

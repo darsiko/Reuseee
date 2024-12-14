@@ -119,11 +119,15 @@ public class Product {
         updatePrezzo(pid);
         updateBaratto(pid);
         updateImagineUrl(pid);
+        updateIdOrdine(pid);
     }
 
 
 
-
+    private void updateIdOrdine(String pid){
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
+        dbr.child("idOrdine").setValue(idOrdine);
+    }
     //non vi servono
     private void updateIdVentirore(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
@@ -192,5 +196,13 @@ public class Product {
 
     public void setBaratto(boolean baratto) {
         this.baratto = baratto;
+    }
+
+    public String getIdOrdine() {
+        return idOrdine;
+    }
+
+    public void setIdOrdine(String idOrdine) {
+        this.idOrdine = idOrdine;
     }
 }
