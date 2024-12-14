@@ -72,7 +72,7 @@ public class AddProductScreen extends Fragment {
                 if(TextUtils.isEmpty(txt_nome) || TextUtils.isEmpty(txt_descrizione) || TextUtils.isEmpty(txt_prezzo)){
                     Toast.makeText(getContext(), "Empty credentials", Toast.LENGTH_SHORT).show();
                 }else{
-                    AggiungiProdotto(txt_nome, txt_prezzo, txt_baratto, txt_descrizione);
+                    Product product=new Product(txt_nome, txt_descrizione, Double.parseDouble(txt_prezzo), txt_baratto,"");
                 }
             }
         });
@@ -125,69 +125,6 @@ public class AddProductScreen extends Fragment {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
-    }
-    private void AggiungiProdotto(String nome, String prezzo, boolean baratto, String descrizione) {
-        DatabaseReference databaseRef = FirebaseDatabase.getInstance().getReference("Products");
-        String productId = databaseRef.push().getKey();
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (currentUser == null) {
-            Toast.makeText(getContext(), "Utente non autenticato", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String uid = currentUser.getUid();
-        double pr = 0;
-        try {
-            pr = Double.parseDouble(prezzo);
-            if (pr <= 0) {
-                Toast.makeText(getContext(), "Il prezzo deve essere maggiore di zero", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        } catch (NumberFormatException e) {
-            Toast.makeText(getContext(), "Formato prezzo non valido", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Product prodotto= new Product(uid, nome, descrizione, pr, baratto);
-        databaseRef.child(productId).setValue(prodotto).addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                Toast.makeText(getContext(), "aggiunto", Toast.LENGTH_SHORT).show();
-
-
-
-                DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
-                databaseReference.get().addOnCompleteListener(task2 -> {
-                    if (task2.isSuccessful()) {
-                        // Recupera i dati esistenti (se presenti)
-                        List<String> productsForSale = new ArrayList<>();
-                        if (task2.getResult().exists()) {
-                            productsForSale = (List<String>) task2.getResult().getValue();
-                        }
-
-                        // Aggiungi il nuovo productId alla lista
-                        productsForSale.add(productId);
-
-                        // Aggiorna la lista nel database
-                        databaseReference.setValue(productsForSale)
-                                .addOnCompleteListener(updateTask -> {
-                                    if (updateTask.isSuccessful()) {
-                                        System.out.println("Product added successfully!");
-                                    } else {
-                                        System.out.println("Failed to add product: " + updateTask.getException().getMessage());
-                                    }
-                                });
-                    } else {
-                        System.out.println("Error getting data: " + task2.getException().getMessage());
-                    }
-                });
-
-
-
-                getParentFragmentManager().popBackStack();
-            } else {
-                Toast.makeText(getContext(), "Errore nell'aggiunta del prodotto", Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     private void openTagDialog() {

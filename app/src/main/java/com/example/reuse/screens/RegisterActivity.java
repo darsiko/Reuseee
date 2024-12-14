@@ -149,8 +149,10 @@ public class RegisterActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Toast.makeText(RegisterActivity.this, "Register user successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegisterActivity.this, HomePage.class));
+
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                     String uid = currentUser.getUid();
+
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
                     User user=new User(username, nome, cognome, telefono, cap, indirizzo, date, imageUrl);
                     databaseReference.child(uid).setValue(user);

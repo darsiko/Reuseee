@@ -91,7 +91,7 @@ public class Product {
 
     //non utilizzare, serve per la classe Utente quando si rimuove un oggetto dagli oggetti venduti
     public void delete(String pid){
-        //DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").removeValue(pid);
+        //DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid).removeValue();
     }
 
 
