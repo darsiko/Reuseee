@@ -60,7 +60,7 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale=new ArrayList<>();
-        //this.imageUrl=imageUrl;
+        this.imageUrl="imageUrl";
     }
 
     //costruttore

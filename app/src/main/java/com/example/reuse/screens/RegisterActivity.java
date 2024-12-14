@@ -154,7 +154,7 @@ public class RegisterActivity extends AppCompatActivity {
                     String uid = currentUser.getUid();
 
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-                    User user=new User(username, nome, cognome, telefono, cap, indirizzo, date, imageUrl);
+                    User user=new User(username, nome, cognome, telefono, cap, indirizzo, date);
                     databaseReference.child(uid).setValue(user);
                 }else{
                     Toast.makeText(RegisterActivity.this,"Register failed", Toast.LENGTH_SHORT).show();
