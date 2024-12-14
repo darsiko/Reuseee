@@ -58,7 +58,9 @@ public class Product {
         this.idOrdine=dbr.child("idOrdine").get().toString();
     }
 
-    public String userUsername() {
+
+    //metodo per recuperare lo username del venditore
+    public String username() {
         User user = new User(idVenditore);
         return user.getUsername();
     }
