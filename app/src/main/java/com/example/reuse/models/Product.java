@@ -91,7 +91,16 @@ public class Product {
 
     //non utilizzare, serve per la classe Utente quando si rimuove un oggetto dagli oggetti venduti
     public void delete(String pid){
-        //DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid).removeValue();
+        DatabaseReference userToDeleteRef = FirebaseDatabase.getInstance().getReference("Products").child(pid);
+        userToDeleteRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Nodo rimosso con successo
+                System.out.println("Nodo " + pid + " rimosso con successo.");
+            } else {
+                // Gestione dell'errore
+                System.err.println("Errore nella rimozione del nodo: " + task.getException());
+            }
+        });
     }
 
 
