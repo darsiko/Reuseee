@@ -22,12 +22,22 @@ public class User {
     private String data;
     private String telefono;
     private List<String> productsForSale;
+    private List<String> productsBought;
     private String imageUrl;
+
+
+
+
+
+
+
+
+
+
 
 
     //costruttori
     public User(){}
-
     //costruttore prende dati dal database
     public User(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
@@ -48,8 +58,15 @@ public class User {
                 this.productsForSale.add(pid);
             }
         }
+        this.productsBought=new ArrayList<>();
+        DataSnapshot pfs2= dbr.child("productsBought").get().getResult();
+        for (DataSnapshot snapshot : pfs.getChildren()) {
+            String pid = snapshot.getValue(String.class);
+            if (pid != null) {
+                this.productsBought.add(pid);
+            }
+        }
     }
-
     //costruttore per creazione User
     public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data){
         this.username=username;
@@ -60,11 +77,11 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale=new ArrayList<>();
+        this.productsBought=new ArrayList<>();
         this.imageUrl="imageUrl";
     }
-
     //costruttore
-    public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale){
+    public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale, List<String> productsBought){
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -73,8 +90,20 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale=productsForSale;
+        this.productsBought=productsBought;
         this.imageUrl=imageUrl;
     }
+
+
+
+
+
+
+
+
+
+    //funzioni varie
+
 
 
     //update per i dati del profilo
@@ -88,8 +117,6 @@ public class User {
         updateImageUrl(uid);
         updateData(uid);
     }
-
-
     //rimuovi oggetto dalla lista di quelli venduti
     public void removeProductForSale(String pid, String uid){
         DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
@@ -119,6 +146,22 @@ public class User {
             }
         });
     }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     //non vi servono
     private void updateUsername(String uid){
@@ -153,6 +196,14 @@ public class User {
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("imageUrl").setValue(imageUrl);
     }
+
+
+
+
+
+
+
+
 
 
 

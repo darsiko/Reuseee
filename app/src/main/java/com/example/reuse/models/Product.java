@@ -22,7 +22,6 @@ public class Product {
 
     //costruttori
     public Product(){}
-
     //costruttore con tutti i dati
     public Product(String idVenditore, String nome, String descrizione, double prezzo, boolean baratto, String imageUrl, String idOrdine){
         this.idVenditore=idVenditore;
@@ -33,7 +32,6 @@ public class Product {
         this.imageUrl=imageUrl;
         this.idOrdine=idOrdine;
     }
-
     //costruttore per aggiunta oggetto in vendita
     public Product(String nome, String descrizione, double prezzo, boolean baratto, String imageUrl){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -45,7 +43,6 @@ public class Product {
         this.imageUrl=imageUrl;
         this.idOrdine="";
     }
-
     //download dell'oggetto dal database
     public Product(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
@@ -59,12 +56,17 @@ public class Product {
     }
 
 
+
+
+
+
+
+
     //metodo per recuperare lo username del venditore
     public String username() {
         User user = new User(idVenditore);
         return user.getUsername();
     }
-
     //agiungi l'oggetto al database
     public void addProduct(){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products");
@@ -95,22 +97,6 @@ public class Product {
             }
         });
     }
-
-    //non utilizzare, serve per la classe Utente quando si rimuove un oggetto dagli oggetti venduti
-    public void delete(String pid){
-        DatabaseReference userToDeleteRef = FirebaseDatabase.getInstance().getReference("Products").child(pid);
-        userToDeleteRef.removeValue().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Nodo rimosso con successo
-                System.out.println("Nodo " + pid + " rimosso con successo.");
-            } else {
-                // Gestione dell'errore
-                System.err.println("Errore nella rimozione del nodo: " + task.getException());
-            }
-        });
-    }
-
-
     //modifica dell'oggetto sul database
     public void update(String pid){
         updateIdVentirore(pid);
@@ -124,6 +110,26 @@ public class Product {
 
 
 
+
+
+
+
+
+
+
+    //non utilizzare, servono ad altro
+    public void delete(String pid){
+        DatabaseReference userToDeleteRef = FirebaseDatabase.getInstance().getReference("Products").child(pid);
+        userToDeleteRef.removeValue().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Nodo rimosso con successo
+                System.out.println("Nodo " + pid + " rimosso con successo.");
+            } else {
+                // Gestione dell'errore
+                System.err.println("Errore nella rimozione del nodo: " + task.getException());
+            }
+        });
+    }
     private void updateIdOrdine(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
         dbr.child("idOrdine").setValue(idOrdine);
@@ -153,6 +159,9 @@ public class Product {
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
         dbr.child("imageUrl").setValue(imageUrl);
     }
+
+
+
 
 
 
