@@ -56,8 +56,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private static final int PICK_IMAGE_REQUEST = 1;
     private Uri imageUri;
-    private Button buttonSelectImage;
-    private ImageView imageView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +79,6 @@ public class RegisterActivity extends AppCompatActivity {
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
-
-        buttonSelectImage.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                openFilePicker();
-            }
-        });
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,41 +153,6 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-    private void openFilePicker() {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*"); // Limita la selezione ai file immagine
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        startActivityForResult(intent, PICK_IMAGE_REQUEST);
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK && requestCode == PICK_IMAGE_REQUEST) {
-            if (data != null) {
-                imageUri = data.getData();
-                // Visualizza l'immagine selezionata nell'ImageView
-                Glide.with(this).load(imageUri).into(imageView);
-
-                FirebaseStorage storage = FirebaseStorage.getInstance();
-                StorageReference storageRef = storage.getReference();
-
-                // Crea un nome unico per il file usando UUID
-                StorageReference fileRef = storageRef.child("images/" + UUID.randomUUID().toString());
-                fileRef.child("ProfilePictures").putFile(imageUri).addOnCompleteListener(task -> {
-                    if (task.isSuccessful()){
-                        fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            imageUrl=uri.toString();
-                            Log.d("Firebase", "Download URL: " + imageUrl);
-                        });
-                        System.out.println("Immagine caricata!");
-                    }else{
-                        System.out.println("Immagine non caricata");
-                    }
-                });
-            }
-        }
     }
 
 
