@@ -16,6 +16,7 @@ public class Product {
     private double prezzo;
     private boolean baratto;
     private String imageUrl;
+    private String idOrdine;
 
 
 
@@ -23,13 +24,14 @@ public class Product {
     public Product(){}
 
     //costruttore con tutti i dati
-    public Product(String idVenditore, String nome, String descrizione, double prezzo, boolean baratto, String imageUrl){
+    public Product(String idVenditore, String nome, String descrizione, double prezzo, boolean baratto, String imageUrl, String idOrdine){
         this.idVenditore=idVenditore;
         this.nome=nome;
         this.descrizione=descrizione;
         this.prezzo=prezzo;
         this.baratto=baratto;
         this.imageUrl=imageUrl;
+        this.idOrdine=idOrdine;
     }
 
     //costruttore per aggiunta oggetto in vendita
@@ -41,6 +43,7 @@ public class Product {
         this.prezzo=prezzo;
         this.baratto=baratto;
         this.imageUrl=imageUrl;
+        this.idOrdine="";
     }
 
     //download dell'oggetto dal database
@@ -52,11 +55,13 @@ public class Product {
         this.prezzo=Double.parseDouble(dbr.child("prezzo").get().toString());
         this.baratto=Boolean.parseBoolean(dbr.child("baratto").get().toString());
         this.imageUrl=dbr.child("imageUrl").get().toString();
+        this.idOrdine=dbr.child("idOrdine").get().toString();
     }
 
-
-
-
+    public String userUsername() {
+        User user = new User(idVenditore);
+        return user.getUsername();
+    }
 
     //agiungi l'oggetto al database
     public void addProduct(){
@@ -171,7 +176,7 @@ public class Product {
         this.descrizione = descrizione;
     }
 
-    public Double getPrezzo() {
+    public double getPrezzo() {
         return prezzo;
     }
 
