@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Product {
@@ -16,6 +17,9 @@ public class Product {
     private boolean baratto;
     private String imageUrl;
 
+
+
+    //costruttori
     public Product(){}
 
     //costruttore con tutti i dati
@@ -28,7 +32,7 @@ public class Product {
         this.imageUrl=imageUrl;
     }
 
-    //costruttore oggetto senza idvenditore per aggiunta nuovo oggetto
+    //costruttore per aggiunta oggetto in vendita
     public Product(String nome, String descrizione, double prezzo, boolean baratto, String imageUrl){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         this.idVenditore=currentUser.getUid();
@@ -39,7 +43,7 @@ public class Product {
         this.imageUrl=imageUrl;
     }
 
-    //costruttore oggetto a partire dall'ID
+    //download dell'oggetto dal database
     public Product(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
         this.idVenditore=dbr.child("idVenditore").get().toString();
@@ -50,41 +54,90 @@ public class Product {
         this.imageUrl=dbr.child("imageUrl").get().toString();
     }
 
-    //update dell'oggetto sul database
-    public void update(String pid, Product product){
-        updateIdVentirore(pid, product.idVenditore);
-        updateNome(pid,product.nome);
-        updateDescrizione(pid, product.descrizione);
-        updatePrezzo(pid, product.prezzo);
-        updateBaratto(pid, product.baratto);
-        updateImagineUrl(pid, product.imageUrl);
+
+
+
+
+    //agiungi l'oggetto al database
+    public void addProduct(){
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products");
+        String pid=dbr.push().getKey();
+        dbr.child(pid).setValue(this);
+        String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
+        dbr2.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Recupera i dati esistenti (se presenti)
+                List<String> productsForSale = new ArrayList<>();
+                if (task.getResult().exists()) {
+                    productsForSale = (List<String>) task.getResult().getValue();
+                }
+                // Aggiungi il nuovo productId alla lista
+                productsForSale.add(pid);
+                // Aggiorna la lista nel database
+                dbr2.setValue(productsForSale)
+                        .addOnCompleteListener(updateTask -> {
+                            if (updateTask.isSuccessful()) {
+                                System.out.println("Product added successfully!");
+                            } else {
+                                System.out.println("Failed to add product: " + updateTask.getException().getMessage());
+                            }
+                        });
+            } else {
+                System.out.println("Error getting data: " + task.getException().getMessage());
+            }
+        });
     }
 
-    public void updateIdVentirore(String pid, String idVenditore){
+    //non utilizzare, serve per la classe Utente quando si rimuove un oggetto dagli oggetti venduti
+    public void delete(String pid){
+        //DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").removeValue(pid);
+    }
+
+
+    //modifica dell'oggetto sul database
+    public void update(String pid){
+        updateIdVentirore(pid);
+        updateNome(pid);
+        updateDescrizione(pid);
+        updatePrezzo(pid);
+        updateBaratto(pid);
+        updateImagineUrl(pid);
+    }
+
+
+
+
+    //non vi servono
+    private void updateIdVentirore(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
         dbr.child("idVenditore").setValue(idVenditore);
     }
-    public void updateNome(String pid, String nome){
+    private void updateNome(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
         dbr.child("nome").setValue(nome);
     }
-    public void updateDescrizione(String pid, String descrizione){
+    private void updateDescrizione(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
         dbr.child("descrizione").setValue(descrizione);
     }
-    public void updatePrezzo(String pid, double prezzo){
+    private void updatePrezzo(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
         dbr.child("prezzo").setValue(prezzo);
     }
-    public void updateBaratto(String pid, boolean baratto){
+    private void updateBaratto(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
         dbr.child("idVenditore").setValue(baratto);
     }
-    public void updateImagineUrl(String pid, String imageUrl){
+    private void updateImagineUrl(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
         dbr.child("imageUrl").setValue(imageUrl);
     }
 
+
+
+
+    //getter e setter dell'oggetto (non dal database)
     public String getIdVenditore() {
         return idVenditore;
     }

@@ -24,8 +24,11 @@ public class User {
     private List<String> productsForSale;
     private String imageUrl;
 
+
+    //costruttori
     public User(){}
 
+    //costruttore prende dati dal database
     public User(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         this.username=dbr.child("username").get().toString();
@@ -37,15 +40,18 @@ public class User {
         this.data=dbr.child("data").get().toString();
         this.imageUrl=dbr.child("imageUrl").get().toString();
 
+        this.productsForSale=new ArrayList<>();
         DataSnapshot pfs= dbr.child("productsForSale").get().getResult();
         for (DataSnapshot snapshot : pfs.getChildren()) {
             String pid = snapshot.getValue(String.class);
             if (pid != null) {
-                productsForSale.add(pid);
+                this.productsForSale.add(pid);
             }
         }
     }
-    public User(String username, String nome, String cognome, String telefono, Integer cap, String indirizzo, String data, String imageUrl){
+
+    //costruttore per creazione User
+    public User(String username, String nome, String cognome, String telefono, Integer cap, String indirizzo, String data){
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -54,8 +60,10 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale=new ArrayList<>();
-        this.imageUrl=imageUrl;
+        //this.imageUrl=imageUrl;
     }
+
+    //costruttore
     public User(String username, String nome, String cognome, String telefono, Integer cap, String indirizzo, String data, String imageUrl, List<String> productsForSale){
         this.username=username;
         this.nome=nome;
@@ -69,48 +77,87 @@ public class User {
     }
 
 
+    //update per i dati del profilo
+    public void updateProfilo(String uid){
+        updateUsername(uid);
+        updateNome(uid);
+        updateCognome(uid);
+        updateTelefono(uid);
+        updateCap(uid);
+        updateIndirizzo(uid);
+        updateImageUrl(uid);
+        updateData(uid);
+    }
 
-    public void updateUsername(String uid, String username){
+
+    //rimuovi oggetto dalla lista di quelli venduti
+    public void removeProductForSale(String pid, String uid){
+        DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
+        dbr2.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                // Recupera i dati esistenti (se presenti)
+                List<String> productsForSale = new ArrayList<>();
+                if (task.getResult().exists()) {
+                    productsForSale = (List<String>) task.getResult().getValue();
+                }
+                // Aggiungi il nuovo productId alla lista
+                productsForSale.remove(pid);
+                // Aggiorna la lista nel database
+                dbr2.setValue(productsForSale)
+                        .addOnCompleteListener(updateTask -> {
+                            if (updateTask.isSuccessful()) {
+                                System.out.println("Product removed successfully!");
+                                //elima prodotto dal database
+                                Product product=new Product(pid);
+                                product.delete(pid);
+                            } else {
+                                System.out.println("Failed to remove product: " + updateTask.getException().getMessage());
+                            }
+                        });
+            } else {
+                System.out.println("Error getting data: " + task.getException().getMessage());
+            }
+        });
+    }
+
+    //non vi servono
+    private void updateUsername(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("username").setValue(username);
     }
-    public void updateNome(String uid, String nome){
+    private void updateNome(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("nome").setValue(nome);
     }
-    public void updateCognome(String uid, String cognome){
+    private void updateCognome(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("cognome").setValue(cognome);
     }
-    public void updateTelefono(String uid, String telefono){
+    private void updateTelefono(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("telefono").setValue(telefono);
     }
-    public void updateCap(String uid, Integer cap){
+    private void updateCap(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("cap").setValue(cap);
     }
-    public void updateIndirizzo(String uid, String indirizzo){
+    private void updateIndirizzo(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("indirizzo").setValue(indirizzo);
     }
-    public void updateData(String uid, String data){
+    private void updateData(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("data").setValue(data);
     }
-    public void updateImageUrl(String uid, String imageUrl){
+    private void updateImageUrl(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("imageUrl").setValue(imageUrl);
     }
-    /*public void removeProductsForSale(String uid, String pid){
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
-        dbr.child("productsForSale").child();
-    }*/
 
 
 
 
-
+    //getter e setter dell'oggetto (non dal database)
     public List<String> getProductsForSale() {
         return productsForSale;
     }
