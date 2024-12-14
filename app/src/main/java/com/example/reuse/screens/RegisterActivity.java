@@ -78,9 +78,6 @@ public class RegisterActivity extends AppCompatActivity {
         EditText dateEditText = findViewById(R.id.dateEditText);
         auth= FirebaseAuth.getInstance();
 
-        buttonSelectImage = findViewById(R.id.buttonSelectImage);
-        imageView = findViewById(R.id.imageView);
-
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference();
 
@@ -104,14 +101,14 @@ public class RegisterActivity extends AppCompatActivity {
                 String txt_indirizzo=indirizzo.getText().toString();
                 Integer txt_cap=Integer.parseInt(cap.getText().toString());
                 String txt_date=dateEditText.getText().toString();
-                String txt_imageUrl=imageUrl;
+
 
                 if(TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_date) || TextUtils.isEmpty(txt_indirizzo) || TextUtils.isEmpty(txt_cognome) || TextUtils.isEmpty(txt_password) || TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_nome)){
                     Toast.makeText(RegisterActivity.this, "Empty credentials", Toast.LENGTH_SHORT).show();
                 } else if(txt_password.length()<6){
                     Toast.makeText(RegisterActivity.this, "Password too short", Toast.LENGTH_SHORT).show();
                 } else {
-                    registerUser(txt_email, txt_password, txt_username, txt_nome, txt_cognome, txt_telefono, txt_cap, txt_indirizzo, txt_date, txt_imageUrl);
+                    registerUser(txt_email, txt_password, txt_username, txt_nome, txt_cognome, txt_telefono, txt_cap, txt_indirizzo, txt_date, String.valueOf(R.drawable.user));
                 }
             }
         });

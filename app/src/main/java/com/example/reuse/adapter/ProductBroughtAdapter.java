@@ -1,5 +1,6 @@
 package com.example.reuse.adapter;
 
+
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reuse.R;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.User;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.List;
+import java.util.Objects;
+
 public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAdapter.ProductViewHolder> {
+    private FirebaseAuth auth;
     private Context context;
     private List<Product> productList;
     private OnItemClickListener onItemClickListener;
@@ -31,8 +38,10 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
     @Override
     public ProductViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_prod_brought_products, parent, false);
+        auth= FirebaseAuth.getInstance();
         return new ProductViewHolder(view);
     }
+
 
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
@@ -41,8 +50,10 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
         //rimosso holder.productImage.setImageResource(product.getImageResId());
         holder.productName.setText(product.getNome());
         holder.productPrice.setText(""+product.getPrezzo());
-        //rimosso holder.userAvatar.setImageResource(product.getUserAvatarResId());
-        //rimosso holder.userName.setText(product.getUserName());
+
+        //holder.userAvatar.setImageResource(product.getUserAvatadanirResId());
+        User user1 = new User(product.getIdVenditore());
+        holder.userName.setText(user1.getUsername());
         //rimosso holder.userStatus.setText(product.getUserStatus());
 
         // Set click listeners

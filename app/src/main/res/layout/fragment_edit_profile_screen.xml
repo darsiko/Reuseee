@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".screens.EditProfileScreen">
     <LinearLayout
         android:gravity="center"
@@ -47,22 +48,24 @@
                 android:text="Edit Profile"/>
         </LinearLayout>
 
-        <ImageView
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/image_profile"
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginBottom="16dp"
-            android:src="@drawable/user"
             android:elevation="5dp"
-            />
+            android:src="@drawable/user"
+            app:shapeAppearanceOverlay="@style/RoundedCorner" />
+
         <ImageView
 
+            android:id="@+id/image_button_profile"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="-20dp"
             android:layout_marginLeft="50dp"
+            android:layout_marginTop="-20dp"
             android:elevation="4dp"
-            android:src="@drawable/baseline_add_a_photo_24"
-            />
+            android:src="@drawable/baseline_add_a_photo_24" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
