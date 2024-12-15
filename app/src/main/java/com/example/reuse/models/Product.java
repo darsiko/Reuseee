@@ -206,7 +206,7 @@ public class Product {
     }
     private void updateBaratto(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
-        dbr.child("idVenditore").setValue(baratto);
+        dbr.child("baratto").setValue(baratto);
     }
     private void updateImagineUrl(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
