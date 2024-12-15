@@ -3,6 +3,7 @@ package com.example.reuse.screens;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -16,6 +17,12 @@ import com.example.reuse.R;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.OAuthCredential;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 
 public class AccountScreen extends Fragment {
@@ -36,14 +43,48 @@ public class AccountScreen extends Fragment {
 
         logout = (LinearLayout) view.findViewById(R.id.logOut);
 
-        if (currentUser != null && currentUser.isAnonymous()) {
-            editProfileButton.setVisibility(View.GONE);
-            broughtProducts.setVisibility(View.GONE);
-            myProducts.setVisibility(View.GONE);
-        }
+        TextView nominativo = view.findViewById(R.id.NomeECognome);
+        TextView fieldName = view.findViewById(R.id.fieldName);
+        TextView fieldEmail = view.findViewById(R.id.fieldEmail);
+        TextView fieldDate = view.findViewById(R.id.birthDate);
 
-        FirebaseAuth auth;
-        auth= FirebaseAuth.getInstance();
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+
+        if(currentUser!=null){
+            String uID = currentUser.getUid();
+            if(currentUser.isAnonymous()){
+                editProfileButton.setVisibility(View.GONE);
+                broughtProducts.setVisibility(View.GONE);
+                myProducts.setVisibility(View.GONE);
+            }
+            else{
+                DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users");
+
+                dbRef.child(uID).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            String nome = snapshot.child("nome").getValue(String.class);
+                            String cognome = snapshot.child("cognome").getValue(String.class);
+                            String email = auth.getCurrentUser().getEmail();
+                            String date = snapshot.child("data").getValue(String.class);
+
+                            String newName = nome+" "+cognome;
+
+                            nominativo.setText(newName);
+                            fieldName.setText(newName);
+                            fieldEmail.setText(email);
+                            fieldDate.setText(date);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+            }
+        }
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -73,6 +114,7 @@ public class AccountScreen extends Fragment {
                         .commit();
             }
         });
+
         myProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -85,6 +127,7 @@ public class AccountScreen extends Fragment {
                         .commit();
             }
         });
+
         broughtProducts.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

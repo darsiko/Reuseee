@@ -69,6 +69,7 @@
         android:elevation="5dp"
         />
     <TextView
+        android:id="@+id/NomeECognome"
         android:text="Melissa Henders"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
@@ -99,12 +100,13 @@
         />
 
     <TextView
+        android:id="@+id/fieldName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="30dp"
         android:layout_gravity="start"
-        android:text="Melissa Henders"/>
+        android:text="User"/>
     <TextView
         android:textSize="18dp"
         android:layout_width="wrap_content"
@@ -114,12 +116,13 @@
         android:layout_gravity="start"
         android:text="Email"/>
     <TextView
+        android:id="@+id/fieldEmail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_gravity="start"
         android:layout_marginBottom="16dp"
-        android:text="Camilla.Henderson@gmail.com"/>
+        android:text="User@gmail.com"/>
     <TextView
         android:textSize="18dp"
         android:layout_width="wrap_content"
@@ -130,12 +133,13 @@
         android:layout_gravity="start"
         android:text="Date of Birth"/>
     <TextView
+        android:id="@+id/birthDate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
         android:layout_marginLeft="30dp"
         android:layout_gravity="start"
-        android:text="24/01/1977"/>
+        android:text="??/??/????"/>
     <TextView
         android:textSize="18dp"
         android:layout_width="wrap_content"
