@@ -68,14 +68,15 @@ public class Product {
         String pid = dbr.push().getKey();
 
         // Save the current product object under the new ID
-        dbr.child(pid).setValue(this)
+        this.update(pid);
+        /*dbr.child(pid).setValue(this)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         System.out.println("Product saved to 'Products' successfully.");
                     } else {
                         System.out.println("Failed to save product: " + task.getException().getMessage());
                     }
-                });
+                });*/
 
         // Ensure the current user is authenticated
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
