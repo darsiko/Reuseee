@@ -55,7 +55,7 @@ public class Product {
         this.nome=dbr.child("nome").get().toString();
         this.descrizione=dbr.child("descrizione").get().toString();
         this.prezzo=Double.parseDouble(dbr.child("prezzo").get().toString());
-        this.baratto=Boolean.parseBoolean(dbr.child("baratto").get().toString());
+        this.baratto= Boolean.parseBoolean(dbr.child("baratto").get().toString());
         this.imageUrl=dbr.child("imageUrl").get().toString();
         this.idOrdine=dbr.child("idOrdine").get().toString();
     }
