@@ -72,7 +72,7 @@ public class AddProductScreen extends Fragment {
                 if(TextUtils.isEmpty(txt_nome) || TextUtils.isEmpty(txt_descrizione) || TextUtils.isEmpty(txt_prezzo)){
                     Toast.makeText(getContext(), "Empty credentials", Toast.LENGTH_SHORT).show();
                 }else{
-                    Product product=new Product(txt_nome, txt_descrizione, Double.parseDouble(txt_prezzo), txt_baratto,"");
+                    Product product=new Product(txt_nome, txt_descrizione, Double.parseDouble(txt_prezzo), txt_baratto);
                     product.addProduct();
                     getParentFragmentManager().popBackStack();
                 }

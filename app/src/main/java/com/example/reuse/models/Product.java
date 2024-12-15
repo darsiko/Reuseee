@@ -37,14 +37,14 @@ public class Product {
         this.idOrdine=idOrdine;
     }
     //costruttore per aggiunta oggetto in vendita
-    public Product(String nome, String descrizione, double prezzo, boolean baratto, String imageUrl){
+    public Product(String nome, String descrizione, double prezzo, boolean baratto){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         this.idVenditore=currentUser.getUid();
         this.nome=nome;
         this.descrizione=descrizione;
         this.prezzo=prezzo;
         this.baratto=baratto;
-        this.imageUrl=imageUrl;
+        this.imageUrl="gs://re-use-98b8a.firebasestorage.app/ProductImages/base.jpeg";
         this.idOrdine="";
     }
     //download dell'oggetto dal database
