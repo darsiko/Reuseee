@@ -48,6 +48,7 @@ public class AddProductScreen extends Fragment {
     private EditText descrizione;
     private LinearLayout goBack;
     private Button aggiungi;
+    private Uri imageUri;
     private ImageButton imageButton;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     @Override
@@ -73,8 +74,7 @@ public class AddProductScreen extends Fragment {
                     Toast.makeText(getContext(), "Empty credentials", Toast.LENGTH_SHORT).show();
                 }else{
                     Product product=new Product(txt_nome, txt_descrizione, Double.parseDouble(txt_prezzo), txt_baratto);
-                    String pid=product.addProduct();
-                    product.uploadImage(pid, nome file uri);
+                    product.addProduct(imageUri);
                     getParentFragmentManager().popBackStack();
                 }
             }
@@ -93,6 +93,7 @@ public class AddProductScreen extends Fragment {
                 result -> {
                     if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
                         Uri imageUri = result.getData().getData(); // Get the URI of the selected image
+                        this.imageUri=imageUri;
                         try {
                             // Convert the URI to a Bitmap
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
