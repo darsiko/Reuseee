@@ -1,9 +1,13 @@
 package com.example.reuse.models;
 
+import android.net.Uri;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -68,7 +72,7 @@ public class Product {
         return user.getUsername();
     }
     //agiungi l'oggetto al database
-    public void addProduct(){
+    public String addProduct(){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products");
         String pid=dbr.push().getKey();
         dbr.child(pid).setValue(this);
@@ -96,6 +100,7 @@ public class Product {
                 System.out.println("Error getting data: " + task.getException().getMessage());
             }
         });
+        return pid;
     }
     //modifica dell'oggetto sul database
     public void update(String pid){
@@ -107,6 +112,35 @@ public class Product {
         updateImagineUrl(pid);
         updateIdOrdine(pid);
     }
+
+
+
+    private void uploadImage(String pid, Uri imageUri) {
+        DatabaseReference databaseReference;
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference("ProductImages");
+
+        // Inizializza Firebase Realtime Database
+        databaseReference = FirebaseDatabase.getInstance().getReference("ProductImagesProducts").child(pid).child("imageUrl");
+        if (imageUri != null) {
+            String fileName = pid + ".jpg";
+            StorageReference fileReference = storageReference.child(fileName);
+
+            fileReference.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                String downloadUrl = uri.toString();
+                                // Salva l'URL nel Realtime Database
+                                databaseReference.setValue(downloadUrl);
+                                this.imageUrl=downloadUrl;
+                            }))
+                    .addOnFailureListener(e -> {
+                        //Toast.makeText(MainActivity.this, "Caricamento fallito: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+
+
 
 
 
@@ -213,5 +247,21 @@ public class Product {
 
     public void setIdOrdine(String idOrdine) {
         this.idOrdine = idOrdine;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Uri getImageUri() {
+        return Uri.parse(imageUrl);
+    }
+
+    public void setImageUri(Uri imageUri) {
+        this.imageUrl = imageUri.toString();
     }
 }
