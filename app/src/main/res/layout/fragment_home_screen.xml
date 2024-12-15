@@ -11,13 +11,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            tools:ignore="UselessParent">
 
             <!-- Updated Search Section -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/search_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#EEEEEE"
                 android:layout_margin="16dp">
 
                 <LinearLayout
@@ -32,15 +34,16 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
+                        android:autofillHints=""
                         android:hint="Search"
                         android:inputType="text"
                         android:drawableLeft="@drawable/baseline_search_24"
-
                         android:drawablePadding="8dp"
                         android:background="@android:color/transparent"
                         android:textSize="16sp"
                         android:padding="12dp"
-                        android:textColor="@color/secondary" />
+                        android:textColor="@color/secondary"
+                        tools:ignore="HardcodedText,RtlHardcoded" />
 
                     <!-- Menu Button -->
                     <ImageButton
@@ -50,17 +53,74 @@
                         android:src="@drawable/baseline_menu_24"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Menu"
-                        app:tint="@color/primary" />
+                        app:tint="@color/primary"
+                        tools:ignore="HardcodedText" />
                 </LinearLayout>
+
             </com.google.android.material.card.MaterialCardView>
+
             <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/filterContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:gravity="center_vertical"
+                >
+                <Button
+                    android:id="@+id/barattoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:text="Baratto"
+                    android:textAllCaps="false"
+                    />
+                <EditText
+                    android:id="@+id/minPriceSetter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:autofillHints=""
+                    android:hint="0"
+                    android:inputType="number"
+                    android:background="@color/primary"
+                    android:textSize="12sp"
+                    android:padding="8dp"
+                    android:textColor="@color/secondary"
+                    tools:ignore="HardcodedText,RtlHardcoded"
+                    />
+                <EditText
+                    android:id="@+id/maxPriceSetter"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_marginLeft="8dp"
+                    android:autofillHints=""
+                    android:hint="1000"
+                    android:inputType="number"
+                    android:background="@color/primary"
+                    android:textSize="12sp"
+                    android:padding="8dp"
+                    android:textColor="@color/secondary"
+                    tools:ignore="HardcodedText,RtlHardcoded"
+                    />
+                <com.google.android.material.slider.RangeSlider
+                    android:id="@+id/rangePrezziSlider"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="16dp"
+                    android:valueFrom="0"
+                    android:valueTo="1000"
+                    app:values="@array/initial_values"
+                    android:stepSize="1"
+                    />
+            </LinearLayout>
+
+
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
                 android:layout_below="@id/search_card"
                 android:orientation="vertical"
-                android:padding="16dp">
+                android:padding="16dp"
+                tools:ignore="ObsoleteLayoutParam">
 
                 <TextView
                     android:id="@+id/recents_title"
@@ -70,7 +130,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#000"
-                    android:paddingBottom="8dp" />
+                    android:paddingBottom="8dp"
+                    tools:ignore="HardcodedText" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/horizontal_recycler_view_recents"
@@ -81,13 +142,11 @@
                     android:clipToPadding="false"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp" />
+
             </LinearLayout>
             <LinearLayout
-                xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="300dp"
-                android:layout_below="@id/search_card"
                 android:orientation="vertical"
                 android:padding="16dp">
 
@@ -99,7 +158,8 @@
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#000"
-                    android:paddingBottom="8dp" />
+                    android:paddingBottom="8dp"
+                    tools:ignore="HardcodedText" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/horizontal_recycler_view_lastadded"
