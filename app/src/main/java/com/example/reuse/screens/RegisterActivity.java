@@ -48,6 +48,8 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText cognome;
     private EditText telefono;
     private EditText username;
+    private EditText stato;
+    private EditText citta;
     private EditText cap;
     private EditText indirizzo;
     private String imageUrl;
@@ -72,6 +74,8 @@ public class RegisterActivity extends AppCompatActivity {
         nome=findViewById(R.id.nome_input);
         cognome=findViewById(R.id.cognome_input);
         telefono=findViewById(R.id.numero_input);
+        stato=findViewById(R.id.stato_input);
+        citta=findViewById(R.id.citta_input);
         indirizzo=findViewById(R.id.indirizzo_input);
         cap=findViewById(R.id.cap_input);
         EditText dateEditText = findViewById(R.id.dateEditText);
@@ -91,16 +95,18 @@ public class RegisterActivity extends AppCompatActivity {
                 String txt_cognome=cognome.getText().toString();
                 String txt_telefono=telefono.getText().toString();
                 String txt_indirizzo=indirizzo.getText().toString();
+                String txt_stato=stato.getText().toString();
+                String txt_citta=citta.getText().toString();
                 Integer txt_cap=Integer.parseInt(cap.getText().toString());
                 String txt_date=dateEditText.getText().toString();
 
 
-                if(TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_date) || TextUtils.isEmpty(txt_indirizzo) || TextUtils.isEmpty(txt_cognome) || TextUtils.isEmpty(txt_password) || TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_nome)){
+                if(TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_stato) || TextUtils.isEmpty(txt_citta) || TextUtils.isEmpty(txt_date) || TextUtils.isEmpty(txt_indirizzo) || TextUtils.isEmpty(txt_cognome) || TextUtils.isEmpty(txt_password) || TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_nome)){
                     Toast.makeText(RegisterActivity.this, "Empty credentials", Toast.LENGTH_SHORT).show();
                 } else if(txt_password.length()<6){
                     Toast.makeText(RegisterActivity.this, "Password too short", Toast.LENGTH_SHORT).show();
                 } else {
-                    registerUser(txt_email, txt_password, txt_username, txt_nome, txt_cognome, txt_telefono, txt_cap, txt_indirizzo, txt_date, String.valueOf(R.drawable.user));
+                    registerUser(txt_email, txt_password, txt_username, txt_nome, txt_cognome, txt_telefono, txt_stato, txt_citta, txt_cap, txt_indirizzo, txt_date, String.valueOf(R.drawable.user));
                 }
             }
         });
@@ -134,7 +140,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUser(String email, String password, String username, String nome, String cognome, String telefono, Integer cap, String indirizzo, String date, String imageUrl) {
+    private void registerUser(String email, String password, String username, String nome, String cognome, String telefono, String stato, String citta, Integer cap, String indirizzo, String date, String imageUrl) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
@@ -146,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
                     String uid = currentUser.getUid();
 
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-                    User user=new User(username, nome, cognome, telefono, cap, indirizzo, date);
+                    User user=new User(username, nome, cognome, telefono, stato, citta, cap, indirizzo, date);
                     databaseReference.child(uid).setValue(user);
                 }else{
                     Toast.makeText(RegisterActivity.this,"Register failed", Toast.LENGTH_SHORT).show();
