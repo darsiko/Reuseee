@@ -74,8 +74,8 @@ public class RegisterActivity extends AppCompatActivity {
         nome=findViewById(R.id.nome_input);
         cognome=findViewById(R.id.cognome_input);
         telefono=findViewById(R.id.numero_input);
-        stato=findViewById(R.id.stato.input);
-        citta=findViewById(R.id.citta.input);
+        stato=findViewById(R.id.stato_input);
+        citta=findViewById(R.id.citta_input);
         indirizzo=findViewById(R.id.indirizzo_input);
         cap=findViewById(R.id.cap_input);
         EditText dateEditText = findViewById(R.id.dateEditText);
