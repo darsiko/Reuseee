@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -60,36 +61,65 @@ public class Product {
     }
     //metodo per recuperare lo username del venditore
     //agiungi l'oggetto al database
-    public void addProduct(Uri imageUri){
+    public String addProduct(){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products");
-        String pid=dbr.push().getKey();
-        dbr.child(pid).setValue(this);
-        String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        // Generate a new product ID
+        String pid = dbr.push().getKey();
+
+        // Save the current product object under the new ID
+        dbr.child(pid).setValue(this)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        System.out.println("Product saved to 'Products' successfully.");
+                    } else {
+                        System.out.println("Failed to save product: " + task.getException().getMessage());
+                    }
+                });
+
+        // Ensure the current user is authenticated
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            System.out.println("User is not logged in.");
+            return null;
+        }
+
+        String uid = currentUser.getUid();
         DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
+
+        // Update the user's list of products for sale
         dbr2.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Recupera i dati esistenti (se presenti)
                 List<String> productsForSale = new ArrayList<>();
+
+                // Retrieve the existing list, if any
                 if (task.getResult().exists()) {
-                    productsForSale = (List<String>) task.getResult().getValue();
+                    for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                        String productId = snapshot.getValue(String.class);
+                        if (productId != null) {
+                            productsForSale.add(productId);
+                        }
+                    }
                 }
                 // Aggiungi il nuovo productId alla lista
-                uploadImage(pid, imageUri);
                 productsForSale.add(pid);
-                // Aggiorna la lista nel database
+
+                // Save the updated list back to Firebase
                 dbr2.setValue(productsForSale)
                         .addOnCompleteListener(updateTask -> {
                             if (updateTask.isSuccessful()) {
-                                System.out.println("Product added successfully!");
+                                System.out.println("Product added to 'productsForSale' successfully.");
                             } else {
-                                System.out.println("Failed to add product: " + updateTask.getException().getMessage());
+                                System.out.println("Failed to update 'productsForSale': " + updateTask.getException().getMessage());
                             }
                         });
             } else {
-                System.out.println("Error getting data: " + task.getException().getMessage());
+                System.out.println("Failed to retrieve 'productsForSale': " + task.getException().getMessage());
             }
         });
+        return pid;
     }
+
     //modifica dell'oggetto sul database
     public void update(String pid){
         updateIdVentirore(pid);
@@ -184,16 +214,10 @@ public class Product {
 
 
 
-
-
-
-
     //getter e setter dell'oggetto (non dal database)
     public String getIdVenditore() {
         return idVenditore;
     }
-
-    
 
     public void setIdVenditore(String idVenditore) {
         this.idVenditore = idVenditore;

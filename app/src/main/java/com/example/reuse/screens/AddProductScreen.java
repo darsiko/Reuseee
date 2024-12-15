@@ -63,23 +63,6 @@ public class AddProductScreen extends Fragment {
         imageButton =view.findViewById(R.id.productImage);
         aggiungi = view.findViewById(R.id.aggiungi);
 
-        aggiungi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String txt_nome=nome.getText().toString();
-                String txt_prezzo=prezzo.getText().toString();
-                boolean txt_baratto=baratto.isChecked();
-                String txt_descrizione=descrizione.getText().toString();
-                if(TextUtils.isEmpty(txt_nome) || TextUtils.isEmpty(txt_descrizione) || TextUtils.isEmpty(txt_prezzo)){
-                    Toast.makeText(getContext(), "Empty credentials", Toast.LENGTH_SHORT).show();
-                }else{
-                    Product product=new Product(txt_nome, txt_descrizione, Double.parseDouble(txt_prezzo), txt_baratto);
-                    product.addProduct(imageUri);
-                    getParentFragmentManager().popBackStack();
-                }
-            }
-        });
-
 
 
 
@@ -106,6 +89,23 @@ public class AddProductScreen extends Fragment {
                     }
                 }
         );
+        aggiungi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String txt_nome=nome.getText().toString();
+                String txt_prezzo=prezzo.getText().toString();
+                boolean txt_baratto=baratto.isChecked();
+                String txt_descrizione=descrizione.getText().toString();
+                if(TextUtils.isEmpty(txt_nome) || TextUtils.isEmpty(txt_descrizione) || TextUtils.isEmpty(txt_prezzo)){
+                    Toast.makeText(getContext(), "Empty credentials", Toast.LENGTH_SHORT).show();
+                }else{
+                    Product product=new Product(txt_nome, txt_descrizione, Double.parseDouble(txt_prezzo), txt_baratto);
+                    product.addProduct(imageUri);
+                    getParentFragmentManager().popBackStack();
+                }
+            }
+        });
+
 
         // Set click listener to open gallery
         imageButton.setOnClickListener(v -> openGallery());
