@@ -61,7 +61,7 @@ public class Product {
     }
     //metodo per recuperare lo username del venditore
     //agiungi l'oggetto al database
-    public String addProduct(){
+    public void addProduct(Uri imageUri){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products");
 
         // Generate a new product ID
@@ -81,7 +81,7 @@ public class Product {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser == null) {
             System.out.println("User is not logged in.");
-            return null;
+            return;
         }
 
         String uid = currentUser.getUid();
@@ -102,6 +102,7 @@ public class Product {
                     }
                 }
                 // Aggiungi il nuovo productId alla lista
+                this.uploadImage(pid, imageUri);
                 productsForSale.add(pid);
 
                 // Save the updated list back to Firebase
@@ -117,7 +118,6 @@ public class Product {
                 System.out.println("Failed to retrieve 'productsForSale': " + task.getException().getMessage());
             }
         });
-        return pid;
     }
 
     //modifica dell'oggetto sul database
