@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.renderscript.Sampler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Range;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +32,13 @@ import android.widget.Toast;
 import com.example.reuse.R;
 import com.example.reuse.adapter.ProductAdapter;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.User;
 import com.google.android.material.slider.RangeSlider;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,9 +47,9 @@ import java.util.Objects;
 public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickListener  {
     private RecyclerView recyclerViewrecents;
     private RecyclerView recyclerViewlastAdded;
-    private ProductAdapter adapter;
-    private List<Product> productList;
-
+    private ProductAdapter adapter1, adapter2;
+    private List<Product> productListRecents, productListLastAdded;
+    private DatabaseReference databaseReference;
     public HomeScreen() {
         // Required empty public constructor
     }
@@ -57,19 +64,45 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
         recyclerViewrecents = rootView.findViewById(R.id.horizontal_recycler_view_recents);
         recyclerViewlastAdded = rootView.findViewById(R.id.horizontal_recycler_view_lastadded);
 
+
+        databaseReference = FirebaseDatabase.getInstance().getReference("Products");
+
         // Set LayoutManager for both RecyclerViews
         recyclerViewrecents.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
         recyclerViewlastAdded.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
 
         // Initialize product list with sample data
-        productList = new ArrayList<>();
+        productListRecents = new ArrayList<>();
+        productListLastAdded = new ArrayList<>();
         //rimosso productList.add(new Product(R.drawable.shoes, "Sneakers Verdi", "$100", "Melissa Peters", "5 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));
         //rimasso productList.add(new Product(R.drawable.shoes, "Sneakers Neri", "$120", "John Doe", "3 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));   // Add more products as needed...
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                productListRecents.clear(); // Clear old data
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Product product = snapshot.getValue(Product.class);
+                    if (product != null) {
+                        productListRecents.add(product);
+                    }
+                }
+                adapter1.notifyDataSetChanged(); // Notify adapter about the data change
+                // Log.d("ProductBoughtScreen", "Products fetched: " + productList.toString());
+            }
 
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                Log.e("ProductBoughtScreen", "Error fetching data: " + databaseError.getMessage());
+                Toast.makeText(getContext(), "Failed to load products.", Toast.LENGTH_SHORT).show();
+            }
+        });
         // Set the adapter for both RecyclerViews
-        adapter = new ProductAdapter(getContext(), productList, this);
-        recyclerViewlastAdded.setAdapter(adapter);
-        recyclerViewrecents.setAdapter(adapter);
+
+        adapter1 = new ProductAdapter(getContext(), productListRecents, this);
+        recyclerViewlastAdded.setAdapter(adapter1);
+        adapter2 = new ProductAdapter(getContext(), productListLastAdded, this);
+        recyclerViewrecents.setAdapter(adapter2);
+
 
         //animazione pop up filtri
         ImageButton menuButton = rootView.findViewById(R.id.menuButton);
@@ -248,7 +281,25 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
 
         // You can now pass the product data to a new fragment or activity, e.g.
         Bundle bundle = new Bundle();
-        bundle.putString("product_name", product.getNome());
+        new User(product.getIdVenditore(), new User.UserCallback() {
+            @Override
+            public void onUserLoaded(User user) {
+               bundle.putString("venditore", user.getNome());
+                bundle.putString("status",user.getProductsForSale().size()+" prodotti online");
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("ProductAdapter", "Error loading user data: ", e);
+            }
+        });
+        bundle.putString("nome", product.getNome());
+        bundle.putString("descrizione", product.getDescrizione());
+        bundle.putString("prezzo",""+ product.getPrezzo());
+
+
+
+
         //rimosso bundle.putString("product_price", product.getPrezzo());
         //rimosso bundle.putInt("product_image", product.getImageResId()); // For ImageView
         // Add other product details to the bundle

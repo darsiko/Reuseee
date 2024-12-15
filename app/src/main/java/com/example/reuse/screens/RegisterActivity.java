@@ -78,7 +78,7 @@ public class RegisterActivity extends AppCompatActivity {
         auth= FirebaseAuth.getInstance();
 
         FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
+
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override

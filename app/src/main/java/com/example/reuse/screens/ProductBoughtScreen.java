@@ -103,7 +103,8 @@ public class ProductBoughtScreen extends Fragment implements ProductBroughtAdapt
         EditProductScreen editProductScreen = new EditProductScreen();
         Bundle bundle = new Bundle();
         bundle.putString("name", product.getNome());
-        bundle.putDouble("prezzo", product.getPrezzo());
+        bundle.putString("prezzo",""+ product.getPrezzo());
+        bundle.putBoolean("barattabile", product.isBaratto());
         //rimosso bundle.putInt("imageResId", product.getImageResId());
         //rimosso bundle.putInt("userAvatarResId", product.getUserAvatarResId());
         //rimosso bundle.putStringArrayList("tags", new ArrayList<>(product.getTags()));

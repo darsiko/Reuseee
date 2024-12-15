@@ -54,19 +54,7 @@ public class Product {
         this.imageUrl=dbr.child("imageUrl").get().toString();
         this.idOrdine=dbr.child("idOrdine").get().toString();
     }
-
-
-
-
-
-
-
-
     //metodo per recuperare lo username del venditore
-    public String username() {
-        User user = new User(idVenditore);
-        return user.getUsername();
-    }
     //agiungi l'oggetto al database
     public void addProduct(){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products");
@@ -170,6 +158,8 @@ public class Product {
     public String getIdVenditore() {
         return idVenditore;
     }
+
+    
 
     public void setIdVenditore(String idVenditore) {
         this.idVenditore = idVenditore;

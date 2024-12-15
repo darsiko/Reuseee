@@ -68,6 +68,12 @@
             android:inputType="textPassword" />
 
         <!-- Sign In Button -->
+        <CheckBox
+            android:id="@+id/checkBoxLog"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Rimani loggato" />
+
         <Button
             android:id="@+id/sign_in_button"
             android:layout_width="match_parent"

@@ -3,11 +3,17 @@ package com.example.reuse.screens;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.fragment.app.Fragment;
 
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +22,13 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reuse.R;
 
+import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
 
@@ -28,6 +36,7 @@ import java.util.List;
 public class EditProductScreen extends Fragment {
 
 
+    private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -37,12 +46,36 @@ public class EditProductScreen extends Fragment {
         EditText priceProd = view.findViewById(R.id.prezzo);
         ImageView file = view.findViewById(R.id.product_image);
         ImageButton addTag = view.findViewById(R.id.add_tag);
+        Switch switchBaratto = view.findViewById(R.id.switch1);
         // Back button functionality
         LinearLayout backtoProfileButton = view.findViewById(R.id.goBackPreviusPage);
         backtoProfileButton.setOnClickListener(v -> {
             getParentFragmentManager().popBackStack();
         });
 
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
+                        Uri imageUri = result.getData().getData(); // Get the URI of the selected image
+                        try {
+                            // Convert the URI to a Bitmap
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
+                            // Set the Bitmap as the source of the ImageButton
+                            file.setImageBitmap(bitmap);
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(getContext(), "Failed to load image", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+        file.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openGallery();
+            }
+        });
         addTag.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,19 +86,22 @@ public class EditProductScreen extends Fragment {
         Bundle args = getArguments();
         if (args != null) {
             String nomeProd = args.getString("name", "");
-            String price = args.getString("price", "");
-            Integer imageProd = args.getInt("imageResId");
-            List<String> tagList = args.getStringArrayList("tags");
+            String price = args.getString("prezzo", "");
+            boolean barattabile = args.getBoolean("barattabile");
+
+            //Integer imageProd = args.getInt("imageResId");
+            //List<String> tagList = args.getStringArrayList("tags");
 
             nameProd.setText(nomeProd);
             priceProd.setText(price);
-            file.setImageResource(imageProd);
+            switchBaratto.setChecked(barattabile);
+            /*file.setImageResource(imageProd);
 
             if (tagList != null) {
                 for (String tag : tagList) {
                     addTagToLayout(view, tag); // Pass the view to the method
                 }
-            }
+            }*/
 
         }
 
@@ -96,7 +132,11 @@ public class EditProductScreen extends Fragment {
                 .setNegativeButton("Cancel", null)  // Close the dialog
                 .show();
     }
-
+    void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        intent.setType("image/*");
+        imagePickerLauncher.launch(intent);
+    }
 
     private void addTagToLayout(View rootView, String tag) {
         // Use the rootView passed from onCreateView

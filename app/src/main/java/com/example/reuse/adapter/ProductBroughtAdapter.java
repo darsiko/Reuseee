@@ -18,6 +18,12 @@ import com.example.reuse.models.Product;
 import com.example.reuse.models.User;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +31,7 @@ import java.util.Objects;
 public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAdapter.ProductViewHolder> {
     private FirebaseAuth auth;
     private Context context;
+
     private List<Product> productList;
     private OnItemClickListener onItemClickListener;
 
@@ -42,28 +49,41 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
         return new ProductViewHolder(view);
     }
 
-
     @Override
     public void onBindViewHolder(@NonNull ProductViewHolder holder, int position) {
+        // Get the product at the current position
         Product product = productList.get(position);
+        String sellerId = product.getIdVenditore();
 
-        //rimosso holder.productImage.setImageResource(product.getImageResId());
-        holder.productName.setText(product.getNome());
-        holder.productPrice.setText(""+product.getPrezzo());
-
-        //holder.userAvatar.setImageResource(product.getUserAvatadanirResId());
-        User user1 = new User(product.getIdVenditore());
-        holder.userName.setText(user1.getUsername());
-        //rimosso holder.userStatus.setText(product.getUserStatus());
-
-        // Set click listeners
-        holder.editProduct.setOnClickListener(view ->{
-            Toast.makeText(view.getContext(), "Item: " + product.getNome(), Toast.LENGTH_SHORT);
-            onItemClickListener.onEditProductClick(product);
+        // Use the callback to set user details once loaded
+        new User(sellerId, new User.UserCallback() {
+            @Override
+            public void onUserLoaded(User user) {
+                holder.userName.setText(user.getUsername());
             }
-        );
 
-        //holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(product));
+            @Override
+            public void onError(Exception e) {
+                holder.userName.setText("Unknown Seller");
+                Log.e("ProductAdapter", "Error loading user data: ", e);
+            }
+        });
+
+        holder.productName.setText(product.getNome());
+
+        // Set product price
+        if (product.getPrezzo() > 0) {
+            holder.productPrice.setText(String.format("$%.2f", product.getPrezzo())); // Format price as a currency
+        } else {
+            holder.productPrice.setText("Price Unavailable");
+        }
+        holder.userStatus.setText(productList.size()+" products online");
+
+        holder.editProduct.setOnClickListener(view -> {
+            Toast.makeText(view.getContext(), "Item: " + product.getNome(), Toast.LENGTH_SHORT).show();
+            onItemClickListener.onEditProductClick(product);
+        });
+        // If you have more views in the ViewHolder, bind them here
     }
 
     public interface OnItemClickListener {

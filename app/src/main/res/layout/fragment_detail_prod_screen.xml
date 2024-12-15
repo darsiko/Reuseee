@@ -109,11 +109,25 @@
                 android:id="@+id/productPrice"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:text="100"
                 android:textAlignment="textStart"
-                android:text="$100"
                 android:textColor="@android:color/black"
                 android:textSize="30sp"
                 android:textStyle="bold" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" android:text="$"></TextView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:text="Descrizione:  "></TextView>
+
+            <TextView
+                android:id="@+id/descrizione"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"></TextView>
         </LinearLayout>
 
         <!-- Seller Info -->

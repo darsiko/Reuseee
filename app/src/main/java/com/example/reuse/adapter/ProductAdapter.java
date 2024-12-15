@@ -1,18 +1,22 @@
 package com.example.reuse.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reuse.R;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
@@ -40,14 +44,36 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
     public void onBindViewHolder(ProductViewHolder holder, int position) {
         // Get the product from the list at the given position
         Product product = productList.get(position);
+        String sellerId = product.getIdVenditore();
 
-        // Bind the product data to the UI elements in the ViewHolder
+
+        // Use the callback to set user details once loaded
+        new User(sellerId, new User.UserCallback() {
+            List<String> idProd = new ArrayList<>();
+            @Override
+            public void onUserLoaded(User user) {
+                idProd = user.getProductsForSale();
+                holder.userStatus.setText(idProd.size()+" products online");
+                holder.userName.setText(user.getUsername());
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                holder.userName.setText("Unknown Seller");
+                Log.e("ProductAdapter", "Error loading user data: ", e);
+            }
+        });
+
         holder.productName.setText(product.getNome());
-        //rimosso holder.productPrice.setText(product.getPrezzo());
-        //rimosso holder.productImage.setImageResource(product.getImageResId());
-        //rimosso holder.userAvatar.setImageResource(product.getUserAvatarResId());
-        //rimosso holder.userName.setText(product.getUserName());
-        //rimosso holder.userStatus.setText(product.getUserStatus());
+
+        // Set product price
+        if (product.getPrezzo() > 0) {
+            holder.productPrice.setText(String.format("$%.2f", product.getPrezzo())); // Format price as a currency
+        } else {
+            holder.productPrice.setText("Price Unavailable");
+        }
+        holder.userStatus.setText(productList.size()+" products online");
 
         // Set the click listener for the item view
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(product));

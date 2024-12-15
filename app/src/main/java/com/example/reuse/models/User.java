@@ -22,50 +22,51 @@ public class User {
     private String data;
     private String telefono;
     private List<String> productsForSale;
-    private List<String> productsBought;
     private String imageUrl;
-
-
-
-
-
-
-
-
-
-
 
 
     //costruttori
     public User(){}
-    //costruttore prende dati dal database
-    public User(String uid){
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
-        this.username=dbr.child("username").get().toString();
-        this.nome=dbr.child("nome").get().toString();
-        this.cognome=dbr.child("cognome").get().toString();
-        this.telefono=dbr.child("telefono").get().toString();
-        this.cap=Integer.parseInt(dbr.child("cap").get().toString());
-        this.indirizzo=dbr.child("indirizzo").get().toString();
-        this.data=dbr.child("data").get().toString();
-        this.imageUrl=dbr.child("imageUrl").get().toString();
 
-        this.productsForSale=new ArrayList<>();
-        DataSnapshot pfs= dbr.child("productsForSale").get().getResult();
-        for (DataSnapshot snapshot : pfs.getChildren()) {
-            String pid = snapshot.getValue(String.class);
-            if (pid != null) {
-                this.productsForSale.add(pid);
+    //costruttore prende dati dal database
+    public User(String uid, UserCallback callback) {
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+
+        // Fetch data asynchronously
+        dbr.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DataSnapshot snapshot = task.getResult();
+                this.username = snapshot.child("username").getValue(String.class);
+                this.nome = snapshot.child("nome").getValue(String.class);
+                this.cognome = snapshot.child("cognome").getValue(String.class);
+                this.telefono = snapshot.child("telefono").getValue(String.class);
+                this.indirizzo = snapshot.child("indirizzo").getValue(String.class);
+                this.data = snapshot.child("data").getValue(String.class);
+                this.imageUrl = snapshot.child("imageUrl").getValue(String.class);
+
+                // Safely parse "cap" field
+                Long capValue = snapshot.child("cap").getValue(Long.class); // Retrieve as Long
+                this.cap = (capValue != null) ? capValue.intValue() : 0;
+
+                // Populate productsForSale
+                this.productsForSale = new ArrayList<>();
+                for (DataSnapshot productSnapshot : snapshot.child("productsForSale").getChildren()) {
+                    String pid = productSnapshot.getValue(String.class);
+                    if (pid != null) {
+                        this.productsForSale.add(pid);
+                    }
+                }
+
+                // Invoke the callback once data is loaded
+                callback.onUserLoaded(this);
+            } else {
+                callback.onError(task.getException());
             }
-        }
-        this.productsBought=new ArrayList<>();
-        DataSnapshot pfs2= dbr.child("productsBought").get().getResult();
-        for (DataSnapshot snapshot : pfs.getChildren()) {
-            String pid = snapshot.getValue(String.class);
-            if (pid != null) {
-                this.productsBought.add(pid);
-            }
-        }
+        });
+    }
+    public interface UserCallback {
+        void onUserLoaded(User user);
+        void onError(Exception e);
     }
     //costruttore per creazione User
     public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data){
@@ -77,11 +78,11 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale=new ArrayList<>();
-        this.productsBought=new ArrayList<>();
         this.imageUrl="imageUrl";
     }
+
     //costruttore
-    public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale, List<String> productsBought){
+    public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale){
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -90,20 +91,8 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale=productsForSale;
-        this.productsBought=productsBought;
         this.imageUrl=imageUrl;
     }
-
-
-
-
-
-
-
-
-
-    //funzioni varie
-
 
 
     //update per i dati del profilo
@@ -117,6 +106,8 @@ public class User {
         updateImageUrl(uid);
         updateData(uid);
     }
+
+
     //rimuovi oggetto dalla lista di quelli venduti
     public void removeProductForSale(String pid, String uid){
         DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
@@ -146,22 +137,6 @@ public class User {
             }
         });
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     //non vi servono
     private void updateUsername(String uid){
@@ -196,14 +171,6 @@ public class User {
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("imageUrl").setValue(imageUrl);
     }
-
-
-
-
-
-
-
-
 
 
 
