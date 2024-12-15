@@ -17,6 +17,8 @@ public class User {
     private String username;
     private String nome;
     private String cognome;
+    private String stato;
+    private String citta;
     private int cap;
     private String indirizzo;
     private String data;
@@ -43,6 +45,8 @@ public class User {
                 this.indirizzo = snapshot.child("indirizzo").getValue(String.class);
                 this.data = snapshot.child("data").getValue(String.class);
                 this.imageUrl = snapshot.child("imageUrl").getValue(String.class);
+                this.stato=snapshot.child("stato").getValue(String.class);
+                this.citta=snapshot.child("citta").getValue(String.class);
 
                 // Safely parse "cap" field
                 Long capValue = snapshot.child("cap").getValue(Long.class); // Retrieve as Long
@@ -78,6 +82,8 @@ public class User {
                 this.indirizzo = snapshot.child("indirizzo").getValue(String.class);
                 this.data = snapshot.child("data").getValue(String.class);
                 this.imageUrl = snapshot.child("imageUrl").getValue(String.class);
+                this.stato=snapshot.child("stato").getValue(String.class);
+                this.citta=snapshot.child("citta").getValue(String.class);
 
                 // Safely parse "cap" field
                 Long capValue = snapshot.child("cap").getValue(Long.class); // Retrieve as Long
@@ -99,7 +105,7 @@ public class User {
         void onError(Exception e);
     }
     //costruttore per creazione User
-    public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data){
+    public User(String username, String nome, String cognome, String telefono, String stato, String citta, int cap, String indirizzo, String data){
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -108,15 +114,19 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale=new ArrayList<>();
+        this.stato=stato;
+        this.citta=citta;
         this.imageUrl="imageUrl";
     }
 
     //costruttore
-    public User(String username, String nome, String cognome, String telefono, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale){
+    public User(String username, String nome, String cognome, String telefono, String stato, String citta, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale){
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
         this.telefono=telefono;
+        this.stato=stato;
+        this.citta=citta;
         this.cap=cap;
         this.indirizzo=indirizzo;
         this.data=data;
@@ -131,6 +141,8 @@ public class User {
         updateNome(uid);
         updateCognome(uid);
         updateTelefono(uid);
+        updateStato(uid);
+        updateCitta(uid);
         updateCap(uid);
         updateIndirizzo(uid);
         updateImageUrl(uid);
@@ -200,6 +212,14 @@ public class User {
     private void updateImageUrl(String uid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("imageUrl").setValue(imageUrl);
+    }
+    private void updateStato(String uid){
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+        dbr.child("stato").setValue(stato);
+    }
+    private void updateCitta(String uid){
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+        dbr.child("citta").setValue(citta);
     }
 
 
@@ -280,5 +300,21 @@ public class User {
 
     public void setTelefono(String telefono) {
         this.telefono = telefono;
+    }
+
+    public String getStato() {
+        return stato;
+    }
+
+    public void setStato(String stato) {
+        this.stato = stato;
+    }
+
+    public String getCitta() {
+        return citta;
+    }
+
+    public void setCitta(String citta) {
+        this.citta = citta;
     }
 }

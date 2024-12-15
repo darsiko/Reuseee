@@ -114,15 +114,48 @@
             android:background="@drawable/edit_text_background"
             android:padding="5dp"
             android:inputType="textPersonName" />
+        <TextView
+            android:id="@+id/stato_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Stato"
+            android:textColor="#000"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/stato_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Italia"
+            android:background="@drawable/edit_text_background"
+            android:padding="5dp"
+            android:inputType="text" />
+        <TextView
+            android:id="@+id/citta_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Città"
+            android:textColor="#000"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="4dp" />
+        <EditText
+            android:id="@+id/citta_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Roma"
+            android:background="@drawable/edit_text_background"
+            android:padding="5dp"
+            android:inputType="text" />
 
         <!-- Data di nascita Field -->
 
         <!-- CAP -->
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_width="342dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -174,10 +207,12 @@
         </LinearLayout>
 
         <!-- Indirizzo -->
+        <!-- Sign In Button -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="100dp"
+            android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -187,10 +222,10 @@
                     android:id="@+id/indirizzo_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Indirizzo"
-                    android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="4dp"
+                    android:text="Indirizzo"
+                    android:textColor="#000" />
 
                 <EditText
                     android:id="@+id/indirizzo_input"
@@ -201,6 +236,7 @@
                     android:inputType="text"
                     android:padding="5dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -210,10 +246,10 @@
                     android:id="@+id/numero_label"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Numero Telefono"
-                    android:textColor="#000"
                     android:layout_marginTop="10dp"
-                    android:layout_marginBottom="4dp" />
+                    android:layout_marginBottom="4dp"
+                    android:text="Numero Telefono"
+                    android:textColor="#000" />
 
                 <EditText
                     android:id="@+id/numero_input"
@@ -226,7 +262,7 @@
             </LinearLayout>
 
         </LinearLayout>
-        <!-- Sign In Button -->
+
         <Button
             android:id="@+id/sign_up"
             android:layout_width="match_parent"
