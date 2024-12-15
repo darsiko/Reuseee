@@ -12,15 +12,18 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.reuse.R;
 import com.example.reuse.models.Product;
 import com.example.reuse.models.User;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
-
+    private StorageReference storageRef;
     private Context context;
     private List<Product> productList;
     private OnItemClickListener onItemClickListener;
@@ -66,8 +69,20 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         });
 
         holder.productName.setText(product.getNome());
+        storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getImageUrl());
 
-        holder.productImage.setImageURI(product.getImageUri());
+        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+            String imageUrl = uri.toString(); // This is the HTTP URL
+            System.out.println("Download URL: " + imageUrl);
+
+            // Use an image loading library (e.g., Glide or Picasso) to load the image
+            Glide.with(context).load(imageUrl).into(holder.productImage);
+
+        }).addOnFailureListener(e -> {
+            System.out.println("Failed to get download URL: " + e.getMessage());
+            e.printStackTrace();
+        });
+
         // Set product price
         if (product.getPrezzo() > 0) {
             holder.productPrice.setText(String.format("$%.2f", product.getPrezzo())); // Format price as a currency

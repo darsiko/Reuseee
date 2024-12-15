@@ -36,7 +36,6 @@ public class DetailProdScreen extends Fragment {
             String descriz = args.getString("descrizione");
             String venditore = args.getString("venditore");
             String prodottiVenditore = args.getString("status");
-            Log.d("venditore","venditore:"+ venditore);
 
             nomeProdotto.setText(nameProd);
             prezzoProdotto.setText(prezzoProd);
