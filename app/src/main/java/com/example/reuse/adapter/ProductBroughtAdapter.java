@@ -2,6 +2,7 @@ package com.example.reuse.adapter;
 
 
 import android.content.Context;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,7 +71,7 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
         });
 
         holder.productName.setText(product.getNome());
-
+        holder.productImage.setImageURI(product.getImageUri());
         // Set product price
         if (product.getPrezzo() > 0) {
             holder.productPrice.setText(String.format("$%.2f", product.getPrezzo())); // Format price as a currency

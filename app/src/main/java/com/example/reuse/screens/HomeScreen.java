@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 
@@ -74,18 +75,22 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
         // Initialize product list with sample data
         productListRecents = new ArrayList<>();
         productListLastAdded = new ArrayList<>();
-        //rimosso productList.add(new Product(R.drawable.shoes, "Sneakers Verdi", "$100", "Melissa Peters", "5 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));
-        //rimasso productList.add(new Product(R.drawable.shoes, "Sneakers Neri", "$120", "John Doe", "3 products online", R.drawable.user, List.of("costoso", "nuovo", "usabile")));   // Add more products as needed...
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 productListRecents.clear(); // Clear old data
+                productListLastAdded.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Product product = snapshot.getValue(Product.class);
                     if (product != null) {
-                        productListRecents.add(product);
+                        if(product.getPrezzo()%2==0){
+                            productListLastAdded.add(product);
+                        }else{
+                            productListRecents.add(product);
+                        }
                     }
                 }
+                adapter2.notifyDataSetChanged();
                 adapter1.notifyDataSetChanged(); // Notify adapter about the data change
                 // Log.d("ProductBoughtScreen", "Products fetched: " + productList.toString());
             }
@@ -281,37 +286,40 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
 
         // You can now pass the product data to a new fragment or activity, e.g.
         Bundle bundle = new Bundle();
+
         new User(product.getIdVenditore(), new User.UserCallback() {
+
             @Override
             public void onUserLoaded(User user) {
-               bundle.putString("venditore", user.getNome());
-                bundle.putString("status",user.getProductsForSale().size()+" prodotti online");
+                // Populate the bundle with the user and product details
+                bundle.putString("venditore", user.getUsername());
+                bundle.putString("status", user.getProductsForSale().size() + " prodotti online");
+                bundle.putString("nome", product.getNome());
+                bundle.putString("descrizione", product.getDescrizione());
+                bundle.putString("prezzo", String.valueOf(product.getPrezzo()));
+
+                DetailProdScreen productDetailFragment = new DetailProdScreen();
+                productDetailFragment.setArguments(bundle);
+
+                // Perform the fragment transaction
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, productDetailFragment);
+                transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
+                transaction.commit();
             }
 
             @Override
             public void onError(Exception e) {
-                Log.e("ProductAdapter", "Error loading user data: ", e);
+
             }
+
+
+            //rimosso bundle.putString("product_price", product.getPrezzo());
+            //rimosso bundle.putInt("product_image", product.getImageResId()); // For ImageView
+            // Add other product details to the bundle
+
+
         });
-        bundle.putString("nome", product.getNome());
-        bundle.putString("descrizione", product.getDescrizione());
-        bundle.putString("prezzo",""+ product.getPrezzo());
-
-
-
-
-        //rimosso bundle.putString("product_price", product.getPrezzo());
-        //rimosso bundle.putInt("product_image", product.getImageResId()); // For ImageView
-        // Add other product details to the bundle
-
-        DetailProdScreen productDetailFragment = new DetailProdScreen();
-        productDetailFragment.setArguments(bundle);
-
-        // Perform the fragment transaction
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, productDetailFragment);
-        transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
-        transaction.commit();
     }
 
 }

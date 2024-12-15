@@ -67,6 +67,7 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
 
         holder.productName.setText(product.getNome());
 
+        holder.productImage.setImageURI(product.getImageUri());
         // Set product price
         if (product.getPrezzo() > 0) {
             holder.productPrice.setText(String.format("$%.2f", product.getPrezzo())); // Format price as a currency

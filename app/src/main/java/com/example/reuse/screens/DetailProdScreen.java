@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +25,18 @@ public class DetailProdScreen extends Fragment {
         TextView nomeVenditore = view.findViewById(R.id.sellerName);
         TextView descrizione = view.findViewById(R.id.descrizione);
         TextView statusVenditore = view.findViewById(R.id.sellerProductsCount);
-
         LinearLayout linearLayout = view.findViewById(R.id.goBackPreviusPage);
 
         Bundle args = getArguments();
         if (args != null) {
-            String nameProd = args.getString("nome", "");
+
+
+            String nameProd = args.getString("nome");
             String prezzoProd = args.getString("prezzo");
             String descriz = args.getString("descrizione");
             String venditore = args.getString("venditore");
-            String prodottiVenditore = args.getString("statusVenditore");
+            String prodottiVenditore = args.getString("status");
+            Log.d("venditore","venditore:"+ venditore);
 
             nomeProdotto.setText(nameProd);
             prezzoProdotto.setText(prezzoProd);
