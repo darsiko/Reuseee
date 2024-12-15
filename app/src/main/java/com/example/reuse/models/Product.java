@@ -60,7 +60,7 @@ public class Product {
     }
     //metodo per recuperare lo username del venditore
     //agiungi l'oggetto al database
-    public String addProduct(){
+    public void addProduct(Uri imageUri){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products");
         String pid=dbr.push().getKey();
         dbr.child(pid).setValue(this);
@@ -74,6 +74,7 @@ public class Product {
                     productsForSale = (List<String>) task.getResult().getValue();
                 }
                 // Aggiungi il nuovo productId alla lista
+                uploadImage(pid, imageUri);
                 productsForSale.add(pid);
                 // Aggiorna la lista nel database
                 dbr2.setValue(productsForSale)
@@ -88,7 +89,6 @@ public class Product {
                 System.out.println("Error getting data: " + task.getException().getMessage());
             }
         });
-        return pid;
     }
     //modifica dell'oggetto sul database
     public void update(String pid){

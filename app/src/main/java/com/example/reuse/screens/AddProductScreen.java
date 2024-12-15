@@ -73,8 +73,7 @@ public class AddProductScreen extends Fragment {
                     Toast.makeText(getContext(), "Empty credentials", Toast.LENGTH_SHORT).show();
                 }else{
                     Product product=new Product(txt_nome, txt_descrizione, Double.parseDouble(txt_prezzo), txt_baratto);
-                    String pid=product.addProduct();
-                    //product.uploadImage(pid, nome file uri);
+                    //product.addProduct(ur);
                     getParentFragmentManager().popBackStack();
                 }
             }
