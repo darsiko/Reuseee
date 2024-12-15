@@ -47,6 +47,8 @@ public class AccountScreen extends Fragment {
         TextView fieldName = view.findViewById(R.id.fieldName);
         TextView fieldEmail = view.findViewById(R.id.fieldEmail);
         TextView fieldDate = view.findViewById(R.id.birthDate);
+        TextView location = view.findViewById(R.id.location);
+        TextView fieldState = view.findViewById(R.id.fieldState);
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
@@ -68,20 +70,23 @@ public class AccountScreen extends Fragment {
                             String cognome = snapshot.child("cognome").getValue(String.class);
                             String email = auth.getCurrentUser().getEmail();
                             String date = snapshot.child("data").getValue(String.class);
+                            String city = snapshot.child("citta").getValue(String.class);
+                            String state = snapshot.child("stato").getValue(String.class);
 
                             String newName = nome+" "+cognome;
+                            String newLocation = city+", "+state;
 
                             nominativo.setText(newName);
                             fieldName.setText(newName);
                             fieldEmail.setText(email);
                             fieldDate.setText(date);
+                            location.setText(newLocation);
+                            fieldState.setText(state);
                         }
                     }
 
                     @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-
-                    }
+                    public void onCancelled(@NonNull DatabaseError error) {}
                 });
             }
         }

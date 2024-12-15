@@ -81,7 +81,7 @@
             android:id="@+id/name_input"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Amanda"
+            android:hint=""
             android:background="@drawable/edit_text_background"
             android:layout_gravity="start"
             android:layout_marginLeft="30dp"

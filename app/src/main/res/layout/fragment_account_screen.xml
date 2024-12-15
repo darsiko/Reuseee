@@ -62,6 +62,7 @@
 
     </LinearLayout>
     <ImageView
+        android:id="@+id/imageProfile"
         android:layout_width="150dp"
         android:layout_height="150dp"
         android:layout_marginBottom="16dp"
@@ -70,7 +71,7 @@
         />
     <TextView
         android:id="@+id/NomeECognome"
-        android:text="Melissa Henders"
+        android:text="User"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
     <LinearLayout
@@ -82,7 +83,8 @@
             android:layout_height="wrap_content"
             android:src="@drawable/baseline_fmd_good_24"/>
         <TextView
-            android:text=" Lagos, Nigeria"
+            android:id="@+id/location"
+            android:text=" City, Country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
@@ -150,11 +152,12 @@
         android:textStyle="bold"
         android:text="Country/Region"/>
     <TextView
+        android:id="@+id/fieldState"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="30dp"
         android:layout_gravity="start"
-        android:text="Nigeria"/>
+        android:text="Country"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_marginTop="25dp"

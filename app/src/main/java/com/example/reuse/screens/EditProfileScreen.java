@@ -13,6 +13,11 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.reuse.R;
+import com.google.firebase.Firebase;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
@@ -33,7 +38,6 @@ import com.google.firebase.storage.UploadTask;
 
 import androidx.annotation.NonNull;
 
-
 public class EditProfileScreen extends Fragment {
     private ImageView imageView;
     private Button saveButton;
@@ -48,11 +52,8 @@ public class EditProfileScreen extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_profile_screen, container, false);
 
-
-
         imageView = view.findViewById(R.id.image_button_profile);
         saveButton = view.findViewById(R.id.save_edit_profile);
-
 
         firebaseStorage = FirebaseStorage.getInstance();
         storageReference = firebaseStorage.getReference();
@@ -63,8 +64,6 @@ public class EditProfileScreen extends Fragment {
                 chooseImage();
             }
         });
-
-
 
         // Back button functionality
         LinearLayout backtoProfileButton = view.findViewById(R.id.goBackProfile);
