@@ -254,4 +254,8 @@ public class Product {
     public void setImageUri(Uri imageUri) {
         this.imageUrl = imageUri.toString();
     }
+    public String username(){
+        User user=new User(idVenditore);
+        return user.getUsername();
+    }
 }

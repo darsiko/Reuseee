@@ -64,6 +64,36 @@ public class User {
             }
         });
     }
+    public User(String uid) {
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
+
+        // Fetch data asynchronously
+        dbr.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DataSnapshot snapshot = task.getResult();
+                this.username = snapshot.child("username").getValue(String.class);
+                this.nome = snapshot.child("nome").getValue(String.class);
+                this.cognome = snapshot.child("cognome").getValue(String.class);
+                this.telefono = snapshot.child("telefono").getValue(String.class);
+                this.indirizzo = snapshot.child("indirizzo").getValue(String.class);
+                this.data = snapshot.child("data").getValue(String.class);
+                this.imageUrl = snapshot.child("imageUrl").getValue(String.class);
+
+                // Safely parse "cap" field
+                Long capValue = snapshot.child("cap").getValue(Long.class); // Retrieve as Long
+                this.cap = (capValue != null) ? capValue.intValue() : 0;
+
+                // Populate productsForSale
+                this.productsForSale = new ArrayList<>();
+                for (DataSnapshot productSnapshot : snapshot.child("productsForSale").getChildren()) {
+                    String pid = productSnapshot.getValue(String.class);
+                    if (pid != null) {
+                        this.productsForSale.add(pid);
+                    }
+                }
+            }
+        });
+    }
     public interface UserCallback {
         void onUserLoaded(User user);
         void onError(Exception e);

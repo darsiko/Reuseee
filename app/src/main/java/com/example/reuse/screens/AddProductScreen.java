@@ -78,6 +78,14 @@ public class AddProductScreen extends Fragment {
                 }
             }
         });
+
+
+
+
+
+
+
+
         // Initialize the image picker launcher
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
