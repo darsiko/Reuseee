@@ -14,45 +14,41 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:orientation="horizontal">
-
+            android:orientation="horizontal"
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:id="@+id/goBackPreviusPage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
+                android:focusable="true"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                android:focusable="true"
-                android:orientation="horizontal">
-
+                android:layout_marginLeft="0dp"
+                android:layout_width="wrap_content"
+                android:orientation="vertical"
+                android:layout_height="wrap_content">
                 <ImageView
 
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     android:layout_marginLeft="30dp"
-                    android:src="@drawable/baseline_arrow_back_ios_new_24" />
-
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/baseline_arrow_back_ios_new_24"/>
                 <TextView
 
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:text="Indietro "
                     android:layout_gravity="start"
                     android:layout_marginLeft="20dp"
-                    android:text="Indietro " />
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
-
             <TextView
                 android:id="@+id/productName"
-                android:layout_width="200dp"
-                android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginLeft="30dp"
-                android:text="Aggiungi Prodotto"
+                android:layout_width="2000dp"
+                android:layout_marginLeft="50dp"
                 android:textSize="24dp"
-                android:textStyle="bold" />
+                android:textStyle="bold"
+                android:layout_height="wrap_content"
+                android:text="Aggiungi Prodotto"/>
         </LinearLayout>
 
         <LinearLayout
@@ -123,6 +119,7 @@
                 android:id="@+id/descrizione_label"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
                 android:text="Descrizione"
                 android:textColor="#000"
                 android:layout_marginBottom="4dp" />
@@ -131,6 +128,9 @@
                 android:id="@+id/descrizione_input"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="16dp"
                 android:hint="..."
                 android:background="@drawable/edit_text_background"
                 android:padding="12dp"
@@ -146,9 +146,11 @@
                 android:textStyle="bold" />
 
             <ImageButton
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
                 android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:id="@+id/productImage"
                 android:layout_marginBottom="16dp"
                 android:src="@drawable/baseline_image_24" />
 

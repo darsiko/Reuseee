@@ -6,6 +6,7 @@ import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import android.app.DatePickerDialog;
@@ -20,12 +21,22 @@ import com.example.reuse.R;
 import com.example.reuse.models.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.auth.FirebaseUser;
 import android.util.Log;
+
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import android.net.Uri;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import java.util.UUID;
+import com.bumptech.glide.Glide;
+
 
 public class RegisterActivity extends AppCompatActivity {
     Button signUp;
@@ -35,10 +46,17 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText password;
     private EditText nome;
     private EditText cognome;
+    private EditText telefono;
     private EditText username;
     private EditText cap;
     private EditText indirizzo;
+    private String imageUrl;
+
     private FirebaseAuth auth;
+
+    private static final int PICK_IMAGE_REQUEST = 1;
+    private Uri imageUri;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +71,14 @@ public class RegisterActivity extends AppCompatActivity {
         password=findViewById(R.id.password_input);
         nome=findViewById(R.id.nome_input);
         cognome=findViewById(R.id.cognome_input);
+        telefono=findViewById(R.id.numero_input);
         indirizzo=findViewById(R.id.indirizzo_input);
         cap=findViewById(R.id.cap_input);
         EditText dateEditText = findViewById(R.id.dateEditText);
         auth= FirebaseAuth.getInstance();
+
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
 
         signUp.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -67,16 +89,18 @@ public class RegisterActivity extends AppCompatActivity {
                 String txt_username=username.getText().toString();
                 String txt_nome=nome.getText().toString();
                 String txt_cognome=cognome.getText().toString();
+                String txt_telefono=telefono.getText().toString();
                 String txt_indirizzo=indirizzo.getText().toString();
                 Integer txt_cap=Integer.parseInt(cap.getText().toString());
                 String txt_date=dateEditText.getText().toString();
+
 
                 if(TextUtils.isEmpty(txt_email) || TextUtils.isEmpty(txt_date) || TextUtils.isEmpty(txt_indirizzo) || TextUtils.isEmpty(txt_cognome) || TextUtils.isEmpty(txt_password) || TextUtils.isEmpty(txt_username) || TextUtils.isEmpty(txt_nome)){
                     Toast.makeText(RegisterActivity.this, "Empty credentials", Toast.LENGTH_SHORT).show();
                 } else if(txt_password.length()<6){
                     Toast.makeText(RegisterActivity.this, "Password too short", Toast.LENGTH_SHORT).show();
                 } else {
-                    registerUser(txt_email, txt_password, txt_username, txt_nome, txt_cognome, txt_cap, txt_indirizzo, txt_date);
+                    registerUser(txt_email, txt_password, txt_username, txt_nome, txt_cognome, txt_telefono, txt_cap, txt_indirizzo, txt_date, String.valueOf(R.drawable.user));
                 }
             }
         });
@@ -110,17 +134,19 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    private void registerUser(String email, String password, String username, String nome, String cognome, Integer cap, String indirizzo, String date) {
+    private void registerUser(String email, String password, String username, String nome, String cognome, String telefono, Integer cap, String indirizzo, String date, String imageUrl) {
         auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener(RegisterActivity.this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(RegisterActivity.this, "Register user successful", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(RegisterActivity.this, HomePage.class));
+
                     FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
                     String uid = currentUser.getUid();
+
                     DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Users");
-                    User user=new User(username, nome, cognome, cap, indirizzo, date);
+                    User user=new User(username, nome, cognome, telefono, cap, indirizzo, date);
                     databaseReference.child(uid).setValue(user);
                 }else{
                     Toast.makeText(RegisterActivity.this,"Register failed", Toast.LENGTH_SHORT).show();
@@ -128,4 +154,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
     }
+
+
 }

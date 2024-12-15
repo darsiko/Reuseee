@@ -14,9 +14,6 @@ import com.example.reuse.R;
 
 public class DetailProdScreen extends Fragment {
 
-
-
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

@@ -1,5 +1,7 @@
 package com.example.reuse.screens;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,6 +13,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.example.reuse.R;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 
 import android.app.DatePickerDialog;
@@ -20,13 +24,47 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.UUID;
+
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+
+import androidx.annotation.NonNull;
+
 
 public class EditProfileScreen extends Fragment {
+    private ImageView imageView;
+    private Button saveButton;
+    private Uri imageUri;
+    private final int PICK_IMAGE_REQUEST = 71;
+
+    private FirebaseStorage firebaseStorage;
+    private StorageReference storageReference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_profile_screen, container, false);
+
+
+
+        imageView = view.findViewById(R.id.image_button_profile);
+        saveButton = view.findViewById(R.id.save_edit_profile);
+
+
+        firebaseStorage = FirebaseStorage.getInstance();
+        storageReference = firebaseStorage.getReference();
+
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chooseImage();
+            }
+        });
+
+
 
         // Back button functionality
         LinearLayout backtoProfileButton = view.findViewById(R.id.goBackProfile);
@@ -41,7 +79,6 @@ public class EditProfileScreen extends Fragment {
         });
 
         // Save button functionality
-        Button saveButton = view.findViewById(R.id.save_edit_profile);
         saveButton.setOnClickListener(v -> {
             // Collect and save data from EditText fields
             saveProfileData(view);
@@ -83,5 +120,14 @@ public class EditProfileScreen extends Fragment {
         // Handle saving the data (e.g., store in SharedPreferences, send to server, etc.)
         // Example: show a toast or save data
         Toast.makeText(getContext(), "Profile saved", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void chooseImage() {
+        Intent intent = new Intent();
+        intent.setType("image/*");
+        intent.setAction(Intent.ACTION_GET_CONTENT); // Seleziona contenuto
+        startActivityForResult(Intent.createChooser(intent, "Seleziona immagine"), PICK_IMAGE_REQUEST);
+        imageUri = intent.getData();
     }
 }

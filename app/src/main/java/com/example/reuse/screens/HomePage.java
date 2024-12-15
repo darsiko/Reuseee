@@ -22,7 +22,7 @@ public class HomePage extends AppCompatActivity {
         fragmentMap.put(R.id.nav_home, new HomeScreen());
         fragmentMap.put(R.id.nav_chat, new ChatListScreen());
         fragmentMap.put(R.id.nav_tutorial, new TutorialListScreen());
-        fragmentMap.put(R.id.nav_market, new MarketScreen());
+        //fragmentMap.put(R.id.nav_market, new MarketScreen());
         fragmentMap.put(R.id.nav_account, new AccountScreen());
         // Load default fragment
         loadFragment(new HomeScreen());
