@@ -103,7 +103,7 @@ public class Product {
 
 
 
-    private void uploadImage(String pid, Uri imageUri) {
+    public void uploadImage(String pid, Uri imageUri) {
         DatabaseReference databaseReference;
         StorageReference storageReference = FirebaseStorage.getInstance().getReference("ProductImages");
 
