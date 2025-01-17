@@ -43,6 +43,11 @@ public class AdapterTutorial extends RecyclerView.Adapter<AdapterTutorial.ViewHo
         holder.resImageId.setImageResource(tutorial.getImageResId());
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(tutorial));
     }
+    public void updateList(List<Tutorial> newTutorialList) {
+        tutorialList = newTutorialList;
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {

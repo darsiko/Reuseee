@@ -8,9 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.reuse.R;
 
 
@@ -22,6 +24,7 @@ public class DetailProdScreen extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_prod_screen, container, false);
         TextView nomeProdotto = view.findViewById(R.id.productName);
         TextView prezzoProdotto = view.findViewById(R.id.productPrice);
+        ImageView imageProd = view.findViewById(R.id.productImage);
         TextView nomeVenditore = view.findViewById(R.id.sellerName);
         TextView descrizione = view.findViewById(R.id.descrizione);
         TextView statusVenditore = view.findViewById(R.id.sellerProductsCount);
@@ -35,11 +38,13 @@ public class DetailProdScreen extends Fragment {
             String prezzoProd = args.getString("prezzo");
             String descriz = args.getString("descrizione");
             String venditore = args.getString("venditore");
+            String imageProdUrl = args.getString("imageProd");
             String prodottiVenditore = args.getString("status");
 
             nomeProdotto.setText(nameProd);
             prezzoProdotto.setText(prezzoProd);
             nomeVenditore.setText(venditore);
+            Glide.with(requireContext()).load(imageProdUrl).into(imageProd);
             statusVenditore.setText(prodottiVenditore);
             descrizione.setText(descriz);
         }

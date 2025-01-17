@@ -30,9 +30,11 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.reuse.R;
 import com.example.reuse.adapter.ProductAdapter;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.Tutorial;
 import com.example.reuse.models.User;
 import com.google.android.material.slider.RangeSlider;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +42,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,6 +79,23 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
         // Initialize product list with sample data
         productListRecents = new ArrayList<>();
         productListLastAdded = new ArrayList<>();
+
+
+        EditText searchInput = rootView.findViewById(R.id.editTextText);
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (s.length() > 2) { // Cerca solo se ci sono almeno 3 caratteri
+                    searchProducts(s.toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -277,49 +298,79 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
 
         return rootView;  // Return the view you inflated
     }
+    private void searchProducts(String query) {
+        List<Product> filteredProducts = new ArrayList<>();
+        for (Product prod : productListLastAdded) {
+            if (prod.getNome().toLowerCase().contains(query.toLowerCase())) {
+                filteredProducts.add(prod);
+            }
+        }
 
+        // Passa i risultati al nuovo frammento
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList("filteredProducts", new ArrayList<>(filteredProducts));
+        SearchResultFragment searchResultsFragment = new SearchResultFragment();
+        searchResultsFragment.setArguments(bundle);
+
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, searchResultsFragment);
+        transaction.addToBackStack(null); // Per tornare indietro
+        transaction.commit();
+    }
     @Override
     public void onItemClick(Product product) {
-        // Handle the product click here
-        // For example, navigate to the product details page or display a Toast
-        Toast.makeText(getContext(), "Clicked on: " + product.getNome(), Toast.LENGTH_SHORT).show();
 
-        // You can now pass the product data to a new fragment or activity, e.g.
         Bundle bundle = new Bundle();
 
+// Fetch user details asynchronously
         new User(product.getIdVenditore(), new User.UserCallback() {
-
             @Override
             public void onUserLoaded(User user) {
-                // Populate the bundle with the user and product details
+                // Populate the bundle with user and product details
                 bundle.putString("venditore", user.getUsername());
                 bundle.putString("status", user.getProductsForSale().size() + " prodotti online");
                 bundle.putString("nome", product.getNome());
                 bundle.putString("descrizione", product.getDescrizione());
                 bundle.putString("prezzo", String.valueOf(product.getPrezzo()));
 
-                DetailProdScreen productDetailFragment = new DetailProdScreen();
-                productDetailFragment.setArguments(bundle);
+                // Get the image URL from Firebase Storage
+                StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getImageUrl());
+                storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    String imageUrl = uri.toString(); // This is the HTTP URL
+                    System.out.println("Download URL: " + imageUrl);
+                    bundle.putString("imageProd", imageUrl);
 
-                // Perform the fragment transaction
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, productDetailFragment);
-                transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
-                transaction.commit();
+                    // Navigate to the detail fragment with the populated bundle
+                    navigateToDetailFragment(bundle);
+                }).addOnFailureListener(e -> {
+                    System.out.println("Failed to get download URL: " + e.getMessage());
+                    e.printStackTrace();
+
+                    // Fallback in case of failure to get the image URL
+                    bundle.putString("imageProd", "default_placeholder_url");
+                    navigateToDetailFragment(bundle);
+                });
             }
 
             @Override
             public void onError(Exception e) {
-
+                // Handle any errors during user data loading
+                System.out.println("Error loading user data: " + e.getMessage());
+                e.printStackTrace();
             }
-
-
-            //rimosso bundle.putString("product_price", product.getPrezzo());
-            //rimosso bundle.putInt("product_image", product.getImageResId()); // For ImageView
-            // Add other product details to the bundle
-
-
         });
+
+    }
+    // Navigate to the detail fragment
+    private void navigateToDetailFragment(Bundle bundle) {
+        DetailProdScreen productDetailFragment = new DetailProdScreen();
+        productDetailFragment.setArguments(bundle);
+
+        // Perform the fragment transaction
+        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, productDetailFragment);
+        transaction.addToBackStack(null); // Add to back stack if you want to go back to this fragment
+        transaction.commit();
     }
 
 }
