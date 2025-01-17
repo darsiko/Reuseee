@@ -110,6 +110,7 @@
                     android:valueTo="1000"
                     app:values="@array/initial_values"
                     android:stepSize="1"
+                    app:labelBehavior="gone"
                     />
             </LinearLayout>
 
