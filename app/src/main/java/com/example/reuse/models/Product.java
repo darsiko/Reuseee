@@ -1,6 +1,10 @@
 package com.example.reuse.models;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,7 +18,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Product {
+public class Product implements Parcelable {
     private String idVenditore;
     private String nome;
     private String descrizione;
@@ -59,6 +63,29 @@ public class Product {
         this.imageUrl=dbr.child("imageUrl").get().toString();
         this.idOrdine=dbr.child("idOrdine").get().toString();
     }
+
+    protected Product(Parcel in) {
+        idVenditore = in.readString();
+        nome = in.readString();
+        descrizione = in.readString();
+        prezzo = in.readDouble();
+        baratto = in.readByte() != 0;
+        imageUrl = in.readString();
+        idOrdine = in.readString();
+    }
+
+    public static final Creator<Product> CREATOR = new Creator<Product>() {
+        @Override
+        public Product createFromParcel(Parcel in) {
+            return new Product(in);
+        }
+
+        @Override
+        public Product[] newArray(int size) {
+            return new Product[size];
+        }
+    };
+
     //metodo per recuperare lo username del venditore
     //agiungi l'oggetto al database
     public void addProduct(Uri imageUri){
@@ -282,5 +309,22 @@ public class Product {
     public String username(){
         User user=new User(idVenditore);
         return user.getUsername();
+    }
+
+    // Metodi per Parcelable
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel parcel, int flags) {
+        parcel.writeString(idVenditore);
+        parcel.writeString(nome);
+        parcel.writeString(descrizione);
+        parcel.writeDouble(prezzo);
+        parcel.writeByte((byte) (baratto ? 1 : 0));
+        parcel.writeString(imageUrl);
+        parcel.writeString(idOrdine);
     }
 }

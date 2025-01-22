@@ -127,7 +127,7 @@
             <TextView
                 android:id="@+id/descrizione"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"></TextView>
+                android:layout_height="50dp"></TextView>
         </LinearLayout>
 
         <!-- Seller Info -->

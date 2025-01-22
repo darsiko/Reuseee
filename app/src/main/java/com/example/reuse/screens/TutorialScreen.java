@@ -1,5 +1,7 @@
 package com.example.reuse.screens;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -46,12 +48,21 @@ public class TutorialScreen extends Fragment {
             String author = args.getString("author");
             String descriptionTutorial = args.getString("descriptionTutorial");
             Integer avatarTutorial = args.getInt("avatarTutorial");
+            String urlTutorial = args.getString("url");
 
             tutorialImagee.setImageResource(imageTutorial);
             nomeTutorial.setText(nameTutorial);
             avatarImage.setImageResource(avatarTutorial);
             description.setText(descriptionTutorial);
             authorTutorial.setText(author);
+
+            tutorialImagee.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(urlTutorial));
+                    startActivity(intent);
+                }
+            });
         }
 
         return view;
