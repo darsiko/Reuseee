@@ -20,13 +20,17 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class ReauthenticateDialog extends DialogFragment {
 
-    private EditText emailAuth;
+    private String pw;
     private EditText passwordAuth;
     private FirebaseAuth auth;
     private FirebaseUser user;
+    public ReauthenticateDialog(String pass){
+        pw = pass;
+    }
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.CustomDialog);
         auth = FirebaseAuth.getInstance();
         user = auth.getCurrentUser();
         if(user==null) return super.onCreateDialog(savedInstanceState);
@@ -37,7 +41,6 @@ public class ReauthenticateDialog extends DialogFragment {
         builder.setView(view);
 
         passwordAuth = view.findViewById(R.id.passwordAuth);
-        emailAuth = view.findViewById(R.id.emailAuth);
         Button submit = view.findViewById(R.id.authButton);
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -52,8 +55,16 @@ public class ReauthenticateDialog extends DialogFragment {
     private void reauthenticateUser(String password){
         AuthCredential credit = EmailAuthProvider.getCredential(user.getEmail(), password);
         user.reauthenticate(credit).addOnCompleteListener(task->{
-            if(task.isSuccessful()) Toast.makeText(getActivity(), "Login succerfull", Toast.LENGTH_SHORT).show();
+            if(task.isSuccessful()){
+                updateEmail();
+                Toast.makeText(getActivity(), "Login succerfull", Toast.LENGTH_SHORT).show();
+                dismiss();
+            }
             else Toast.makeText(getActivity(), "Re-authentication failed.", Toast.LENGTH_SHORT).show();
         });
+    }
+
+    private void updateEmail(){
+        user.updatePassword(pw);
     }
 }

@@ -87,7 +87,6 @@ public class EditProfileScreen extends Fragment {
         EditText indirizzoInput = view.findViewById(R.id.indirizzo_input);
         EditText telefonoInput = view.findViewById(R.id.telefono_input);
         EditText dateEditText = view.findViewById(R.id.dateEditText);
-        EditText emailInput = view.findViewById(R.id.email_input);
 
         dateEditText.setOnClickListener( x -> {
             final Calendar calendar = Calendar.getInstance();
@@ -130,7 +129,6 @@ public class EditProfileScreen extends Fragment {
                         String indirizzo = snapshot.child("indirizzo").getValue(String.class);
                         String telefono = snapshot.child("telefono").getValue(String.class);
                         String date = snapshot.child("data").getValue(String.class);
-                        String email = authUser.getEmail();
 
                         nomeInput.setHint(nome);
                         cognomeInput.setHint(cognome);
@@ -141,7 +139,6 @@ public class EditProfileScreen extends Fragment {
                         indirizzoInput.setHint(indirizzo);
                         telefonoInput.setHint(telefono);
                         dateEditText.setHint(date);
-                        emailInput.setHint(email);
                     }
                 }
 
@@ -166,9 +163,7 @@ public class EditProfileScreen extends Fragment {
         EditText indirizzoInput = view.findViewById(R.id.indirizzo_input);
         EditText telefonoInput = view.findViewById(R.id.telefono_input);
 
-        EditText emailInput = view.findViewById(R.id.email_input);
         EditText passwordInput = view.findViewById(R.id.password_input);
-        String email = emailInput.getText().toString();
         String password = passwordInput.getText().toString();
 
         // Get data from inputs
@@ -198,12 +193,9 @@ public class EditProfileScreen extends Fragment {
             if(!indirrizo.isEmpty()) updates.put("indirizzo", indirrizo);
             if(!telefono.isEmpty()) updates.put("telefono", telefono);
             if(!Newdate.isEmpty()) updates.put("data", Newdate);
-            if(!email.isEmpty()){
-                authUser.updateEmail(email);
-                //QUI
-            }
             if(!password.isEmpty()){
-                authUser.updatePassword(password);
+                ReauthenticateDialog dialog = new ReauthenticateDialog(password);
+                dialog.show(getChildFragmentManager(), "ReAuthenticateDialog");
             }
             dbRef.updateChildren(updates);
         }
