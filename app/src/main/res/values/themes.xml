@@ -5,6 +5,7 @@
         <item name="colorSecondary">@color/secondary</item>
         <item name="android:colorBackground">@color/light</item>
         <item name="android:textColorPrimary">@color/dark</item>
+
     </style>
 
     <style name="AppTheme.NoActionBar" parent="Theme.MaterialComponents.DayNight.NoActionBar">

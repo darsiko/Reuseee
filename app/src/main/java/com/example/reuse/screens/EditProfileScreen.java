@@ -56,7 +56,6 @@ public class EditProfileScreen extends Fragment {
     private Uri imageUri;
     private final int PICK_IMAGE_REQUEST = 71;
     FirebaseAuth auth = FirebaseAuth.getInstance();
-    FirebaseUser authUser = auth.getCurrentUser();
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

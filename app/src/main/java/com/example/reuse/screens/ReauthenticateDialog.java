@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -40,6 +41,8 @@ public class ReauthenticateDialog extends DialogFragment {
         View view = inflater.inflate(R.layout.dialog_reauthenticate, null);
         builder.setView(view);
 
+        ImageView closeButton = view.findViewById(R.id.CloseButton);
+
         passwordAuth = view.findViewById(R.id.passwordAuth);
         Button submit = view.findViewById(R.id.authButton);
         submit.setOnClickListener(new View.OnClickListener() {
@@ -49,6 +52,8 @@ public class ReauthenticateDialog extends DialogFragment {
                 reauthenticateUser(pw);
             }
         });
+
+        closeButton.setOnClickListener(v -> dismiss());
         return builder.create();
     }
 
