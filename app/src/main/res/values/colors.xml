@@ -4,4 +4,6 @@
     <color name="light">#D6EFD8</color>
     <color name="primary">#80AF81</color>
     <color name="secondary">#508D4E</color>
+    <color name="RegBackLight">#F5F5F5</color>
+    <color name="RegBackDark">#414d44</color>
 </resources>

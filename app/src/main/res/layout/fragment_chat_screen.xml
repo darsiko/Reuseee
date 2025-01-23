@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.ChatScreen">
+    tools:context=".screens.ChatScreen"
+    android:theme="@style/NoBackText">
 
     <!-- Chat Messages (RecyclerView) -->
 
@@ -100,7 +101,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:orientation="horizontal"
-        android:background="@color/primary"
+        android:theme="@style/RegActivityBack"
         android:padding="8dp"
         android:gravity="center_vertical"
         android:layout_gravity="bottom">

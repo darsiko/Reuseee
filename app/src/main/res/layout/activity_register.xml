@@ -3,8 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
-    android:padding="16dp">
+    android:padding="16dp"
+    android:theme="@style/RegActivityBack"
+    >
 
     <!-- Logo -->
     <!-- Form Container -->
@@ -17,7 +18,7 @@
         android:orientation="vertical"
         android:layout_margin="5dp"
         android:padding="16dp"
-        android:background="#FFFFFF"
+        android:theme="@style/RegActivityBack"
         android:layout_marginHorizontal="16dp"
         android:elevation="2dp"
         android:clipToPadding="false">
@@ -27,8 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Username"
-            android:textColor="#000"
-            android:layout_marginBottom="4dp" />
+            android:layout_marginBottom="4dp"
+            android:theme="@style/NoBackText"/>
 
         <EditText
             android:id="@+id/username_input"
@@ -45,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Email"
-            android:textColor="#000"
+            android:theme="@style/NoBackText"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
 
@@ -64,7 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Password"
-            android:textColor="#000"
+            android:theme="@style/NoBackText"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
 
@@ -83,7 +84,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nome"
-            android:textColor="#000"
+            android:theme="@style/NoBackText"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
 
@@ -102,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cognome"
-            android:textColor="#000"
+            android:theme="@style/NoBackText"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
 
@@ -119,7 +120,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Stato"
-            android:textColor="#000"
+            android:theme="@style/NoBackText"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
         <EditText
@@ -135,7 +136,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Città"
-            android:textColor="#000"
+            android:theme="@style/NoBackText"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="4dp" />
         <EditText
@@ -168,13 +169,14 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="4dp"
                     android:text="Data di nascita"
-                    android:textColor="#000" />
+                    android:theme="@style/NoBackText" />
 
                 <EditText
                     android:id="@+id/dateEditText"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:focusable="false"
+                    android:theme="@style/NoBackText"
                     android:hint="Seleziona una data"
                     android:inputType="none" />
 
@@ -192,7 +194,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="4dp"
                     android:text="CAP"
-                    android:textColor="#000" />
+                    android:theme="@style/NoBackText" />
 
                 <EditText
                     android:id="@+id/cap_input"
@@ -225,7 +227,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="4dp"
                     android:text="Indirizzo"
-                    android:textColor="#000" />
+                    android:theme="@style/NoBackText" />
 
                 <EditText
                     android:id="@+id/indirizzo_input"
@@ -249,7 +251,7 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginBottom="4dp"
                     android:text="Numero Telefono"
-                    android:textColor="#000" />
+                    android:theme="@style/NoBackText" />
 
                 <EditText
                     android:id="@+id/numero_input"

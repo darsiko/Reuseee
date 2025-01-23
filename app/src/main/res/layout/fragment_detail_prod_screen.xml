@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.DetailProdScreen">
+    tools:context=".screens.DetailProdScreen"
+    android:theme="@style/NoBackText">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,10 +53,12 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/search_card"
             android:layout_width="match_parent"
+            android:theme="@style/RegActivityBack"
             android:layout_height="wrap_content"
             android:layout_margin="16dp">
 
             <LinearLayout
+                android:theme="@style/DarkSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -72,8 +75,7 @@
                     android:drawablePadding="8dp"
                     android:background="@android:color/transparent"
                     android:textSize="16sp"
-                    android:padding="12dp"
-                    android:textColor="@color/secondary" />
+                    android:padding="12dp"/>
 
                 <!-- Menu Button -->
                 <ImageButton
@@ -111,7 +113,6 @@
                 android:layout_height="wrap_content"
                 android:text="100"
                 android:textAlignment="textStart"
-                android:textColor="@android:color/black"
                 android:textSize="30sp"
                 android:textStyle="bold" />
             <TextView
@@ -159,8 +160,7 @@
                     android:layout_height="wrap_content"
                     android:text="Melissa Peters"
                     android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:textColor="@android:color/black" />
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/sellerProductsCount"
@@ -218,7 +218,6 @@
             android:layout_margin="12dp"
             android:text="Tags:"
             android:layout_marginTop="16dp"
-            android:textColor="@android:color/black"
             android:textStyle="bold" />
 
         <com.google.android.flexbox.FlexboxLayout
@@ -228,27 +227,22 @@
             android:layout_marginTop="8dp">
 
             <TextView
-                android:background="@drawable/tag_background"
                 android:id="@+id/tag1"
-
                 style="@style/TagStyle"
                 android:text="Comode" />
 
             <TextView
                 android:id="@+id/tag2"
-                android:background="@drawable/tag_background"
                 style="@style/TagStyle"
                 android:text="Tag" />
 
             <TextView
                 android:id="@+id/tag3"
-                android:background="@drawable/tag_background"
                 style="@style/TagStyle"
                 android:text="Verdi" />
 
             <TextView
                 android:id="@+id/tag4"
-                android:background="@drawable/tag_background"
                 style="@style/TagStyle"
                 android:text="Usato" />
         </com.google.android.flexbox.FlexboxLayout>

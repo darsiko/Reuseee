@@ -3,18 +3,19 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F5F5"
-    android:padding="16dp">
+    android:theme="@style/RegActivityBack"
+    android:padding="16dp"
+    >
 
-    <!-- Logo -->
-<TextView
-    android:layout_width="wrap_content"
-    android:text="Re Use"
-    android:textSize="38dp"
-    android:fontFamily="sans-serif-smallcaps"
-    android:layout_marginTop="80dp"
-    android:layout_centerHorizontal="true"
-    android:layout_height="wrap_content"></TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="Re Use"
+        android:textSize="38dp"
+        android:fontFamily="sans-serif-smallcaps"
+        android:layout_marginTop="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:theme="@style/NoBackText"/>
     <!-- Form Container -->
 
     <LinearLayout
@@ -36,6 +37,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Email"
+            android:background="#FFFFFF"
             android:textColor="#000"
             android:layout_marginBottom="4dp" />
 
@@ -54,6 +56,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Password"
+            android:background="#FFFFFF"
             android:textColor="#000"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="4dp" />
@@ -105,8 +108,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="16dp"
         android:text="Forgot password?"
-
-        android:textColor="#000"
+        android:theme="@style/NoBackText"
         android:textSize="14sp" />
 
     <!-- Guest Login -->
@@ -118,6 +120,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="8dp"
         android:text="Accedi come ospite"
+        android:theme="@style/NoBackText"
         android:textSize="14sp"
         android:textStyle="bold" />
 

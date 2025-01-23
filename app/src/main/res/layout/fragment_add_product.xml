@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".screens.AddProductScreen">
+    tools:context=".screens.AddProductScreen"
+    android:theme="@style/NoBackText">
 
 
     <LinearLayout
@@ -121,7 +122,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="30dp"
                 android:text="Descrizione"
-                android:textColor="#000"
                 android:layout_marginBottom="4dp" />
 
             <EditText
