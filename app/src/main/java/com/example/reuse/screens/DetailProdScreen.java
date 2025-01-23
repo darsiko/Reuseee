@@ -1,10 +1,10 @@
 package com.example.reuse.screens;
 
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,20 +15,26 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.example.reuse.R;
 
-
 public class DetailProdScreen extends Fragment {
+
+    private TextView nomeProdotto, prezzoProdotto, nomeVenditore, descrizione, statusVenditore;
+    private ImageView imageProd;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_prod_screen, container, false);
-        TextView nomeProdotto = view.findViewById(R.id.productName);
-        TextView prezzoProdotto = view.findViewById(R.id.productPrice);
-        ImageView imageProd = view.findViewById(R.id.productImage);
-        TextView nomeVenditore = view.findViewById(R.id.sellerName);
-        TextView descrizione = view.findViewById(R.id.descrizione);
-        TextView statusVenditore = view.findViewById(R.id.sellerProductsCount);
+
+        // Initialize UI components
+        nomeProdotto = view.findViewById(R.id.productName);
+        prezzoProdotto = view.findViewById(R.id.productPrice);
+        imageProd = view.findViewById(R.id.productImage);
+        nomeVenditore = view.findViewById(R.id.sellerName);
+        descrizione = view.findViewById(R.id.descrizione);
+        statusVenditore = view.findViewById(R.id.sellerProductsCount);
         LinearLayout linearLayout = view.findViewById(R.id.goBackPreviusPage);
+
+        // Restore data from bundle
 
         Bundle args = getArguments();
         if (args != null) {
@@ -50,13 +56,8 @@ public class DetailProdScreen extends Fragment {
         }
 
 
-        linearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getParentFragmentManager().popBackStack();
-            }
-        });
-        // Inflate the layout for this fragment
+        linearLayout.setOnClickListener(view1 -> getParentFragmentManager().popBackStack());
+
         return view;
     }
 }
