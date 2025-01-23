@@ -35,14 +35,26 @@ public class DetailProdScreen extends Fragment {
         LinearLayout linearLayout = view.findViewById(R.id.goBackPreviusPage);
 
         // Restore data from bundle
-        if (savedInstanceState == null && getArguments() != null) {
-            nomeProdotto.setText(getArguments().getString("nome"));
-            prezzoProdotto.setText(String.valueOf(getArguments().getDouble("prezzo")));
-            nomeVenditore.setText(getArguments().getString("venditore"));
-            imageProd.setImageURI(Uri.parse(getArguments().getString("immagine")));
-            statusVenditore.setText(getArguments().getString("status"));
-            descrizione.setText(getArguments().getString("descrizione"));
+
+        Bundle args = getArguments();
+        if (args != null) {
+
+
+            String nameProd = args.getString("nome");
+            String prezzoProd = args.getString("prezzo");
+            String descriz = args.getString("descrizione");
+            String venditore = args.getString("venditore");
+            String imageProdUrl = args.getString("imageProd");
+            String prodottiVenditore = args.getString("status");
+
+            nomeProdotto.setText(nameProd);
+            prezzoProdotto.setText(prezzoProd);
+            nomeVenditore.setText(venditore);
+            Glide.with(requireContext()).load(imageProdUrl).into(imageProd);
+            statusVenditore.setText(prodottiVenditore);
+            descrizione.setText(descriz);
         }
+
 
         linearLayout.setOnClickListener(view1 -> getParentFragmentManager().popBackStack());
 

@@ -31,6 +31,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -249,29 +251,51 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
         });
     }
 
-    @Override
-    public void onItemClick(Product product) {
-        Bundle bundle = new Bundle();
-        new User(product.getIdVenditore(), new User.UserCallback() {
-            @Override
-            public void onUserLoaded(User user) {
-                bundle.putString("venditore", user.getUsername());
-                bundle.putString("nome", product.getNome());
-                bundle.putString("descrizione", product.getDescrizione());
-                bundle.putString("immagine", product.getImageUrl());
-                bundle.putDouble("prezzo", product.getPrezzo());
-                bundle.putBoolean("baratto", product.isBaratto());
-               // bundle.putString("status", user.getProductsCount());  // Assuming this method provides product count
+                @Override
+                public void onItemClick (Product product){
 
-                navigateToDetailFragment(bundle);
-            }
+                    Bundle bundle = new Bundle();
 
-            @Override
-            public void onError(Exception e) {
-                Log.e("HomeScreen", "Error fetching user: " + e.getMessage());
-            }
-        });
-    }
+// Fetch user details asynchronously
+                    new User(product.getIdVenditore(), new User.UserCallback() {
+                        @Override
+                        public void onUserLoaded(User user) {
+                            // Populate the bundle with user and product details
+                            bundle.putString("venditore", user.getUsername());
+                            bundle.putString("status", user.getProductsForSale().size() + " prodotti online");
+                            bundle.putString("nome", product.getNome());
+                            bundle.putString("descrizione", product.getDescrizione());
+                            bundle.putString("prezzo", String.valueOf(product.getPrezzo()));
+
+                            // Get the image URL from Firebase Storage
+                            StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getImageUrl());
+                            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                                String imageUrl = uri.toString(); // This is the HTTP URL
+                                System.out.println("Download URL: " + imageUrl);
+                                bundle.putString("imageProd", imageUrl);
+
+                                // Navigate to the detail fragment with the populated bundle
+                                navigateToDetailFragment(bundle);
+                            }).addOnFailureListener(e -> {
+                                System.out.println("Failed to get download URL: " + e.getMessage());
+                                e.printStackTrace();
+
+                                // Fallback in case of failure to get the image URL
+                                bundle.putString("imageProd", "default_placeholder_url");
+                                navigateToDetailFragment(bundle);
+                            });
+                        }
+
+                        @Override
+                        public void onError(Exception e) {
+                            // Handle any errors during user data loading
+                            System.out.println("Error loading user data: " + e.getMessage());
+                            e.printStackTrace();
+                        }
+                    });
+
+                }
+
 
     private void navigateToDetailFragment(Bundle bundle) {
         DetailProdScreen detailFragment = new DetailProdScreen();
