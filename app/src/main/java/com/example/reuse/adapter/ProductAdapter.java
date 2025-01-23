@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.reuse.R;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.Tutorial;
 import com.example.reuse.models.User;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -41,6 +42,10 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         // Inflate the layout for each item in the RecyclerView
         View view = LayoutInflater.from(context).inflate(R.layout.cardview_layout, parent, false);
         return new ProductViewHolder(view);
+    }
+    public void updateList(List<Product> newProductList) {
+        productList = newProductList;
+        notifyDataSetChanged();
     }
 
     @Override
