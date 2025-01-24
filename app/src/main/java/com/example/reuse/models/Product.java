@@ -3,6 +3,7 @@ package com.example.reuse.models;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -163,16 +164,15 @@ public class Product implements Parcelable {
 
     public void uploadImage(String pid, Uri imageUri) {
         DatabaseReference databaseReference;
+        StorageReference ref = FirebaseStorage.getInstance().getReference().child("ProductImages/" + pid);
         StorageReference storageReference = FirebaseStorage.getInstance().getReference("ProductImages");
 
         // Inizializza Firebase Realtime Database
-        databaseReference = FirebaseDatabase.getInstance().getReference("ProductImagesProducts").child(pid).child("imageUrl");
+        databaseReference = FirebaseDatabase.getInstance().getReference("Products").child(pid).child("imageUrl");
         if (imageUri != null) {
-            String fileName = pid + ".jpg";
-            StorageReference fileReference = storageReference.child(fileName);
 
-            fileReference.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> fileReference.getDownloadUrl()
+            /*ref.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl()
                             .addOnSuccessListener(uri -> {
                                 String downloadUrl = uri.toString();
                                 // Salva l'URL nel Realtime Database
@@ -181,6 +181,22 @@ public class Product implements Parcelable {
                             }))
                     .addOnFailureListener(e -> {
                         //Toast.makeText(MainActivity.this, "Caricamento fallito: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });*/
+            ref.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Wait for the URL to be obtained
+                        ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String URL = uri.toString();
+                            databaseReference.setValue(URL);
+                            System.err.println("Immagine caricata con successo");
+                        }).addOnFailureListener(e -> {
+                            // Handle any failure to get the download URL
+                            System.err.println("Errore nel caricamento dell'immagine");
+                        });
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle any failure to upload the file
+                        System.err.println("Errore nel caricamento dell'immagine");
                     });
         }
     }
