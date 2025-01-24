@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.reuse.R;
+import com.google.android.material.imageview.ShapeableImageView;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -23,10 +24,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 
 public class AccountScreen extends Fragment {
     Button broughtProducts, myProducts;
+    private ShapeableImageView imageProfile;
 
     private LinearLayout logout;
 
@@ -50,6 +53,8 @@ public class AccountScreen extends Fragment {
         TextView location = view.findViewById(R.id.location);
         TextView fieldState = view.findViewById(R.id.fieldState);
 
+        imageProfile = view.findViewById(R.id.imageProfile);
+
         FirebaseAuth auth = FirebaseAuth.getInstance();
 
         if(currentUser!=null){
@@ -72,6 +77,16 @@ public class AccountScreen extends Fragment {
                             String date = snapshot.child("data").getValue(String.class);
                             String city = snapshot.child("citta").getValue(String.class);
                             String state = snapshot.child("stato").getValue(String.class);
+
+                            String imageP = snapshot.child("imageUrl").getValue(String.class);
+                            if (imageP != null && !imageP.isEmpty()) {
+                                Picasso.get()
+                                        .load(imageP)
+                                        .placeholder(R.drawable.user)
+                                        .into(imageProfile);
+                            }
+
+
 
                             String newName = nome+" "+cognome;
                             String newLocation = city+", "+state;
