@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".screens.EditProfileScreen"
-    android:theme="@style/NoBackText">
+    android:theme="@style/DarkEditProfile">
     <LinearLayout
         android:gravity="center"
         android:orientation="vertical"

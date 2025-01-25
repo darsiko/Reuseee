@@ -1,6 +1,7 @@
 package com.example.reuse.screens;
 
 import android.app.AlertDialog;
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -64,8 +65,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.squareup.picasso.Picasso;
 
-
-
 public class EditProfileScreen extends Fragment {
     public String URL;
     FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -77,10 +76,19 @@ public class EditProfileScreen extends Fragment {
     private Uri imageUri;
     private Bitmap previewBitmap;
 
-
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_edit_profile_screen, container, false);
+
+        // Usa un ShapeableImageView per gestire l'immagine del profilo
+        imageProfile = view.findViewById(R.id.image_profile);
+        imageButtonProfile = view.findViewById(R.id.image_button_profile);
+        saveEditProfile = view.findViewById(R.id.save_edit_profile);
+
+        LinearLayout backtoProfileButton = view.findViewById(R.id.goBackProfile);
+        backtoProfileButton.setOnClickListener(v -> {
+            getParentFragmentManager().popBackStack();
+        });
 
         EditText nomeInput = view.findViewById(R.id.name_input);
         EditText cognomeInput = view.findViewById(R.id.surname_input);
@@ -92,20 +100,30 @@ public class EditProfileScreen extends Fragment {
         EditText telefonoInput = view.findViewById(R.id.telefono_input);
         EditText dateEditText = view.findViewById(R.id.dateEditText);
 
-        // Usa un ShapeableImageView per gestire l'immagine del profilo
-        imageProfile = view.findViewById(R.id.image_profile);
-        imageButtonProfile = view.findViewById(R.id.image_button_profile);
-        saveEditProfile = view.findViewById(R.id.save_edit_profile);
+        dateEditText.setOnClickListener( x -> {
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            // Mostra il DatePickerDialog
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    getContext(),
+                    (view1, selectedYear, selectedMonth, selectedDay) -> {
+                        String selectedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        dateEditText.setText(selectedDate);
+                    },
+                    year, month, day);
+            datePickerDialog.show();
+        });
 
         // Listener per cambiare immagine profilo
         imageButtonProfile.setOnClickListener(v -> openImageChooser());
 
         // Listener per salvare il profilo
-        saveEditProfile.setOnClickListener(v -> saveProfileData(view));
-
-        LinearLayout backtoProfileButton = view.findViewById(R.id.goBackProfile);
-        backtoProfileButton.setOnClickListener(v -> {
-            getParentFragmentManager().popBackStack();
+        saveEditProfile.setOnClickListener(v -> {
+            String date = dateEditText.getText().toString();
+            saveProfileData(view, date);
         });
 
         // Recupero dati utente da Firebase
@@ -118,15 +136,15 @@ public class EditProfileScreen extends Fragment {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        String nome = snapshot.child("nome").getValue() != null ? snapshot.child("nome").getValue().toString() : "";
-                        String cognome = snapshot.child("cognome").getValue() != null ? snapshot.child("cognome").getValue().toString() : "";
-                        String username = snapshot.child("username").getValue() != null ? snapshot.child("username").getValue().toString() : "";
-                        String country = snapshot.child("stato").getValue() != null ? snapshot.child("stato").getValue().toString() : "";
-                        String city = snapshot.child("citta").getValue() != null ? snapshot.child("citta").getValue().toString() : "";
-                        String cap = snapshot.child("cap").getValue() != null ? snapshot.child("cap").getValue().toString() : "";
-                        String indirizzo = snapshot.child("indirizzo").getValue() != null ? snapshot.child("indirizzo").getValue().toString() : "";
-                        String telefono = snapshot.child("telefono").getValue() != null ? snapshot.child("telefono").getValue().toString() : "";
-                        String date = snapshot.child("data").getValue() != null ? snapshot.child("data").getValue().toString() : "";
+                        String nome = snapshot.child("nome").getValue(String.class);
+                        String cognome = snapshot.child("cognome").getValue(String.class);
+                        String username = snapshot.child("username").getValue(String.class);
+                        String country = snapshot.child("stato").getValue(String.class);
+                        String city = snapshot.child("citta").getValue(String.class);
+                        String cap = snapshot.child("cap").getValue(String.class);
+                        String indirizzo = snapshot.child("indirizzo").getValue(String.class);
+                        String telefono = snapshot.child("telefono").getValue(String.class);
+                        String date = snapshot.child("data").getValue(String.class);
 
                         // Carica i dati negli EditText
                         nomeInput.setHint(nome);
@@ -149,104 +167,12 @@ public class EditProfileScreen extends Fragment {
                         }
                     }
                 }
-
                 @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    // Gestione errore
-                }
+                public void onCancelled(@NonNull DatabaseError error) {}
             });
         }
-
         return view;
     }
-
-
-    /*@Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_edit_profile_screen, container, false);
-
-
-        EditText nomeInput = view.findViewById(R.id.name_input);
-        EditText cognomeInput = view.findViewById(R.id.surname_input);
-        EditText userNameInput = view.findViewById(R.id.Username_input);
-        EditText countryInput = view.findViewById(R.id.country_input);
-        EditText cityInput = view.findViewById(R.id.city_input);
-        EditText capInput = view.findViewById(R.id.cap_input);
-        EditText indirizzoInput = view.findViewById(R.id.indirizzo_input);
-        EditText telefonoInput = view.findViewById(R.id.telefono_input);
-        EditText dateEditText = view.findViewById(R.id.dateEditText);
-        EditText imageURL = view.findViewById(R.id.image_profile);
-
-        imageProfile = view.findViewById(R.id.image_profile);
-        imageButtonProfile = view.findViewById(R.id.image_button_profile);
-        saveEditProfile = view.findViewById(R.id.save_edit_profile);
-
-        // Listener per cambiare immagine profilo
-        imageButtonProfile.setOnClickListener(v -> openImageChooser());
-
-        // Listener per salvare il profilo
-
-        saveEditProfile.setOnClickListener(v -> saveProfileData(view));
-
-        LinearLayout backtoProfileButton = view.findViewById(R.id.goBackProfile);
-        backtoProfileButton.setOnClickListener(v -> {
-            getParentFragmentManager().popBackStack();
-        });
-
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null) {
-            String uID = currentUser.getUid();
-            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(uID);
-
-            dbRef.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        String nome = snapshot.child("nome").getValue() != null ? snapshot.child("nome").getValue().toString() : "";
-                        String cognome = snapshot.child("cognome").getValue() != null ? snapshot.child("cognome").getValue().toString() : "";
-                        String username = snapshot.child("username").getValue() != null ? snapshot.child("username").getValue().toString() : "";
-                        String country = snapshot.child("stato").getValue() != null ? snapshot.child("stato").getValue().toString() : "";
-                        String city = snapshot.child("citta").getValue() != null ? snapshot.child("citta").getValue().toString() : "";
-                        String cap = snapshot.child("cap").getValue() != null ? snapshot.child("cap").getValue().toString() : "";
-                        String indirizzo = snapshot.child("indirizzo").getValue() != null ? snapshot.child("indirizzo").getValue().toString() : "";
-                        String telefono = snapshot.child("telefono").getValue() != null ? snapshot.child("telefono").getValue().toString() : "";
-                        String date = snapshot.child("data").getValue() != null ? snapshot.child("data").getValue().toString() : "";
-                        String imageUrl = snapshot.child("ImageUrl").getValue() != null ? snapshot.child("ImageUrl").getValue().toString() : "";
-
-
-                        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                        String imageP = FirebaseDatabase.getInstance().getReference().child(userId).child("imageUrl").get().toString();
-
-
-                        nomeInput.setHint(nome);
-                        cognomeInput.setHint(cognome);
-                        userNameInput.setHint(username);
-                        countryInput.setHint(country);
-                        cityInput.setHint(city);
-                        capInput.setHint(cap);
-                        indirizzoInput.setHint(indirizzo);
-                        telefonoInput.setHint(telefono);
-                        dateEditText.setHint(date);
-
-
-
-                            Picasso.get()
-                                    .load(imageP)
-                                    .placeholder(R.drawable.user)
-                                    .into(imageProfile);
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                }
-            });
-
-        }
-
-        return view;
-    }*/
 
     private void openImageChooser() {
         Intent intent = new Intent();
@@ -254,7 +180,6 @@ public class EditProfileScreen extends Fragment {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Seleziona un'immagine"), PICK_IMAGE_REQUEST);
     }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -273,7 +198,6 @@ public class EditProfileScreen extends Fragment {
             }
         }
     }
-
     private void showImagePreviewDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Anteprima immagine");
@@ -299,10 +223,7 @@ public class EditProfileScreen extends Fragment {
 
         builder.show();
     }
-
-
-
-    private void saveProfileData(View view) {
+    private void saveProfileData(View view, String data) {
 
         EditText nomeInput = view.findViewById(R.id.name_input);
         EditText cognomeInput = view.findViewById(R.id.surname_input);
@@ -311,8 +232,10 @@ public class EditProfileScreen extends Fragment {
         EditText cityInput = view.findViewById(R.id.city_input);
         EditText capInput = view.findViewById(R.id.cap_input);
         EditText indirizzoInput = view.findViewById(R.id.indirizzo_input);
-        EditText dataInput = view.findViewById(R.id.dateEditText);
         EditText telefonoInput = view.findViewById(R.id.telefono_input);
+
+        EditText passwordInput = view.findViewById(R.id.password_input);
+        String password = passwordInput.getText().toString();
 
         String nome = nomeInput.getText().toString();
         String cognome = cognomeInput.getText().toString();
@@ -321,7 +244,6 @@ public class EditProfileScreen extends Fragment {
         String city = cityInput.getText().toString();
         String cap = capInput.getText().toString();
         String indirrizo = indirizzoInput.getText().toString();
-        String data = dataInput.getText().toString();
         String telefono = telefonoInput.getText().toString();
 
         if (imageUri != null) {
@@ -335,7 +257,7 @@ public class EditProfileScreen extends Fragment {
                             String URL = uri.toString();
 
                             // Now perform the update with the obtained URL
-                            updateUserData(nome, cognome, username, country, city, cap, indirrizo, data, telefono, URL);
+                            updateUserData(nome, cognome, username, country, city, cap, indirrizo, data, telefono, URL, password);
                         }).addOnFailureListener(e -> {
                             // Handle any failure to get the download URL
                             Toast.makeText(getContext(), "Failed to upload image.", Toast.LENGTH_SHORT).show();
@@ -347,12 +269,12 @@ public class EditProfileScreen extends Fragment {
                     });
         } else {
             // No image to upload; proceed with data saving
-            updateUserData(nome, cognome, username, country, city, cap, indirrizo, data, telefono, null);
+            updateUserData(nome, cognome, username, country, city, cap, indirrizo, data, telefono, null, password);
         }
     }
 
     private void updateUserData(String nome, String cognome, String username, String country, String city,
-                                String cap, String indirrizo, String data, String telefono, String URL) {
+                                String cap, String indirrizo, String data, String telefono, String URL, String password) {
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
         if (currentUser != null) {
             String uID = currentUser.getUid();
@@ -368,90 +290,13 @@ public class EditProfileScreen extends Fragment {
             if (!indirrizo.isEmpty()) updates.put("indirizzo", indirrizo);
             if (!telefono.isEmpty()) updates.put("telefono", telefono);
             if (!data.isEmpty()) updates.put("data", data);
+            if(!password.isEmpty()){
+                ReauthenticateDialog dialog = new ReauthenticateDialog(password);
+                dialog.show(getChildFragmentManager(), "ReAuthenticateDialog");
+            }
             if (URL != null && !URL.isEmpty()) updates.put("imageUrl", URL);
-
-            dbRef.updateChildren(updates)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(getContext(), "Profile updated successfully!", Toast.LENGTH_SHORT).show();
-                        getParentFragmentManager().popBackStack();
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(getContext(), "Failed to update profile.", Toast.LENGTH_SHORT).show();
-                    });
-        }
-    }
-
-
-
-    /*private void saveProfileData(View view) {
-
-        if (imageUri != null) {
-            String userId = auth.getCurrentUser().getUid();
-            StorageReference ref = FirebaseStorage.getInstance().getReference().child("ProfileImages/" + userId);
-
-            ref.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        // Ottieni l'URL del file caricato
-                        ref.getDownloadUrl().addOnSuccessListener(uri -> {
-                            URL = uri.toString();
-
-                        });
-                    });
-        }
-
-
-        EditText nomeInput = view.findViewById(R.id.name_input);
-        EditText cognomeInput = view.findViewById(R.id.surname_input);
-        EditText userNameInput = view.findViewById(R.id.Username_input);
-        EditText countryInput = view.findViewById(R.id.country_input);
-        EditText cityInput = view.findViewById(R.id.city_input);
-        EditText capInput = view.findViewById(R.id.cap_input);
-        EditText indirizzoInput = view.findViewById(R.id.indirizzo_input);
-        EditText dataInput = view.findViewById(R.id.dateEditText);
-        EditText telefonoInput = view.findViewById(R.id.telefono_input);
-
-        EditText emailInput = view.findViewById(R.id.email_input);
-        EditText passwordInput = view.findViewById(R.id.password_input);
-        String email = emailInput.getText().toString();
-        String password = passwordInput.getText().toString();
-
-        // Get data from inputs
-        String nome = nomeInput.getText().toString();
-        String cognome = cognomeInput.getText().toString();
-        String username = userNameInput.getText().toString();
-        String country = countryInput.getText().toString();
-        String city = cityInput.getText().toString();
-        String cap = capInput.getText().toString();
-        String indirrizo = indirizzoInput.getText().toString();
-        String data = dataInput.getText().toString();
-        String telefono = telefonoInput.getText().toString();
-
-        // Handle saving the data (e.g., store in SharedPreferences, send to server, etc.)
-        // Example: show a toast or save data
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        if(currentUser!=null){
-            String uID = currentUser.getUid();
-            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(uID);
-
-            Map<String, Object> updates = new HashMap<>();
-            if(!nome.isEmpty()) updates.put("nome", nome);
-            if(!cognome.isEmpty()) updates.put("cognome", cognome);
-            if(!username.isEmpty()) updates.put("username", username);
-            if(!country.isEmpty()) updates.put("stato", country);
-            if(!city.isEmpty()) updates.put("citta", city);
-            if(!cap.isEmpty()) updates.put("cap", cap);
-            if(!indirrizo.isEmpty()) updates.put("indirizzo", indirrizo);
-            if(!telefono.isEmpty()) updates.put("telefono", telefono);
-            if(!data.isEmpty()) updates.put("data", data);
-            if(!URL.isEmpty()) updates.put("imageUrl", URL);
 
             dbRef.updateChildren(updates);
         }
-
-
-
-        Toast.makeText(getContext(), "ENSDRONGOOO", Toast.LENGTH_SHORT).show();
-    }*/
+    }
 }
-
-

@@ -14,6 +14,11 @@
     <item name="android:textColorPrimary">@color/dark</item>
 </style>
 
+    <style name="DarkEditProfile">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textColorHint">@color/dark</item>
+    </style>
+
     <style name="NoBackText">
         <item name="android:textColor">@android:color/white</item>
         <item name="android:textColorHint">@android:color/white</item>
