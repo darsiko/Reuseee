@@ -222,6 +222,8 @@ public class EditProductScreen extends Fragment {
             // No image to upload; proceed with data saving
             updateProductData(nome, prezzo, descrizione, baratto, null, pid);
         }
+        Toast.makeText(getContext(), "Prodouct updated correctly", Toast.LENGTH_SHORT).show();
+        getParentFragmentManager().popBackStack();
     }
     private void updateProductData(String nome, String prezzo, String descrizione, boolean baratto, String URL, String pid) {
 
