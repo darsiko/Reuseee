@@ -103,6 +103,27 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="start"
                 android:layout_marginLeft="30dp"
+                android:text="Descrizione Prodotto"
+                android:textSize="18dp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/descrizione_input"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="30dp"
+                android:layout_marginRight="30dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/edit_text_background"
+                android:hint="descrizione"
+                android:inputType="textEmailAddress" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginLeft="30dp"
                 android:text="Barattabile"
                 android:textSize="18dp"
                 android:textStyle="bold" />
@@ -162,7 +183,9 @@
 
         </LinearLayout>
         <Button
+            android:id="@+id/save_edit_product"
             android:layout_width="wrap_content"
+            android:clickable="true"
             android:text="Modifica"
             android:layout_height="wrap_content"/>
     </LinearLayout>

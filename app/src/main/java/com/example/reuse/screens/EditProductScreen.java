@@ -27,15 +27,26 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reuse.R;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import com.squareup.picasso.Picasso;
 
 
 public class EditProductScreen extends Fragment {
 
-
+    private String pid;
+    private Uri imageUri;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
 
     @Override
@@ -44,6 +55,7 @@ public class EditProductScreen extends Fragment {
         View view = inflater.inflate(R.layout.fragment_edit_product_screen, container, false);
         EditText nameProd = view.findViewById(R.id.name_input);
         EditText priceProd = view.findViewById(R.id.prezzo);
+        EditText descrizioneProd=view.findViewById(R.id.descrizione_input);
         ImageView file = view.findViewById(R.id.product_image);
         ImageButton addTag = view.findViewById(R.id.add_tag);
         Switch switchBaratto = view.findViewById(R.id.switch1);
@@ -53,11 +65,18 @@ public class EditProductScreen extends Fragment {
             getParentFragmentManager().popBackStack();
         });
 
+        Button saveEditProduct;
+        saveEditProduct=view.findViewById(R.id.save_edit_product);
+
+        saveEditProduct.setOnClickListener(v -> {
+            saveProductData(view);
+        });
+
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
                     if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
-                        Uri imageUri = result.getData().getData(); // Get the URI of the selected image
+                        imageUri = result.getData().getData(); // Get the URI of the selected image
                         try {
                             // Convert the URI to a Bitmap
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), imageUri);
@@ -85,24 +104,20 @@ public class EditProductScreen extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
+
             String nomeProd = args.getString("name", "");
             String price = args.getString("prezzo", "");
             boolean barattabile = args.getBoolean("barattabile");
+            String descrizione = args.getString("descrizione", "");
 
-            //Integer imageProd = args.getInt("imageResId");
-            //List<String> tagList = args.getStringArrayList("tags");
+            String productId=args.getString("id");
+            String imageProd=args.getString("imageUrl");
 
             nameProd.setText(nomeProd);
             priceProd.setText(price);
+            descrizioneProd.setText(descrizione);
             switchBaratto.setChecked(barattabile);
-            /*file.setImageResource(imageProd);
-
-            if (tagList != null) {
-                for (String tag : tagList) {
-                    addTagToLayout(view, tag); // Pass the view to the method
-                }
-            }*/
-
+            Picasso.get().load(imageProd).into(file);
         }
 
 
@@ -163,5 +178,63 @@ public class EditProductScreen extends Fragment {
         });
         tagTextView.setLayoutParams(params);
         tagsContainer.addView(tagTextView);
+    }
+
+    private void saveProductData(View view){
+        EditText nomeInput = view.findViewById(R.id.name_input);
+        EditText prezzoInput = view.findViewById(R.id.prezzo);
+        EditText descrizioneInput = view.findViewById(R.id.descrizione_input);
+        Switch switchBaratto = view.findViewById(R.id.switch1);
+
+        String nome = nomeInput.getText().toString();
+        String prezzo=prezzoInput.getText().toString();
+        String descrizione=descrizioneInput.getText().toString();
+        boolean baratto=switchBaratto.isChecked();
+
+
+
+        Bundle arg = getArguments();
+        if (arg != null) {
+            pid=arg.getString("id");
+        }
+
+        if (imageUri != null) {
+            StorageReference ref = FirebaseStorage.getInstance().getReference().child("ProductImages/" + pid);
+
+            ref.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> {
+                        // Wait for the URL to be obtained
+                        ref.getDownloadUrl().addOnSuccessListener(uri -> {
+                            String URL = uri.toString();
+
+                            // Now perform the update with the obtained URL
+                            updateProductData(nome, prezzo, descrizione, baratto, URL, pid);
+                        }).addOnFailureListener(e -> {
+                            // Handle any failure to get the download URL
+                            Toast.makeText(getContext(), "Failed to upload image.", Toast.LENGTH_SHORT).show();
+                        });
+                    })
+                    .addOnFailureListener(e -> {
+                        // Handle any failure to upload the file
+                        Toast.makeText(getContext(), "Failed to upload image.", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            // No image to upload; proceed with data saving
+            updateProductData(nome, prezzo, descrizione, baratto, null, pid);
+        }
+    }
+    private void updateProductData(String nome, String prezzo, String descrizione, boolean baratto, String URL, String pid) {
+
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Products").child(pid);
+
+        double dbPrezzo=Double.parseDouble(prezzo);
+
+        Map<String, Object> updates = new HashMap<>();
+        if (!nome.isEmpty()) updates.put("nome", nome);
+        if (!descrizione.isEmpty()) updates.put("descrizione", descrizione);
+        if (!prezzo.isEmpty()) updates.put("prezzo", dbPrezzo);
+        if (baratto) updates.put("baratto", baratto);
+        if (URL != null && !URL.isEmpty()) updates.put("imageUrl", URL);
+        dbRef.updateChildren(updates);
     }
 }

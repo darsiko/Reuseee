@@ -74,7 +74,7 @@ public class ProductBoughtScreen extends Fragment implements ProductBroughtAdapt
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Product product = snapshot.getValue(Product.class);
                     if (product != null && product.getIdVenditore().equals(auth.getUid())) {
-                        product.setId(dataSnapshot.getKey());
+                        product.setId(snapshot.getKey());
                         productList.add(product);
                     }
                 }
@@ -103,6 +103,9 @@ public class ProductBoughtScreen extends Fragment implements ProductBroughtAdapt
     public void onEditProductClick(Product product) {
         EditProductScreen editProductScreen = new EditProductScreen();
         Bundle bundle = new Bundle();
+        bundle.putString("id", product.getId());
+        bundle.putString("imageUrl", product.getImageUrl());
+        bundle.putString("descrizione", product.getDescrizione());
         bundle.putString("name", product.getNome());
         bundle.putString("prezzo",""+ product.getPrezzo());
         bundle.putBoolean("barattabile", product.isBaratto());
@@ -121,6 +124,8 @@ public class ProductBoughtScreen extends Fragment implements ProductBroughtAdapt
 
     @Override
     public void onDeleteProductClick(Product product){
+        String a=product.getId();
+        System.out.println("ohno!"+a);
         if(product.getId()=="" || product.getId()==null){
             Toast.makeText(getContext(), "Failed to find product", Toast.LENGTH_SHORT).show();
         }else{
@@ -128,12 +133,13 @@ public class ProductBoughtScreen extends Fragment implements ProductBroughtAdapt
             productRef.removeValue().addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     DatabaseReference userProductRef=FirebaseDatabase.getInstance().getReference("Users").child(product.getIdVenditore()).child("productsForSale").child(product.getId());
-                    userProductRef.removeValue().addOnSuccessListener(task2 -> {
-                        if (task.isSuccessful()) {
-                            System.out.println("Prodotto eliminato con successo!");
-                        }else{
-                            System.out.println("Prodotto non trovato!");
-                        }
+                    userProductRef.removeValue().addOnSuccessListener(unused -> {
+                        // Operazione riuscita
+                        System.out.println("Prodotto eliminato con successo!");
+                    })
+                    .addOnFailureListener(e -> {
+                        // Operazione fallita
+                        System.out.println("Errore durante l'eliminazione del prodotto: " + e.getMessage());
                     });
                 } else {
                     System.err.println("Errore nell'eliminazione del prodotto: " + task.getException());
