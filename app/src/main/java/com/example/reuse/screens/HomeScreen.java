@@ -104,6 +104,7 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Product product = snapshot.getValue(Product.class);
                     if (product != null) {
+                        product.setId(dataSnapshot.getKey());
                         if(product.getPrezzo()%2==0){
                             productListLastAdded.add(product);
                         }else{

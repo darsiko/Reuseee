@@ -107,6 +107,7 @@
         <ImageView
             android:id="@+id/deleteProduct"
             android:layout_width="24dp"
+            android:clickable="true"
             android:focusable="true"
             android:layout_height="24dp"
             android:src="@drawable/baseline_delete_24"

@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Product implements Parcelable {
+    private String id="";
     private String idVenditore;
     private String nome;
     private String descrizione;
@@ -326,6 +327,14 @@ public class Product implements Parcelable {
         User user=new User(idVenditore);
         return user.getUsername();
     }
+
+    public void setId(String id){
+        this.id=id;
+    }
+    public String getId(){
+        return id;
+    }
+
 
     // Metodi per Parcelable
     @Override

@@ -99,11 +99,16 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
             Toast.makeText(view.getContext(), "Item: " + product.getNome(), Toast.LENGTH_SHORT).show();
             onItemClickListener.onEditProductClick(product);
         });
+        holder.deleteProduct.setOnClickListener(view -> {
+            Toast.makeText(view.getContext(), "Item: " + product.getNome(), Toast.LENGTH_SHORT).show();
+            onItemClickListener.onDeleteProductClick(product);
+        });
         // If you have more views in the ViewHolder, bind them here
     }
 
     public interface OnItemClickListener {
           void onEditProductClick(Product product);
+          void onDeleteProductClick(Product product);
     }
 
     @Override
@@ -112,7 +117,7 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
     }
 
     public static class ProductViewHolder extends RecyclerView.ViewHolder {
-        ImageView productImage, userAvatar, editProduct;
+        ImageView productImage, userAvatar, editProduct, deleteProduct;
         TextView productName, productPrice, userName, userStatus;
 
         public ProductViewHolder(@NonNull View itemView) {
@@ -124,6 +129,7 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
             userName = itemView.findViewById(R.id.sellerName);
             userStatus = itemView.findViewById(R.id.sellerStatus);
             editProduct = itemView.findViewById(R.id.editProduct);
+            deleteProduct = itemView.findViewById(R.id.deleteProduct);
         }
     }
 }

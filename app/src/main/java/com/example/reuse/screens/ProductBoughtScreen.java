@@ -74,6 +74,7 @@ public class ProductBoughtScreen extends Fragment implements ProductBroughtAdapt
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Product product = snapshot.getValue(Product.class);
                     if (product != null && product.getIdVenditore().equals(auth.getUid())) {
+                        product.setId(dataSnapshot.getKey());
                         productList.add(product);
                     }
                 }
@@ -116,5 +117,28 @@ public class ProductBoughtScreen extends Fragment implements ProductBroughtAdapt
         transaction.replace(R.id.fragment_container, editProductScreen);
         transaction.addToBackStack(null);
         transaction.commit();  // Add to back stack if you want to go back to this fragment
+    }
+
+    @Override
+    public void onDeleteProductClick(Product product){
+        if(product.getId()=="" || product.getId()==null){
+            Toast.makeText(getContext(), "Failed to find product", Toast.LENGTH_SHORT).show();
+        }else{
+            DatabaseReference productRef=FirebaseDatabase.getInstance().getReference("Products").child(product.getId());
+            productRef.removeValue().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DatabaseReference userProductRef=FirebaseDatabase.getInstance().getReference("Users").child(product.getIdVenditore()).child("productsForSale").child(product.getId());
+                    userProductRef.removeValue().addOnSuccessListener(task2 -> {
+                        if (task.isSuccessful()) {
+                            System.out.println("Prodotto eliminato con successo!");
+                        }else{
+                            System.out.println("Prodotto non trovato!");
+                        }
+                    });
+                } else {
+                    System.err.println("Errore nell'eliminazione del prodotto: " + task.getException());
+                }
+            });
+        }
     }
 }
