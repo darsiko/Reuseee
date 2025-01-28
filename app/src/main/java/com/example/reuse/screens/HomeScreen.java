@@ -5,7 +5,9 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -149,8 +151,11 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
         barButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                boolean isDark = (getContext().getResources().getConfiguration().uiMode
+                        & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
                 if(!barButtonActive[0]){
-                    barButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dark));
+                    if(isDark) barButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.primary));
+                    else barButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dark));
                     barButtonActive[0] = true;
                 }
                 else{

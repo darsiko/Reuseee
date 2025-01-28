@@ -6,175 +6,183 @@
     tools:context=".screens.DetailProdScreen"
     android:theme="@style/NoBackText">
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_marginTop="25dp"
-            android:orientation="horizontal"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical">
             <LinearLayout
-                android:id="@+id/goBackPreviusPage"
-                android:focusable="true"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
-                android:layout_marginLeft="0dp"
-                android:layout_width="wrap_content"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-                <ImageView
-
-                    android:layout_width="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_arrow_back_ios_new_24"/>
-                <TextView
-
-                    android:text="Indietro "
-                    android:layout_gravity="start"
-                    android:layout_marginLeft="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
-            <TextView
-                android:id="@+id/productName"
-                android:layout_gravity="center"
-                android:layout_width="190dp"
-                android:layout_marginLeft="40dp"
-                android:textSize="24dp"
-                android:textStyle="bold"
-                android:layout_height="wrap_content"
-                android:text="Sneakers Verdi"/>
-        </LinearLayout>
-        <!-- Search Bar -->
-        <!-- Product Image -->
-
-        <ImageView
-            android:id="@+id/productImage"
-            android:layout_width="match_parent"
-            android:src="@drawable/shoes"
-            android:layout_height="210dp"
-            android:layout_marginTop="16dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="image Prod" />
-
-        <!-- Product Name and Price -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="12dp"
-            >
-
-            <TextView
-                android:id="@+id/productPrice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="100"
-                android:textAlignment="textStart"
-                android:textSize="30sp"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:text="$"></TextView>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:text="Descrizione:  "></TextView>
-
-            <TextView
-                android:id="@+id/descrizione"
                 android:layout_width="match_parent"
-                android:layout_height="50dp"></TextView>
-        </LinearLayout>
+                android:layout_marginTop="25dp"
+                android:orientation="horizontal"
+                android:layout_height="wrap_content">
+                <LinearLayout
+                    android:id="@+id/goBackPreviusPage"
+                    android:focusable="true"
+                    android:background="?android:attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:layout_marginLeft="0dp"
+                    android:layout_width="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_height="wrap_content">
+                    <ImageView
 
-        <!-- Seller Info -->
-        <LinearLayout
-            android:layout_margin="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="8dp"
-            android:gravity="center_vertical">
+                        android:layout_width="wrap_content"
+                        android:layout_marginLeft="30dp"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/baseline_arrow_back_ios_new_24"/>
+                    <TextView
+
+                        android:text="Indietro "
+                        android:layout_gravity="start"
+                        android:layout_marginLeft="20dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+                <TextView
+                    android:id="@+id/productName"
+                    android:layout_gravity="center"
+                    android:layout_width="190dp"
+                    android:layout_marginLeft="40dp"
+                    android:textSize="24dp"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    android:text="Sneakers Verdi"/>
+            </LinearLayout>
+            <!-- Search Bar -->
+            <!-- Product Image -->
 
             <ImageView
-                android:id="@+id/sellerImage"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
+                android:id="@+id/productImage"
+                android:layout_width="210dp"
+                android:src="@drawable/shoes"
+                android:layout_height="210dp"
+                android:layout_marginTop="16dp"
                 android:scaleType="centerCrop"
-                android:src="@drawable/user"
-                android:background="@drawable/circle_shape"
-                android:layout_marginEnd="8dp" />
+                android:contentDescription="image Prod" />
 
+            <!-- Product Name and Price -->
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:layout_margin="12dp"
+                >
 
                 <TextView
-                    android:id="@+id/sellerName"
+                    android:id="@+id/productPrice"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Melissa Peters"
-                    android:textSize="14sp"
+                    android:text="100"
+                    android:textAlignment="textStart"
+                    android:textSize="30sp"
                     android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:text="$"></TextView>
 
                 <TextView
-                    android:id="@+id/sellerProductsCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="5 product online"
-                    android:textSize="12sp"
-                    android:textColor="@android:color/darker_gray" />
+                    android:layout_marginLeft="10dp"
+                    android:text="Descrizione:  "></TextView>
+
+                <TextView
+                    android:id="@+id/descrizione"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"></TextView>
             </LinearLayout>
+
+            <!-- Seller Info -->
+            <LinearLayout
+                android:layout_margin="12dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:id="@+id/sellerImage"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/user"
+                    android:background="@drawable/circle_shape"
+                    android:layout_marginEnd="8dp" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/sellerName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Melissa Peters"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/sellerProductsCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="5 product online"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/darker_gray" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Action Buttons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="16dp"
+                android:layout_margin="12dp"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/buyButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Compra"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@android:color/white"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/tradeButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Scambia"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@android:color/white"
+                    android:layout_marginEnd="4dp" />
+
+                <Button
+                    android:id="@+id/contactButton"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Contatta"
+                    android:backgroundTint="@color/primary"
+                    android:textColor="@android:color/white" />
+            </LinearLayout>
+
+            <!-- Tags -->
+
         </LinearLayout>
 
-        <!-- Action Buttons -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="16dp"
-            android:layout_margin="12dp"
-            android:gravity="center">
+    </ScrollView>
 
-            <Button
-                android:id="@+id/buyButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Compra"
-                android:backgroundTint="@color/primary"
-                android:textColor="@android:color/white"
-                android:layout_marginEnd="4dp" />
 
-            <Button
-                android:id="@+id/tradeButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Scambia"
-                android:backgroundTint="@color/primary"
-                android:textColor="@android:color/white"
-                android:layout_marginEnd="4dp" />
-
-            <Button
-                android:id="@+id/contactButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Contatta"
-                android:backgroundTint="@color/primary"
-                android:textColor="@android:color/white" />
-        </LinearLayout>
-
-        <!-- Tags -->
-
-    </LinearLayout>
 
 </FrameLayout>
