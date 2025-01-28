@@ -82,7 +82,6 @@ public class TutorialListScreen extends Fragment implements AdapterTutorial.OnIt
     }
     @Override
     public void onItemClick(Tutorial tutorial) {
-        Toast.makeText(getContext(), "Clicked on: " + tutorial.getName(), Toast.LENGTH_SHORT).show();
 
         Bundle bundle = new Bundle();
         bundle.putString("nameTutorial", tutorial.getName());
