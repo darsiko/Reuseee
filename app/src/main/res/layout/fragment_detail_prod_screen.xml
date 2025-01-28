@@ -50,44 +50,6 @@
                 android:text="Sneakers Verdi"/>
         </LinearLayout>
         <!-- Search Bar -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/search_card"
-            android:layout_width="match_parent"
-            android:theme="@style/RegActivityBack"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <LinearLayout
-                android:theme="@style/DarkSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <!-- Search Input -->
-                <EditText
-                    android:id="@+id/editTextText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Search"
-                    android:inputType="text"
-                    android:drawablePadding="8dp"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"
-                    android:padding="12dp"/>
-
-                <!-- Menu Button -->
-                <ImageButton
-                    android:id="@+id/menuButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/baseline_menu_24"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Menu"
-                    android:backgroundTint="@color/secondary"/>
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
         <!-- Product Image -->
 
         <ImageView
@@ -212,40 +174,6 @@
         </LinearLayout>
 
         <!-- Tags -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="12dp"
-            android:text="Tags:"
-            android:layout_marginTop="16dp"
-            android:textStyle="bold" />
-
-        <com.google.android.flexbox.FlexboxLayout
-            android:layout_margin="12dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp">
-
-            <TextView
-                android:id="@+id/tag1"
-                style="@style/TagStyle"
-                android:text="Comode" />
-
-            <TextView
-                android:id="@+id/tag2"
-                style="@style/TagStyle"
-                android:text="Tag" />
-
-            <TextView
-                android:id="@+id/tag3"
-                style="@style/TagStyle"
-                android:text="Verdi" />
-
-            <TextView
-                android:id="@+id/tag4"
-                style="@style/TagStyle"
-                android:text="Usato" />
-        </com.google.android.flexbox.FlexboxLayout>
 
     </LinearLayout>
 

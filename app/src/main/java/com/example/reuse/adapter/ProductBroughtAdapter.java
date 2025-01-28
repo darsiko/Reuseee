@@ -63,6 +63,15 @@ public class ProductBroughtAdapter extends RecyclerView.Adapter<ProductBroughtAd
             @Override
             public void onUserLoaded(User user) {
                 holder.userName.setText(user.getUsername());
+                String profilePictureUrl = user.getImageUrl();
+                if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+                    Glide.with(context)
+                            .load(profilePictureUrl)// Error image in case of failure
+                            .into(holder.userAvatar);
+                } else {
+                    // Set a default image if profilePictureUrl is unavailable
+                    holder.userAvatar.setImageResource(R.drawable.user);
+                }
             }
 
             @Override

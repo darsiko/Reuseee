@@ -330,15 +330,20 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
             @Override
             public void onUserLoaded(User user) {
                 // Populate the bundle with user and product details
+                bundle.putString("sellerId", product.getIdVenditore());
                 bundle.putString("venditore", user.getUsername());
                 bundle.putString("status", user.getProductsForSale().size() + " prodotti online");
                 bundle.putString("nome", product.getNome());
                 bundle.putString("descrizione", product.getDescrizione());
                 bundle.putString("prezzo", String.valueOf(product.getPrezzo()));
+// Fetch user profile image URL
+                String userProfileImageUrl = user.getImageUrl();
+                bundle.putString("userProfileImage", userProfileImageUrl);
 
                 // Get the image URL from Firebase Storage
                 StorageReference storageRef = FirebaseStorage.getInstance().getReferenceFromUrl(product.getImageUrl());
                 storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+
                     String imageUrl = uri.toString(); // This is the HTTP URL
                     System.out.println("Download URL: " + imageUrl);
                     bundle.putString("imageProd", imageUrl);

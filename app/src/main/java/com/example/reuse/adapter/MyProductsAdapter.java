@@ -10,9 +10,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.reuse.R;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.ProductViewHolder> {
@@ -38,9 +41,36 @@ public class MyProductsAdapter extends RecyclerView.Adapter<MyProductsAdapter.Pr
     @Override
     public void onBindViewHolder(@NonNull MyProductsAdapter.ProductViewHolder holder, int position) {
         Product product = productList.get(position);
+        String sellerId = product.getIdVenditore();
+        new User(sellerId, new User.UserCallback() {
+            List<String> idProd = new ArrayList<>();
 
-        //rimosso holder.productImage.setImageResource(product.getImageResId());
+            @Override
+            public void onUserLoaded(User user) {
+                idProd = user.getProductsForSale();
+                //holder.userStatus.setText(idProd.size() + " products online");
+                holder.userName.setText(user.getUsername());
+                String profilePictureUrl = user.getImageUrl();
+                if (profilePictureUrl != null && !profilePictureUrl.isEmpty()) {
+                    Glide.with(context)
+                            .load(profilePictureUrl)// Error image in case of failure
+                            .into(holder.userAvatar);
+                } else {
+                    // Set a default image if profilePictureUrl is unavailable
+                    holder.userAvatar.setImageResource(R.drawable.user);
+                }
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
+
+            //rimosso holder.productImage.setImageResource(product.getImageResId());
         holder.productName.setText(product.getNome());
+
         //rimosso holder.productPrice.setText(product.getPrezzo());
         //rimosso holder.userAvatar.setImageResource(product.getUserAvatarResId());
         //rimosso holder.userName.setText(product.getUserName());

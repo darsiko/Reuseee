@@ -35,7 +35,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,7 +50,6 @@ public class EditProductScreen extends Fragment {
     private String pid;
     private Uri imageUri;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -57,7 +58,6 @@ public class EditProductScreen extends Fragment {
         EditText priceProd = view.findViewById(R.id.prezzo);
         EditText descrizioneProd=view.findViewById(R.id.descrizione_input);
         ImageView file = view.findViewById(R.id.product_image);
-        ImageButton addTag = view.findViewById(R.id.add_tag);
         Switch switchBaratto = view.findViewById(R.id.switch1);
         // Back button functionality
         LinearLayout backtoProfileButton = view.findViewById(R.id.goBackPreviusPage);
@@ -95,12 +95,7 @@ public class EditProductScreen extends Fragment {
                 openGallery();
             }
         });
-        addTag.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openTagDialog();
-            }
-        });
+
 
         Bundle args = getArguments();
         if (args != null) {
