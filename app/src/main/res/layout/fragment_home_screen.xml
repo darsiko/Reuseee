@@ -30,22 +30,6 @@
                     android:orientation="horizontal"
                     android:padding="8dp">
 
-                    <!-- Search Input -->
-                    <EditText
-                        android:id="@+id/editTextText"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:autofillHints=""
-                        android:hint="Search"
-                        android:inputType="text"
-                        android:drawableLeft="@drawable/baseline_search_24"
-                        android:drawablePadding="8dp"
-                        android:background="@android:color/transparent"
-                        android:textSize="16sp"
-                        android:padding="12dp"
-                        tools:ignore="HardcodedText,RtlHardcoded" />
-
                     <!-- Menu Button -->
                     <ImageButton
                         android:id="@+id/menuButton"
@@ -56,6 +40,30 @@
                         android:contentDescription="Menu"
                         app:tint="@color/primary"
                         tools:ignore="HardcodedText" />
+
+                    <!-- Search Input -->
+                    <EditText
+                        android:id="@+id/editTextText"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:autofillHints=""
+                        android:hint="Search"
+                        android:inputType="text"
+                        android:drawablePadding="8dp"
+                        android:background="@android:color/transparent"
+                        android:textSize="16sp"
+                        android:padding="12dp"
+                        tools:ignore="HardcodedText,RtlHardcoded" />
+
+                    <Button
+                        android:id="@+id/searchButton"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Cerca"
+                        android:textAllCaps="false"
+                        />
                 </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
@@ -104,15 +112,16 @@
                     />
                 <com.google.android.material.slider.RangeSlider
                     android:id="@+id/rangePrezziSlider"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_margin="16dp"
+                    android:layout_margin="8dp"
                     android:valueFrom="0"
                     android:valueTo="1000"
                     app:values="@array/initial_values"
                     android:stepSize="1"
                     app:labelBehavior="gone"
                     />
+
             </LinearLayout>
 
 
@@ -128,48 +137,22 @@
                     android:id="@+id/recents_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Recents Items"
+                    android:text="Some Items"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:paddingBottom="8dp"
                     tools:ignore="HardcodedText" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/horizontal_recycler_view_recents"
+                    android:id="@+id/productList"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:orientation="vertical"
+                    app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                     android:clipToPadding="false"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp" />
 
-            </LinearLayout>
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:id="@+id/lastAdded_title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Last Added"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:paddingBottom="8dp"
-                    tools:ignore="HardcodedText" />
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/horizontal_recycler_view_lastadded"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                    android:clipToPadding="false"
-                    android:paddingStart="8dp"
-                    android:paddingEnd="8dp" />
             </LinearLayout>
         </LinearLayout>
 

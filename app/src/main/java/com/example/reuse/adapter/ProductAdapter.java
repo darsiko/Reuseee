@@ -26,13 +26,13 @@ import java.util.List;
 public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductViewHolder> {
     private StorageReference storageRef;
     private Context context;
-    private List<Product> productList;
+    private List<Product> productList = new ArrayList<>();
     private OnItemClickListener onItemClickListener;
 
     // Constructor with custom OnItemClickListener
-    public ProductAdapter(Context context, List<Product> productList, OnItemClickListener onItemClickListener) {
+    public ProductAdapter(Context context, List<Product> newProductList, OnItemClickListener onItemClickListener) {
         this.context = context;
-        this.productList = productList;
+        this.productList.addAll(newProductList);
         this.onItemClickListener = onItemClickListener;
     }
 
@@ -44,7 +44,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         return new ProductViewHolder(view);
     }
     public void updateList(List<Product> newProductList) {
-        productList = newProductList;
+        this.productList.clear();
+        this.productList.addAll(newProductList);
         notifyDataSetChanged();
     }
 

@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -50,92 +51,35 @@ import java.util.List;
 import java.util.Objects;
 
 public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickListener  {
-    private RecyclerView recyclerViewrecents;
-    private RecyclerView recyclerViewlastAdded;
-    private ProductAdapter adapter1, adapter2;
-    private List<Product> productListRecents, productListLastAdded;
+    private RecyclerView recyclerView;
+    private ProductAdapter adapter;
+    private List<Product> productList;
     private DatabaseReference databaseReference;
-    public HomeScreen() {
-        // Required empty public constructor
-    }
+
+    public HomeScreen() {}
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View rootView = inflater.inflate(R.layout.fragment_home_screen, container, false);
+        View view = inflater.inflate(R.layout.fragment_home_screen, container, false);
 
         // Initialize RecyclerViews after the view is inflated
-        recyclerViewrecents = rootView.findViewById(R.id.horizontal_recycler_view_recents);
-        recyclerViewlastAdded = rootView.findViewById(R.id.horizontal_recycler_view_lastadded);
-
+        recyclerView = view.findViewById(R.id.productList);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
         databaseReference = FirebaseDatabase.getInstance().getReference("Products");
-
-        // Set LayoutManager for both RecyclerViews
-        recyclerViewrecents.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-        recyclerViewlastAdded.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
-
         // Initialize product list with sample data
-        productListRecents = new ArrayList<>();
-        productListLastAdded = new ArrayList<>();
+        productList = new ArrayList<>();
 
+        loadProducts();
 
-        EditText searchInput = rootView.findViewById(R.id.editTextText);
-        searchInput.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (s.length() > 2) { // Cerca solo se ci sono almeno 3 caratteri
-                    searchProducts(s.toString());
-                }
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {}
-        });
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                productListRecents.clear(); // Clear old data
-                productListLastAdded.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Product product = snapshot.getValue(Product.class);
-                    if (product != null) {
-                        product.setId(snapshot.getKey());
-                        String tmp=snapshot.child("imageUrl").getValue(String.class);
-                        product.setImageUrl(tmp);
-                        if(product.getPrezzo()%2==0){
-                            productListLastAdded.add(product);
-                        }else{
-                            productListRecents.add(product);
-                        }
-                    }
-                }
-                adapter2.notifyDataSetChanged();
-                adapter1.notifyDataSetChanged(); // Notify adapter about the data change
-                // Log.d("ProductBoughtScreen", "Products fetched: " + productList.toString());
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-                Log.e("ProductBoughtScreen", "Error fetching data: " + databaseError.getMessage());
-                Toast.makeText(getContext(), "Failed to load products.", Toast.LENGTH_SHORT).show();
-            }
-        });
-        // Set the adapter for both RecyclerViews
-
-        adapter1 = new ProductAdapter(getContext(), productListRecents, this);
-        recyclerViewlastAdded.setAdapter(adapter1);
-        adapter2 = new ProductAdapter(getContext(), productListLastAdded, this);
-        recyclerViewrecents.setAdapter(adapter2);
-
+        adapter = new ProductAdapter(getContext(), productList, this);
+        recyclerView.setAdapter(adapter);
 
         //animazione pop up filtri
-        ImageButton menuButton = rootView.findViewById(R.id.menuButton);
-        LinearLayout filterContainer = rootView.findViewById(R.id.filterContainer);
+        ImageButton menuButton = view.findViewById(R.id.menuButton);
+        LinearLayout filterContainer = view.findViewById(R.id.filterContainer);
         filterContainer.post(new Runnable() {
             @Override
             public void run() {
@@ -199,44 +143,49 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
         });
 
         //animazione barButton e setting dell'attività del bottone (nella ricerca basterà controllare il parametro boolean barButtonActive
-        Button barButton = rootView.findViewById(R.id.barattoButton);
+        Button barButton = view.findViewById(R.id.barattoButton);
         barButton.setBackgroundColor(Color.RED);
+        final boolean[] barButtonActive = new boolean[1];
         barButton.setOnClickListener(new View.OnClickListener() {
-            boolean barButtonActive = false;
             @Override
             public void onClick(View v) {
-                if(!barButtonActive){
+                if(!barButtonActive[0]){
                     barButton.setBackgroundColor(ContextCompat.getColor(getContext(), R.color.dark));
-                    barButtonActive = true;
+                    barButtonActive[0] = true;
                 }
                 else{
                     barButton.setBackgroundColor(Color.RED);
-                    barButtonActive = false;
+                    barButtonActive[0] = false;
                 }
             }
         });
 
         //barra del range di prezzo
-        EditText min = rootView.findViewById(R.id.minPriceSetter);
-        EditText max = rootView.findViewById(R.id.maxPriceSetter);
-        RangeSlider rangePrezzi = rootView.findViewById(R.id.rangePrezziSlider);
-
+        EditText min = view.findViewById(R.id.minPriceSetter);
+        EditText max = view.findViewById(R.id.maxPriceSetter);
+        RangeSlider rangePrezzi = view.findViewById(R.id.rangePrezziSlider);
         final boolean[] isUpdating = {false};
-
+        final float[] minVal = new float[1];
+        final float[] maxVal = new float[1];
+        final float[] minAbs = new float[1];
+        final float[] maxAbs = new float[1];
+        minVal[0] = rangePrezzi.getValues().get(0);
+        maxVal[0] = rangePrezzi.getValues().get(1);
+        minAbs[0] = rangePrezzi.getValues().get(0);
+        maxAbs[0] = rangePrezzi.getValues().get(1);
         rangePrezzi.addOnChangeListener(new RangeSlider.OnChangeListener() {
             @Override
             public void onValueChange(@NonNull RangeSlider slider, float value, boolean fromUser) {
                 if(!isUpdating[0]){
                     isUpdating[0] = true;
-                    float minVal = slider.getValues().get(0);
-                    float maxVal = slider.getValues().get(1);
-                    min.setText(String.valueOf((int) minVal));
-                    max.setText(String.valueOf((int) maxVal));
+                    minVal[0] = slider.getValues().get(0);
+                    maxVal[0] = slider.getValues().get(1);
+                    min.setText(String.valueOf((int) minVal[0]));
+                    max.setText(String.valueOf((int) maxVal[0]));
                     isUpdating[0] = false;
                 }
             }
         });
-
         min.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after){}
@@ -251,9 +200,9 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
                     if(!text.isEmpty()){
                         try{
                             isUpdating[0] = true;
-                            float minVal = Float.parseFloat(text);
-                            if(minVal>=rangePrezzi.getValueFrom()){
-                                if(minVal<=rangePrezzi.getValues().get(1)) rangePrezzi.setValues(minVal, rangePrezzi.getValues().get(1));
+                            minVal[0] = Float.parseFloat(text);
+                            if(minVal[0]>=rangePrezzi.getValueFrom()){
+                                if(minVal[0]<=rangePrezzi.getValues().get(1)) rangePrezzi.setValues(minVal[0], rangePrezzi.getValues().get(1));
                                 else rangePrezzi.setValues(rangePrezzi.getValues().get(1), rangePrezzi.getValues().get(1));
                             }
                             else rangePrezzi.setValues(rangePrezzi.getValueFrom(), rangePrezzi.getValues().get(1));
@@ -263,10 +212,13 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
                             isUpdating[0] = false;
                         }
                     }
+                    else{
+                        minVal[0] = minAbs[0];
+                        rangePrezzi.setValues(minVal[0], rangePrezzi.getValues().get(1));
+                    }
                 }
             }
         });
-
         max.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -281,9 +233,9 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
                     if(!text.isEmpty()){
                         try{
                             isUpdating[0] = true;
-                            float maxVal = Float.parseFloat(text);
-                            if(maxVal<=rangePrezzi.getValueTo()){
-                                if(maxVal>=rangePrezzi.getValues().get(0)) rangePrezzi.setValues(rangePrezzi.getValues().get(0), maxVal);
+                            maxVal[0] = Float.parseFloat(text);
+                            if(maxVal[0]<=rangePrezzi.getValueTo()){
+                                if(maxVal[0]>=rangePrezzi.getValues().get(0)) rangePrezzi.setValues(rangePrezzi.getValues().get(0), maxVal[0]);
                                 else rangePrezzi.setValues(rangePrezzi.getValues().get(0), rangePrezzi.getValues().get(0));
                             }
                             else rangePrezzi.setValues(rangePrezzi.getValues().get(0), rangePrezzi.getValueTo());
@@ -292,40 +244,108 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
                         } finally {
                             isUpdating[0] = false;
                         }
-
-
+                    }
+                    else{
+                        maxVal[0] = maxAbs[0];
+                        rangePrezzi.setValues(rangePrezzi.getValues().get(0), maxVal[0]);
                     }
                 }
             }
         });
+        EditText searchInput = view.findViewById(R.id.editTextText);
+        final String[] search = new String[1];
+        search[0] = "";
+        searchInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-        return rootView;  // Return the view you inflated
-    }
-    private void searchProducts(String query) {
-        List<Product> filteredProducts = new ArrayList<>();
-        for (Product prod : productListLastAdded) {
-            if (prod.getNome().toLowerCase().contains(query.toLowerCase())) {
-                filteredProducts.add(prod);
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                search[0]=s.toString();
             }
+        });
+
+        //Ricerca
+        Button searchButton = view.findViewById(R.id.searchButton);
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                searchProducts(search[0], barButtonActive[0], minVal[0], maxVal[0]);
+            }
+        });
+
+        return view;  // Return the view you inflated
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        loadProducts();
+    }
+    private void loadProducts(){
+        databaseReference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                productList.clear();
+                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                    Product product = snapshot.getValue(Product.class);
+                    if(product!=null) productList.add(product);
+                }
+                adapter.updateList(productList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Log.e("ProductBoughtScreen", "Error fetching data: " + error.getMessage());
+                Toast.makeText(getContext(), "Failed to load products.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+    private void searchProducts(String query, boolean baratto, float min, float max) {
+        List<Product> filteredProducts = new ArrayList<>();
+        if(query.isEmpty()){
+            if(baratto){
+                for(Product prod : productList){
+                    if(prod.isBaratto() && prod.getPrezzo()>=min && prod.getPrezzo()<=max){
+                        filteredProducts.add(prod);
+                    }
+                }
+            }
+            else{
+                for (Product prod : productList) {
+                    if (prod.getPrezzo()>=min && prod.getPrezzo()<=max) {
+                        filteredProducts.add(prod);
+                    }
+                }
+            }
+            adapter.updateList(filteredProducts);
         }
-
-        // Passa i risultati al nuovo frammento
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList("filteredProducts", new ArrayList<>(filteredProducts));
-        SearchResultFragment searchResultsFragment = new SearchResultFragment();
-        searchResultsFragment.setArguments(bundle);
-
-        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragment_container, searchResultsFragment);
-        transaction.addToBackStack(null); // Per tornare indietro
-        transaction.commit();
+        else{
+            if(baratto){
+                for(Product prod : productList){
+                    if(prod.getNome().toLowerCase().contains(query.toLowerCase()) && prod.isBaratto() && prod.getPrezzo()>=min && prod.getPrezzo()<=max){
+                        filteredProducts.add(prod);
+                    }
+                }
+            }
+            else{
+                for (Product prod : productList) {
+                    if (prod.getNome().toLowerCase().contains(query.toLowerCase()) && prod.getPrezzo()>=min && prod.getPrezzo()<=max) {
+                        filteredProducts.add(prod);
+                    }
+                }
+            }
+            adapter.updateList(filteredProducts);
+        }
     }
     @Override
     public void onItemClick(Product product) {
-
         Bundle bundle = new Bundle();
 
-// Fetch user details asynchronously
+        // Fetch user details asynchronously
         new User(product.getIdVenditore(), new User.UserCallback() {
             @Override
             public void onUserLoaded(User user) {
