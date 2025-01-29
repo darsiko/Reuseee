@@ -1,9 +1,9 @@
 package com.example.reuse.screens;
 
-import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +18,11 @@ import com.example.reuse.R;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class DetailProdScreen extends Fragment {
-
     private TextView nomeProdotto, prezzoProdotto, nomeVenditore, descrizione, statusVenditore;
     private ImageView imageProd, sellerImage;
     private Button compra, scambia, contatta;
     private String prezzo;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -38,12 +38,11 @@ public class DetailProdScreen extends Fragment {
         descrizione = view.findViewById(R.id.descrizione);
         compra = view.findViewById(R.id.buyButton);
         scambia = view.findViewById(R.id.tradeButton);
-        contatta = view.findViewById(R.id.contactButton);
+        contatta = view.findViewById(R.id.contactButton); //penso sia per i resi. Faremo che ti apre gmail con la chat pronta per contattarlo lì
         statusVenditore = view.findViewById(R.id.sellerProductsCount);
         LinearLayout linearLayout = view.findViewById(R.id.goBackPreviusPage);
 
         // Restore data from bundle
-
         Bundle args = getArguments();
         if (args != null) {
             String prodId = args.getString("prodId");
@@ -63,28 +62,29 @@ public class DetailProdScreen extends Fragment {
 
                 compra.setVisibility(View.GONE);
             }
-        compra.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                DetailPaymnent detailPaymnent = new DetailPaymnent();
-                Bundle bundle = new Bundle();
-                bundle.putString("prodId", prodId);
-                bundle.putString("sellerId", sellerId);
-                bundle.putString("nome", nameProd);
-                bundle.putString("descrizione", descriz);
-                bundle.putString("prezzo", prezzo);
-                bundle.putString("imageProd", imageProdUrl);
-                bundle.putString("idOrdine", idOrdine);
+            compra.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    DetailPayment detailPayment = new DetailPayment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString("prodId", prodId);
+                    bundle.putString("sellerId", sellerId);
+                    bundle.putString("nome", nameProd);
+                    bundle.putString("descrizione", descriz);
+                    bundle.putString("prezzo", prezzo);
+                    bundle.putString("imageProd", imageProdUrl);
+                    bundle.putString("idOrdine", idOrdine);
 
 
-                detailPaymnent.setArguments(bundle);
-                // Perform the fragment transaction to replace the current fragment
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, detailPaymnent)  // Use the correct container ID
-                        .addToBackStack(null)  // Optional: add to the back stack to enable back navigation
-                        .commit();
-            }
-        });
+                    detailPayment.setArguments(bundle);
+                    // Perform the fragment transaction to replace the current fragment
+                    getActivity().getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.fragment_container, detailPayment)  // Use the correct container ID
+                            .addToBackStack(null)  // Optional: add to the back stack to enable back navigation
+                            .commit();
+                }
+            });
+
             nomeProdotto.setText(nameProd);
             prezzoProdotto.setText(prezzo+"€");
             nomeVenditore.setText(venditore);
@@ -97,8 +97,30 @@ public class DetailProdScreen extends Fragment {
             descrizione.setText(descriz);
         }
 
-
         linearLayout.setOnClickListener(view1 -> getParentFragmentManager().popBackStack());
+
+        scambia.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle currentBundle = getArguments();
+                if(currentBundle != null){
+                    Bundle chatBundle = new Bundle();
+                    chatBundle.putString("sellerId", currentBundle.getString("sellerId"));
+                    chatBundle.putString("venditore", currentBundle.getString("venditore"));
+                    chatBundle.putString("userProfileImage", currentBundle.getString("userProfileImage"));
+                    chatBundle.putString("nomeProdotto", currentBundle.getString("nome"));
+                    chatBundle.putString("imageProd", currentBundle.getString("imageProd"));
+
+                    ChatListScreen chatListFragment = new ChatListScreen();
+                    chatListFragment.setArguments(chatBundle);
+
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, chatListFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
+                }
+            }
+        });
 
         return view;
     }

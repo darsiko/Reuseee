@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,21 +19,21 @@ import com.example.reuse.models.Product;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class DetailPaymnent extends Fragment {
+public class DetailPayment extends Fragment {
     LinearLayout back;
     TextView textPrezzo, etCardNumber, etExpiryDate, etCVC;
     RadioButton rbCreditCard;
     Button btnPayNow;
     Product purchasedProduct;
 
-    public DetailPaymnent() {
+    public DetailPayment() {
         // Costruttore vuoto richiesto per i Fragments
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail_paymnent, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_payment, container, false);
         back = view.findViewById(R.id.goBackPreviusPage);
         btnPayNow = view.findViewById(R.id.btnPayNow);
         textPrezzo = view.findViewById(R.id.tvTotalAmount);

@@ -1,31 +1,28 @@
 package com.example.reuse.models;
+
+import static java.security.AccessController.getContext;
+
 import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class User {
-
-    private String username;
-    private String nome;
-    private String cognome;
-    private String stato;
-    private String citta;
+    private String username, nome, cognome, stato, citta, indirizzo, data, telefono, imageUrl;
     private int cap;
-    private String indirizzo;
-    private String data;
-    private String telefono;
     private List<String> productsForSale;
-    private String imageUrl;
-
 
     //costruttori
     public User(){}
@@ -68,6 +65,21 @@ public class User {
             }
         });
     }
+
+    public User(final User other){
+        this.username=other.getUsername();
+        this.nome=other.getNome();
+        this.cognome=other.getCognome();
+        this.stato=other.getStato();
+        this.citta=other.getCitta();
+        this.indirizzo=other.getIndirizzo();
+        this.data=other.getData();
+        this.telefono=other.getTelefono();
+        this.imageUrl=other.imageUrl;
+        this.cap=other.cap;
+        productsForSale.addAll(other.productsForSale);
+    }
+
     public User(String uid) {
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
 
@@ -100,6 +112,7 @@ public class User {
             }
         });
     }
+
     public interface UserCallback {
         void onUserLoaded(User user);
         void onError(Exception e);
@@ -134,7 +147,6 @@ public class User {
         this.imageUrl=imageUrl;
     }
 
-
     //update per i dati del profilo
     public void updateProfilo(String uid){
         updateUsername(uid);
@@ -148,7 +160,6 @@ public class User {
         updateImageUrl(uid);
         updateData(uid);
     }
-
 
     //rimuovi oggetto dalla lista di quelli venduti
     public void removeProductForSale(String pid, String uid){
@@ -221,8 +232,6 @@ public class User {
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
         dbr.child("citta").setValue(citta);
     }
-
-
 
 
     //getter e setter dell'oggetto (non dal database)

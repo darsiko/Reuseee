@@ -33,16 +33,16 @@ public class MyProductsScreen extends Fragment implements MyProductsAdapter.OnIt
         // Initialize product list and add the received product
         productList = new ArrayList<>();
 
-        // Retrieve the purchased product from the Bundle
+        //Retrieve the purchased product from the Bundle
         Bundle args = getArguments();
-        if (args != null) {
+        if(args!=null){
             Product purchasedProduct = args.getParcelable("purchased_product");
-            if (purchasedProduct != null) {
-                productList.add(purchasedProduct); // Add the purchased product to the list
+            if(purchasedProduct!=null){
+                productList.add(purchasedProduct);
             }
         }
 
-        // Set the adapter with the updated list
+        //Set the adapter with the updated list
         adapter = new MyProductsAdapter(getContext(), productList, this);
         recyclerViewMyProducts.setAdapter(adapter);
 
@@ -53,6 +53,6 @@ public class MyProductsScreen extends Fragment implements MyProductsAdapter.OnIt
 
     @Override
     public void onItemClick(Product product) {
-        // Handle item click (if needed)
+        //Handle item click, if needed
     }
 }

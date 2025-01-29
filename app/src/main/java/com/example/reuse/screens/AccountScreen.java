@@ -26,7 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
-
 public class AccountScreen extends Fragment {
     Button broughtProducts;
     private ShapeableImageView imageProfile;
@@ -42,7 +41,6 @@ public class AccountScreen extends Fragment {
         // Find the Button after the layout has been inflated
         LinearLayout editProfileButton = view.findViewById(R.id.editProfile);
         broughtProducts = (Button) view.findViewById(R.id.productBrought);
-
 
         logout = (LinearLayout) view.findViewById(R.id.logOut);
 

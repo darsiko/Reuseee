@@ -2,6 +2,7 @@ package com.example.reuse.screens;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,6 +19,14 @@ import com.example.reuse.adapter.ProductAdapter;
 import com.example.reuse.adapter.ProductBroughtAdapter;
 import com.example.reuse.models.Product;
 import com.example.reuse.models.User;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,22 +46,67 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
         recyclerViewUsers = rootView.findViewById(R.id.chatList);
         recyclerViewUsers.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-
         userList = new ArrayList<>();
-        //rimosso userList.add(new User("Darsiko", "Dario", "Rossi", 32011, "Via rossi 1", "1/1/2001"));
-        //rimosso userList.add(new User("Martella", "Marta", "Verdi", 31012, "Via verdi 2", "2/2/2002"));
-        // Add more products as needed...
-
-        // Set the adapter for both RecyclerViews
         adapter = new ChatListAdapter(getContext(), userList, this);
         recyclerViewUsers.setAdapter(adapter);
 
-
-
-        // Inflate the layout for this fragment
+        Bundle bundle = getArguments();
+        if(bundle!=null){
+            String sellerId = bundle.getString("sellerId");
+            loadUsers(sellerId);
+        }
         return rootView;
     }
 
+    private boolean contains(String userName){
+        for(User u : userList){
+            if(u.getUsername()==userName) return true;
+        }
+        return false;
+    }
+
+
+    //chat con te stesso
+    private void loadUsers(final String uID){
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(uID);
+
+        dbRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    String username=snapshot.child("username").getValue(String.class);
+                    if(!contains(username)){
+                        String nome=snapshot.child("nome").getValue(String.class);
+                        String cognome=snapshot.child("cognome").getValue(String.class);
+                        String telefono=snapshot.child("telefono").getValue(String.class);
+                        String indirizzo = snapshot.child("indirizzo").getValue(String.class);
+                        String data = snapshot.child("data").getValue(String.class);
+                        String imageUrl = snapshot.child("imageUrl").getValue(String.class);
+                        String stato = snapshot.child("stato").getValue(String.class);
+                        String citta = snapshot.child("citta").getValue(String.class);
+
+                        int cap = snapshot.child("cap").getValue(int.class);
+                        List<String> productsForSale = new ArrayList<>();
+                        for (DataSnapshot productSnapshot : snapshot.child("productsForSale").getChildren()) {
+                            String pid = productSnapshot.getValue(String.class);
+                            if (pid != null) {
+                                productsForSale.add(pid);
+                            }
+                        }
+                        User user = new User(username, nome, cognome, telefono, stato, citta, cap, indirizzo, data, imageUrl, productsForSale);
+                        userList.add(user);
+                        adapter.updateList(userList);
+                    }
+                    //String username, String nome, String cognome, String telefono, String stato,
+                    // String citta, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale
+
+                }
+            }
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {}
+        });
+
+    }
     @Override
     public void onItemClick(User user) {
         // For example, navigate to the product details page or display a Toast

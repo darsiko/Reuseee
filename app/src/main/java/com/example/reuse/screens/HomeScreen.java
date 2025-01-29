@@ -363,7 +363,7 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
                 bundle.putString("nome", product.getNome());
                 bundle.putString("descrizione", product.getDescrizione());
                 bundle.putString("prezzo", String.valueOf(product.getPrezzo()));
-                bundle.putString("idordine", product.getIdOrdine());
+                bundle.putString("idOrdine", product.getIdOrdine());
 // Fetch user profile image URL
                 String userProfileImageUrl = user.getImageUrl();
                 bundle.putString("userProfileImage", userProfileImageUrl);

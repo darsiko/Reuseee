@@ -55,7 +55,6 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
         Product product = productList.get(position);
         String sellerId = product.getIdVenditore();
 
-
         // Use the callback to set user details once loaded
         new User(sellerId, new User.UserCallback() {
             List<String> idProd = new ArrayList<>();
@@ -71,7 +70,8 @@ public class ProductAdapter extends RecyclerView.Adapter<ProductAdapter.ProductV
                             .into(holder.userAvatar);
                 } else {
                     // Set a default image if profilePictureUrl is unavailable
-                    holder.userAvatar.setImageResource(R.drawable.user);
+                    holder.userAvatar
+                            .setImageResource(R.drawable.user);
                 }
 
             }
