@@ -43,6 +43,16 @@ public class Product implements Parcelable {
         this.imageUrl=imageUrl;
         this.idOrdine=idOrdine;
     }
+    public Product(String prodId,String idVenditore, String nome, String descrizione, double prezzo, boolean baratto, String imageUrl, String idOrdine){
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(prodId);
+        this.idVenditore=dbr.child("idVenditore").get().toString();
+        this.nome=dbr.child("nome").get().toString();
+        this.descrizione=dbr.child("descrizione").get().toString();
+        this.prezzo=Double.parseDouble(dbr.child("prezzo").get().toString());
+        this.baratto= Boolean.parseBoolean(dbr.child("baratto").get().toString());
+        this.imageUrl=dbr.child("imageUrl").get().toString();
+        this.idOrdine=dbr.child("idOrdine").get().toString();
+    }
     //costruttore per aggiunta oggetto in vendita
     public Product(String nome, String descrizione, double prezzo, boolean baratto){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();

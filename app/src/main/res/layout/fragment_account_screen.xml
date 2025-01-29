@@ -174,13 +174,6 @@
             android:layout_height="wrap_content"
             android:text="Visualizza i miei prodotti in vendita" />
 
-        <Button
-            android:id="@+id/myProducts"
-            android:text="Visualizza i miei prodotti aquistati"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           />
-
     </LinearLayout>
 </LinearLayout>
 

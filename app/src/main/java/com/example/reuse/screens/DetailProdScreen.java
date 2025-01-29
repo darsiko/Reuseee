@@ -22,7 +22,7 @@ public class DetailProdScreen extends Fragment {
     private TextView nomeProdotto, prezzoProdotto, nomeVenditore, descrizione, statusVenditore;
     private ImageView imageProd, sellerImage;
     private Button compra, scambia, contatta;
-
+    private String prezzo;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,15 +46,16 @@ public class DetailProdScreen extends Fragment {
 
         Bundle args = getArguments();
         if (args != null) {
-
+            String prodId = args.getString("prodId");
             String sellerId = args.getString("sellerId", "");
             String nameProd = args.getString("nome");
-            String prezzoProd = args.getString("prezzo");
+            prezzo = args.getString("prezzo");
             String descriz = args.getString("descrizione");
             String venditore = args.getString("venditore");
             String imageProdUrl = args.getString("imageProd");
             String prodottiVenditore = args.getString("status");
             String immagineVenditore = args.getString("userProfileImage");
+            String idOrdine = args.getString("idOrdine");
             if(currentUserId.equals(sellerId)){
                 contatta.setVisibility(View.GONE);
 
@@ -62,9 +63,30 @@ public class DetailProdScreen extends Fragment {
 
                 compra.setVisibility(View.GONE);
             }
+        compra.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DetailPaymnent detailPaymnent = new DetailPaymnent();
+                Bundle bundle = new Bundle();
+                bundle.putString("prodId", prodId);
+                bundle.putString("sellerId", sellerId);
+                bundle.putString("nome", nameProd);
+                bundle.putString("descrizione", descriz);
+                bundle.putString("prezzo", prezzo);
+                bundle.putString("imageProd", imageProdUrl);
+                bundle.putString("idOrdine", idOrdine);
 
+
+                detailPaymnent.setArguments(bundle);
+                // Perform the fragment transaction to replace the current fragment
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.fragment_container, detailPaymnent)  // Use the correct container ID
+                        .addToBackStack(null)  // Optional: add to the back stack to enable back navigation
+                        .commit();
+            }
+        });
             nomeProdotto.setText(nameProd);
-            prezzoProdotto.setText(prezzoProd);
+            prezzoProdotto.setText(prezzo+"€");
             nomeVenditore.setText(venditore);
             Glide.with(requireContext())
                     .load(immagineVenditore)

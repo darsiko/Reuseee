@@ -23,31 +23,32 @@
             android:layout_height="wrap_content">
 
             <!-- Back Button -->
+
+            <!-- Chat User Name -->
             <LinearLayout
                 android:id="@+id/goBackPreviusPage"
-                android:focusable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
                 android:background="?android:attr/selectableItemBackground"
                 android:clickable="true"
-                android:layout_marginLeft="0dp"
-                android:layout_width="wrap_content"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
+                android:focusable="true"
+                android:orientation="vertical">
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="30dp"
                     android:layout_height="wrap_content"
+                    android:layout_marginLeft="30dp"
                     android:src="@drawable/baseline_arrow_back_ios_new_24" />
 
                 <TextView
-                    android:text="Indietro "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="start"
                     android:layout_marginLeft="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:text="Indietro " />
             </LinearLayout>
 
-            <!-- Chat User Name -->
             <TextView
                 android:id="@+id/chatUserName"
                 android:layout_gravity="center"

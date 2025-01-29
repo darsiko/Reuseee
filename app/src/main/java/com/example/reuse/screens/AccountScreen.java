@@ -28,7 +28,7 @@ import com.squareup.picasso.Picasso;
 
 
 public class AccountScreen extends Fragment {
-    Button broughtProducts, myProducts;
+    Button broughtProducts;
     private ShapeableImageView imageProfile;
 
     private LinearLayout logout;
@@ -42,7 +42,7 @@ public class AccountScreen extends Fragment {
         // Find the Button after the layout has been inflated
         LinearLayout editProfileButton = view.findViewById(R.id.editProfile);
         broughtProducts = (Button) view.findViewById(R.id.productBrought);
-        myProducts = (Button) view.findViewById(R.id.myProducts);
+
 
         logout = (LinearLayout) view.findViewById(R.id.logOut);
 
@@ -62,7 +62,6 @@ public class AccountScreen extends Fragment {
             if(currentUser.isAnonymous()){
                 editProfileButton.setVisibility(View.GONE);
                 broughtProducts.setVisibility(View.GONE);
-                myProducts.setVisibility(View.GONE);
             }
             else{
                 DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users");
@@ -130,19 +129,6 @@ public class AccountScreen extends Fragment {
                 // Perform the fragment transaction to replace the current fragment
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .replace(R.id.fragment_container, editProfileFragment)  // Use the correct container ID
-                        .addToBackStack(null)  // Optional: add to the back stack to enable back navigation
-                        .commit();
-            }
-        });
-
-        myProducts.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MyProductsScreen myProductsScreen = new MyProductsScreen();
-
-                // Perform the fragment transaction to replace the current fragment
-                getActivity().getSupportFragmentManager().beginTransaction()
-                        .replace(R.id.fragment_container, myProductsScreen)  // Use the correct container ID
                         .addToBackStack(null)  // Optional: add to the back stack to enable back navigation
                         .commit();
             }
