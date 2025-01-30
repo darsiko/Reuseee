@@ -114,7 +114,7 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
                                                                     chats.add(cid);
                                                                 }
                                                             }
-                                                            User user = new User(username, nome, cognome, telefono, stato, citta, cap, indirizzo, data, imageUrl, productsForSale, chats);
+                                                            User user = new User(uID, username, nome, cognome, telefono, stato, citta, cap, indirizzo, data, imageUrl, productsForSale, chats);
                                                             userList.add(user);
                                                             adapter.updateList(userList);
                                                         }
@@ -144,9 +144,12 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
         Toast.makeText(getContext(), "Clicked on: " + user.getUsername(), Toast.LENGTH_SHORT).show();
 
 
+
         // You can now pass the product data to a new fragment or activity, e.g.
         Bundle bundle = new Bundle();
         bundle.putString("name", user.getUsername());
+        String id = user.getId();
+        bundle.putString("sellerID", user.getId());
 
         ChatScreen chatScreen = new ChatScreen();
         chatScreen.setArguments(bundle);

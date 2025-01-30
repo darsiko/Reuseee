@@ -55,9 +55,15 @@ public class Chat {
 
                 this.messaggi = new ArrayList<>();
                 for (DataSnapshot mSnapshot : snapshot.child("chats").getChildren()) {
+
+                    String content = mSnapshot.child("contenuto").getValue(String.class);
+                    addMessaggio(idUtente1, content);
+
+                    /*
                     String mid = mSnapshot.getKey();
                     Messaggio m = new Messaggio(mid, this.id);
                     messaggi.add(m);
+                     */
                 }
                 if (snapshot.hasChild("idOfferente")) {
                     String idOfferente=snapshot.child("idOfferente").getValue(String.class);

@@ -138,7 +138,8 @@ public class User {
 
     }
     //costruttore per creazione User
-    public User(String username, String nome, String cognome, String telefono, String stato, String citta, int cap, String indirizzo, String data){
+    public User(String id, String username, String nome, String cognome, String telefono, String stato, String citta, int cap, String indirizzo, String data){
+        this.id = id;
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -154,7 +155,8 @@ public class User {
     }
 
     //costruttore
-    public User(String username, String nome, String cognome, String telefono, String stato, String citta, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale, List<String> chats){
+    public User(String id, String username, String nome, String cognome, String telefono, String stato, String citta, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale, List<String> chats){
+        this.id = id;
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -375,6 +377,7 @@ public class User {
     }
 
     public String getId(){
+        String a = this.id;
         return this.id;
     }
 }
