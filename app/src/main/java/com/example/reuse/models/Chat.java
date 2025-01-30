@@ -318,5 +318,28 @@ public class Chat {
         return scambio;
     }
 
+    public void checkOfferta(CheckOffertaCallback callback) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats").child(id);
+
+        ref.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                DataSnapshot dataSnapshot = task.getResult();
+                if (dataSnapshot.child("ifOfferente").exists()) {
+                    System.out.println("Offerta già esistente");
+                    callback.onResult(true); // Invoca il callback con true
+                } else {
+                    System.out.println("Nessuna offerta già esistente");
+                    callback.onResult(false); // Invoca il callback con false
+                }
+            } else {
+                System.out.println("Nessuna chat trovata");
+                callback.onResult(false); // Anche in caso di errore restituisce false
+            }
+        });
+    }
+    public interface CheckOffertaCallback {
+        void onResult(boolean exists);
+    }
+
 
 }
