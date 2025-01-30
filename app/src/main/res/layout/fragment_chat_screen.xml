@@ -67,7 +67,7 @@
 
                 <ImageView
                     android:layout_width="wrap_content"
-                    android:layout_marginLeft="30dp"
+                    android:layout_marginLeft="35dp"
                     android:layout_height="wrap_content"
                     android:src="@drawable/baseline_currency_exchange_24" />
 
@@ -78,29 +78,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/trash"
-                android:focusable="true"
-                android:background="?android:attr/selectableItemBackground"
-                android:clickable="true"
 
-                android:layout_width="wrap_content"
-                android:orientation="vertical"
-                android:layout_height="wrap_content">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_marginLeft="30dp"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/baseline_delete_24" />
-
-                <TextView
-                    android:text="Elimina "
-                    android:layout_gravity="start"
-                    android:layout_marginLeft="20dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
         </LinearLayout>
         <LinearLayout
         android:layout_width="match_parent"

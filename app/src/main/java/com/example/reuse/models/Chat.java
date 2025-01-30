@@ -16,10 +16,8 @@ public class Chat {
     private String id="";
     private String idUtente1;
     private String idUtente2;
-    private List<Messaggio> messaggi;
+    private List<Messaggio> messaggi = new ArrayList<>();
     private  Scambio scambio;
-
-
 
     //costruttore se servono metodi anche con oggetto vuoto
     public Chat() {
@@ -29,11 +27,20 @@ public class Chat {
         this.messaggi=new ArrayList<>();
     }
     //costruttore manuale
-    public Chat(String idUtente1, String idUtente2, List<Messaggio> messaggi){
-        this.idUtente1=idUtente1;
-        this.idUtente2=idUtente2;
-        this.messaggi=messaggi;
+    public Chat(String idUtente1, String idUtente2, List<Messaggio> messaggi) {
+        this.idUtente1 = idUtente1;
+        this.idUtente2 = idUtente2;
+        this.messaggi = messaggi;
     }
+
+    public void copy(final Chat other){
+        this.id = other.id;
+        this.idUtente1 = other.idUtente1;
+        this.idUtente2 = other.idUtente2;
+        this.messaggi.addAll(other.messaggi);
+        this.scambio = other.scambio;
+    }
+
 
     //UTILIZZARE
     //crea oggetto chat a partire dall'id (prendetelo dalla lista delle chat dell'utente)
