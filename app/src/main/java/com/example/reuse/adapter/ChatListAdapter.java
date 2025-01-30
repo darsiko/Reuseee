@@ -49,28 +49,26 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
     public void onBindViewHolder(@NonNull ChatListViewHolder holder, int position) {
         User user = userList.get(position);
 
-        for(User u : userList){
-            String profilePic = u.getImageUrl();
-            if(profilePic!=null && !profilePic.isEmpty()){
-                Glide.with(context)
-                        .load(profilePic)
-                        .into(holder.userAvatar);
-            }
-            else{
-                holder.userAvatar
-                        .setImageResource(R.drawable.user);
-            }
-            String userName = u.getUsername();
-            if(userName!=null && !userName.isEmpty()){
-                holder.userName.setText(userName);
-            }
-            else{
-                holder.userName.setText("Username");
-            }
-        }
-        //holder.userAvatar.setImageResource(user.getUserAvatarResId());
-
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(user));
+
+        //fino a qui funziona
+
+        String profilePic = user.getImageUrl();
+        if (profilePic != null && !profilePic.isEmpty()) {
+            Glide.with(context)
+                    .load(profilePic)
+                    .into(holder.userAvatar);
+        } else {
+            holder.userAvatar.setImageResource(R.drawable.user);
+        }
+
+        String userName = user.getUsername();
+        if (userName != null && !userName.isEmpty()) {
+            holder.userName.setText(userName);
+        } else {
+            holder.userName.setText("Username");
+        }
+
     }
 
     @Override

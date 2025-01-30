@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -39,6 +40,7 @@ public class ChatScreen extends Fragment {
     private DatabaseReference databaseReference;
     private List<Message> chatList = new ArrayList<>();
     TextView textView;
+    LinearLayout exchangeOption;
     LinearLayout goBack;
 
 
@@ -50,7 +52,7 @@ public class ChatScreen extends Fragment {
         databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
         goBack = (LinearLayout) view.findViewById(R.id.goBackPreviusPage);
         textView = (android.widget.TextView) view.findViewById(R.id.chatUserName);
-
+        exchangeOption = view.findViewById(R.id.btnExchange);
         Bundle args = getArguments();
         if (args != null) {
             String userName = args.getString("name", ""); // Default to empty if not found
@@ -69,9 +71,21 @@ public class ChatScreen extends Fragment {
         adapter = new ChatMessageAdapter(getContext(), messageList);
         recyclerViewMessages.setAdapter(adapter);
 
+        exchangeOption.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ExchangeFragmentScreen exchangeFragmentScreen = new ExchangeFragmentScreen();
+
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
+                transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
+                transaction.commit();
+            }
+        });
         // Inflate the layout for this fragment
         return view;
     }
+
     private void loadChats() {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override

@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.example.reuse.R;
+import com.example.reuse.models.Chat;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class DetailProdScreen extends Fragment {
@@ -106,11 +107,11 @@ public class DetailProdScreen extends Fragment {
                 Bundle currentBundle = getArguments();
                 if(currentBundle != null){
                     Bundle chatBundle = new Bundle();
-                    chatBundle.putString("sellerId", currentBundle.getString("sellerId"));
-                    chatBundle.putString("venditore", currentBundle.getString("venditore"));
-                    chatBundle.putString("userProfileImage", currentBundle.getString("userProfileImage"));
-                    chatBundle.putString("nomeProdotto", currentBundle.getString("nome"));
-                    chatBundle.putString("imageProd", currentBundle.getString("imageProd"));
+                    String sellerId = currentBundle.getString("sellerId");
+                    String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                    Chat chat = new Chat(currentUserId, sellerId);
+                    chat.uploadChat();
 
                     ChatListScreen chatListFragment = new ChatListScreen();
                     chatListFragment.setArguments(chatBundle);

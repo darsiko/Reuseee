@@ -44,13 +44,4 @@
             android:textSize="14sp"
             android:textColor="@color/secondary" />
     </LinearLayout>
-
-    <!-- Indicatore di stato -->
-    <View
-        android:id="@+id/status_indicator"
-        android:layout_width="8dp"
-        android:layout_height="8dp"
-        android:layout_gravity="center_vertical"
-        android:layout_marginStart="8dp"
-        android:background="@color/primary" />
 </LinearLayout>

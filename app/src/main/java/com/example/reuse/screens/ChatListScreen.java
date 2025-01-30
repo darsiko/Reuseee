@@ -31,11 +31,12 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemClickListener {
     private RecyclerView recyclerViewUsers;
     private ChatListAdapter adapter;
-    private List<User> userList;
+    private List<User> userList = new ArrayList<>();
     String sellerId;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,73 +48,95 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
         recyclerViewUsers = rootView.findViewById(R.id.chatList);
         recyclerViewUsers.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
 
-        userList = new ArrayList<>();
         adapter = new ChatListAdapter(getContext(), userList, this);
         recyclerViewUsers.setAdapter(adapter);
 
-        Bundle bundle = getArguments();
-        if(bundle!=null){
-            sellerId = bundle.getString("sellerId");
-            loadUsers(sellerId);
-        }
+        newLoadUsers();
+
         return rootView;
     }
-
     private boolean contains(String userName){
         for(User u : userList){
-            if(u.getUsername()==userName) return true;
+            if(u.getUsername().equals(userName)) return true;
         }
         return false;
     }
 
+    public void newLoadUsers(){
+        String uID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        if(!uID.isEmpty()){
+            DatabaseReference currentUserRef = FirebaseDatabase.getInstance().getReference("Users").child(uID);
+            currentUserRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if(snapshot.exists()){
+                        for(DataSnapshot d : snapshot.child("chats").getChildren()){
+                            String chatId = d.getValue(String.class);
+                            if(chatId!=null && !chatId.isEmpty()){
+                                DatabaseReference destinataryChatRef = FirebaseDatabase
+                                        .getInstance()
+                                        .getReference("Chats")
+                                        .child(chatId)
+                                        .child("idUtente2");
+                                destinataryChatRef.addValueEventListener(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        String uID = snapshot.getValue(String.class);
+                                        if(uID!=null && !uID.isEmpty()){
+                                            DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(uID);
+                                            userRef.addValueEventListener(new ValueEventListener() {
+                                                @Override
+                                                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                                    if(snapshot.exists()){
+                                                        String username = snapshot.child("username").getValue(String.class);
+                                                        if(!contains(username)){
+                                                            String nome=snapshot.child("nome").getValue(String.class);
+                                                            String cognome=snapshot.child("cognome").getValue(String.class);
+                                                            String telefono=snapshot.child("telefono").getValue(String.class);
+                                                            String indirizzo = snapshot.child("indirizzo").getValue(String.class);
+                                                            String data = snapshot.child("data").getValue(String.class);
+                                                            String imageUrl = snapshot.child("imageUrl").getValue(String.class);
+                                                            String stato = snapshot.child("stato").getValue(String.class);
+                                                            String citta = snapshot.child("citta").getValue(String.class);
 
-    //chat con te stesso
-    private void loadUsers(final String uID){
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(uID);
-
-        dbRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    String username=snapshot.child("username").getValue(String.class);
-                    if(!contains(username)){
-                        String nome=snapshot.child("nome").getValue(String.class);
-                        String cognome=snapshot.child("cognome").getValue(String.class);
-                        String telefono=snapshot.child("telefono").getValue(String.class);
-                        String indirizzo = snapshot.child("indirizzo").getValue(String.class);
-                        String data = snapshot.child("data").getValue(String.class);
-                        String imageUrl = snapshot.child("imageUrl").getValue(String.class);
-                        String stato = snapshot.child("stato").getValue(String.class);
-                        String citta = snapshot.child("citta").getValue(String.class);
-
-                        int cap = snapshot.child("cap").getValue(int.class);
-                        List<String> productsForSale = new ArrayList<>();
-                        for (DataSnapshot productSnapshot : snapshot.child("productsForSale").getChildren()) {
-                            String pid = productSnapshot.getValue(String.class);
-                            if (pid != null) {
-                                productsForSale.add(pid);
+                                                            int cap = snapshot.child("cap").getValue(int.class);
+                                                            List<String> productsForSale = new ArrayList<>();
+                                                            for (DataSnapshot productSnapshot : snapshot.child("productsForSale").getChildren()) {
+                                                                String pid = productSnapshot.getValue(String.class);
+                                                                if (pid != null) {
+                                                                    productsForSale.add(pid);
+                                                                }
+                                                            }
+                                                            List<String> chats = new ArrayList<>();
+                                                            for (DataSnapshot chatSnapshot : snapshot.child("chats").getChildren()) {
+                                                                String cid = chatSnapshot.getValue(String.class);
+                                                                if (cid != null) {
+                                                                    chats.add(cid);
+                                                                }
+                                                            }
+                                                            User user = new User(username, nome, cognome, telefono, stato, citta, cap, indirizzo, data, imageUrl, productsForSale, chats);
+                                                            userList.add(user);
+                                                            adapter.updateList(userList);
+                                                        }
+                                                    }
+                                                }
+                                                @Override
+                                                public void onCancelled(@NonNull DatabaseError error) {
+                                                }
+                                            });
+                                        }
+                                    }
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {}
+                                });
                             }
                         }
-                        List<String> chats = new ArrayList<>();
-                        for (DataSnapshot chatSnapshot : snapshot.child("chats").getChildren()) {
-                            String cid = chatSnapshot.getValue(String.class);
-                            if (cid != null) {
-                                chats.add(cid);
-                            }
-                        }
-                        User user = new User(username, nome, cognome, telefono, stato, citta, cap, indirizzo, data, imageUrl, productsForSale, chats);
-                        userList.add(user);
-                        adapter.updateList(userList);
                     }
-                    //String username, String nome, String cognome, String telefono, String stato,
-                    // String citta, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale
-
                 }
-            }
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
-
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {}
+            });
+        }
     }
     @Override
     public void onItemClick(User user) {
@@ -125,11 +148,6 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
         Bundle bundle = new Bundle();
         bundle.putString("name", user.getUsername());
 
-        //modifica momentanea bundle.putInt("userAvatarResId", user.getUserAvatarResId());
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-
-        Chat chat = new Chat(currentUserId, sellerId);
-        chat.uploadChat();
         ChatScreen chatScreen = new ChatScreen();
         chatScreen.setArguments(bundle);
 
