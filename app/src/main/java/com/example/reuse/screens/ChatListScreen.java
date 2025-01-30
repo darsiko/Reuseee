@@ -93,7 +93,14 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
                                 productsForSale.add(pid);
                             }
                         }
-                        User user = new User(username, nome, cognome, telefono, stato, citta, cap, indirizzo, data, imageUrl, productsForSale);
+                        List<String> chats = new ArrayList<>();
+                        for (DataSnapshot chatSnapshot : snapshot.child("chats").getChildren()) {
+                            String cid = chatSnapshot.getValue(String.class);
+                            if (cid != null) {
+                                chats.add(cid);
+                            }
+                        }
+                        User user = new User(username, nome, cognome, telefono, stato, citta, cap, indirizzo, data, imageUrl, productsForSale, chats);
                         userList.add(user);
                         adapter.updateList(userList);
                     }
