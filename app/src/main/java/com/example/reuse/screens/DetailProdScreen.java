@@ -45,7 +45,8 @@ public class DetailProdScreen extends Fragment {
         // Restore data from bundle
         Bundle args = getArguments();
         if (args != null) {
-            String prodId = args.getString("prodId");
+            String productId = args.getString("productId");
+            System.out.println(productId);
             String sellerId = args.getString("sellerId", "");
             String nameProd = args.getString("nome");
             prezzo = args.getString("prezzo");
@@ -67,7 +68,7 @@ public class DetailProdScreen extends Fragment {
                 public void onClick(View v) {
                     DetailPayment detailPayment = new DetailPayment();
                     Bundle bundle = new Bundle();
-                    bundle.putString("prodId", prodId);
+                    bundle.putString("productId", productId);
                     bundle.putString("sellerId", sellerId);
                     bundle.putString("nome", nameProd);
                     bundle.putString("descrizione", descriz);
@@ -86,7 +87,7 @@ public class DetailProdScreen extends Fragment {
             });
 
             nomeProdotto.setText(nameProd);
-            prezzoProdotto.setText(prezzo+"€");
+            prezzoProdotto.setText(prezzo);
             nomeVenditore.setText(venditore);
             Glide.with(requireContext())
                     .load(immagineVenditore)

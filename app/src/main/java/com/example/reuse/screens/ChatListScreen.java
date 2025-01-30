@@ -17,6 +17,7 @@ import com.example.reuse.R;
 import com.example.reuse.adapter.ChatListAdapter;
 import com.example.reuse.adapter.ProductAdapter;
 import com.example.reuse.adapter.ProductBroughtAdapter;
+import com.example.reuse.models.Chat;
 import com.example.reuse.models.Product;
 import com.example.reuse.models.User;
 import com.google.firebase.auth.FirebaseAuth;
@@ -35,7 +36,7 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
     private RecyclerView recyclerViewUsers;
     private ChatListAdapter adapter;
     private List<User> userList;
-
+    String sellerId;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -52,7 +53,7 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
 
         Bundle bundle = getArguments();
         if(bundle!=null){
-            String sellerId = bundle.getString("sellerId");
+            sellerId = bundle.getString("sellerId");
             loadUsers(sellerId);
         }
         return rootView;
@@ -119,12 +120,16 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
         // For example, navigate to the product details page or display a Toast
         Toast.makeText(getContext(), "Clicked on: " + user.getUsername(), Toast.LENGTH_SHORT).show();
 
+
         // You can now pass the product data to a new fragment or activity, e.g.
         Bundle bundle = new Bundle();
         bundle.putString("name", user.getUsername());
+
         //modifica momentanea bundle.putInt("userAvatarResId", user.getUserAvatarResId());
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-
+        Chat chat = new Chat(currentUserId, sellerId);
+        chat.uploadChat();
         ChatScreen chatScreen = new ChatScreen();
         chatScreen.setArguments(bundle);
 
