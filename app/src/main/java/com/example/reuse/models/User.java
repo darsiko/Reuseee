@@ -372,4 +372,8 @@ public class User {
     public void setCitta(String citta) {
         this.citta = citta;
     }
+
+    public String getId(){
+        return this.id;
+    }
 }
