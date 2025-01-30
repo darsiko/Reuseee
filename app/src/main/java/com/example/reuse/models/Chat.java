@@ -161,7 +161,6 @@ public class Chat {
     //ancora da implementare
     public String trovaId(String idUtente1, String idUtente2){ return "";}
 
-
     public String getId(){
         return id;
     }
