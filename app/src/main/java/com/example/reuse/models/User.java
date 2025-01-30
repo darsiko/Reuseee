@@ -98,7 +98,7 @@ public class User {
         dbr.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DataSnapshot snapshot = task.getResult();
-                this.id=uid;
+                this.id = uid;
                 this.username = snapshot.child("username").getValue(String.class);
                 this.nome = snapshot.child("nome").getValue(String.class);
                 this.cognome = snapshot.child("cognome").getValue(String.class);
@@ -370,6 +370,7 @@ public class User {
     }
 
     public void setCitta(String citta) {
+
         this.citta = citta;
     }
 

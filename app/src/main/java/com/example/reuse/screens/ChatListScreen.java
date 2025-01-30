@@ -37,6 +37,7 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
     private RecyclerView recyclerViewUsers;
     private ChatListAdapter adapter;
     private List<User> userList = new ArrayList<>();
+    private List<String> userIDs = new ArrayList<>();
     String sellerId;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,6 +56,14 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
 
         return rootView;
     }
+    @Override
+    public void onResume(){
+        super.onResume();
+        userList.clear();
+        userIDs.clear();
+        newLoadUsers();
+    }
+
     private boolean contains(String userName){
         for(User u : userList){
             if(u.getUsername().equals(userName)) return true;
@@ -116,6 +125,7 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
                                                             }
                                                             User user = new User(username, nome, cognome, telefono, stato, citta, cap, indirizzo, data, imageUrl, productsForSale, chats);
                                                             userList.add(user);
+                                                            userIDs.add(uID);
                                                             adapter.updateList(userList);
                                                         }
                                                     }
@@ -125,6 +135,7 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
                                                 }
                                             });
                                         }
+
                                     }
                                     @Override
                                     public void onCancelled(@NonNull DatabaseError error) {}
@@ -140,13 +151,15 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
     }
     @Override
     public void onItemClick(User user) {
-        // For example, navigate to the product details page or display a Toast
-        Toast.makeText(getContext(), "Clicked on: " + user.getUsername(), Toast.LENGTH_SHORT).show();
-
 
         // You can now pass the product data to a new fragment or activity, e.g.
         Bundle bundle = new Bundle();
-        bundle.putString("name", user.getUsername());
+        bundle.putString("seller", user.getUsername());
+        for(int i=0; i<userIDs.size(); ++i){
+            String pos = Integer.toString(i);
+            bundle.putString(pos, userIDs.get(i));
+        }
+        bundle.putString("size", Integer.toString(userIDs.size()));
 
         ChatScreen chatScreen = new ChatScreen();
         chatScreen.setArguments(bundle);

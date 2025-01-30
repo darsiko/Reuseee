@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.reuse.R;
+import com.example.reuse.models.Chat;
 import com.example.reuse.models.Product;
 import com.example.reuse.models.User;
 import com.google.firebase.database.DatabaseReference;
@@ -50,7 +51,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         User user = userList.get(position);
 
         holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(user));
-
         //fino a qui funziona
 
         String profilePic = user.getImageUrl();
@@ -85,8 +85,6 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
 
             userName = itemView.findViewById(R.id.contact_name);
             userAvatar = itemView.findViewById(R.id.profile_image);
-
-
         }
     }
 
