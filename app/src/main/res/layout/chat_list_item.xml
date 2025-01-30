@@ -44,6 +44,4 @@
             android:textSize="14sp"
             android:textColor="@color/secondary" />
     </LinearLayout>
-
-    <!-- Indicatore di stato -->
 </LinearLayout>
