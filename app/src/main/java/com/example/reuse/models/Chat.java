@@ -2,6 +2,7 @@ package com.example.reuse.models;
 
 
 import android.net.Uri;
+import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
@@ -116,7 +117,7 @@ public class Chat {
         });
     }
 
-    public void uploadChatSupporto(){
+    private void uploadChatSupporto(){
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
         id = dbRef.push().getKey();
         DatabaseReference ref=dbRef.child(id);
@@ -179,6 +180,65 @@ public class Chat {
             }
         });
     }
+
+    public void deleteChat(){
+        if(id=="" || id==null){
+            System.out.println("risulta id nullo" + id);
+        }else {
+            DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("Chats").child(id);
+            dbref.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    if (task.getResult().exists()) {
+                        deleteChatSupporto(dbref);
+                    } else {
+                        System.out.println("Chat(result) non trovata per id: " + id);
+                    }
+                } else {
+                    System.out.println("Chat(ref) non trovata per id: " + id);
+                }
+            });
+        }
+
+    }
+
+    private void deleteChatSupporto(DatabaseReference dbref){
+        dbref.removeValue().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                deleteChatSupportoLista(true);
+                deleteChatSupportoLista(false);
+            }
+        });
+    }
+
+    private void deleteChatSupportoLista(boolean t){
+        String idUtente;
+        if(t){
+            idUtente=idUtente1;
+        }else{
+            idUtente=idUtente2;
+        }
+        DatabaseReference userChatRef = FirebaseDatabase.getInstance().getReference("Users").child(idUtente).child("chats");
+        userChatRef.get().addOnCompleteListener(userTask -> {
+            if (userTask.isSuccessful() && userTask.getResult().exists()) {
+                List<String> chats = new ArrayList<>();
+
+                for (DataSnapshot snapshot : userTask.getResult().getChildren()) {
+                    String chatId = snapshot.getValue(String.class);
+                    if (chatId != null && !chatId.equals(id)) {
+                        chats.add(chatId);
+                    }
+                }
+
+                // Aggiorna la lista senza il prodotto rimosso
+                userChatRef.setValue(chats)
+                        .addOnSuccessListener(aVoid -> System.out.println("Chat rimossa con successo dalla lista dell'utente."))
+                        .addOnFailureListener(e -> System.err.println("Errore durante l'aggiornamento della lista: " + e.getMessage()));
+            } else {
+                System.out.println("Nessuna chat trovata nella lista dell'utente.");
+            }
+        });
+    }
+
 
 
     //UTILIZZARE
