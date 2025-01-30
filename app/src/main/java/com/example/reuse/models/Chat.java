@@ -305,4 +305,55 @@ public class Chat {
         return scambio;
     }
 
+    /*public boolean checkOfferta(){
+        boolean res=false;
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats").child(id);
+        ref.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                DataSnapshot dataSnapshot = task.getResult();
+                if (dataSnapshot.child("ifOfferente").exists()) {
+                    System.out.println("Offerta già esistente");
+                    return true;
+                }else{
+                    System.out.println("Nessuna offerta già esistente");
+                }
+            }else{
+                System.out.println("Nessuna chat trovata");
+            }
+        });
+        return res;
+    }*/
+    public void checkOfferta(CheckOffertaCallback callback) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats").child(id);
+
+        ref.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                DataSnapshot dataSnapshot = task.getResult();
+                if (dataSnapshot.child("ifOfferente").exists()) {
+                    System.out.println("Offerta già esistente");
+                    callback.onResult(true); // Invoca il callback con true
+                } else {
+                    System.out.println("Nessuna offerta già esistente");
+                    callback.onResult(false); // Invoca il callback con false
+                }
+            } else {
+                System.out.println("Nessuna chat trovata");
+                callback.onResult(false); // Anche in caso di errore restituisce false
+            }
+        });
+    }
+
+
+    //checkOfferta(result -> {
+    //    if (result) {
+    //        System.out.println("L'offerta esiste già.");
+    //    } else {
+    //        System.out.println("Nessuna offerta trovata.");
+    //    }
+    //});
+    public interface CheckOffertaCallback {
+        void onResult(boolean exists);
+    }
+
+
 }
