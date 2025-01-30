@@ -72,7 +72,8 @@ public class Chat {
 
 
     //UTILIZZARE
-    //Chat.creaChat() per caricare la chat nel database
+    //Chat c=new Chat(idUtente1, idUtente2);
+    //c.uploadChat() per caricare la chat nel database
     public void uploadChat(){
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
         id = dbRef.push().getKey();

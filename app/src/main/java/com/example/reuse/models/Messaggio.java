@@ -16,7 +16,7 @@ public class Messaggio {
     private String id="";
     private String idMittente;
     private String dataora;
-    private boolean tipo;
+    private boolean tipo; //true=immagine, false=testo
     private String contenuto;
 
 

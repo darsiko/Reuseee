@@ -182,33 +182,48 @@ public class User {
 
 
     //rimuovi oggetto dalla lista di quelli venduti
-    public void removeProductForSale(String pid, String uid){
-        DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
-        dbr2.get().addOnCompleteListener(task -> {
+    public void removeProductForSale(String pid, String uid) {
+        if (pid == null || pid.isEmpty() || uid == null || uid.isEmpty()) {
+            System.out.println("Errore: ID del prodotto o ID utente non valido.");
+            return;
+        }
+
+        DatabaseReference productRef = FirebaseDatabase.getInstance().getReference("Products").child(pid);
+
+        // Rimuove il prodotto dal database
+        productRef.removeValue().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // Recupera i dati esistenti (se presenti)
-                List<String> productsForSale = new ArrayList<>();
-                if (task.getResult().exists()) {
-                    productsForSale = (List<String>) task.getResult().getValue();
-                }
-                // Aggiungi il nuovo productId alla lista
-                productsForSale.remove(pid);
-                // Aggiorna la lista nel database
-                dbr2.setValue(productsForSale)
-                        .addOnCompleteListener(updateTask -> {
-                            if (updateTask.isSuccessful()) {
-                                System.out.println("Product removed successfully!");
-                                //elima prodotto dal database
-                                Product product=new Product(pid);
-                                product.delete(pid);
-                            } else {
-                                System.out.println("Failed to remove product: " + updateTask.getException().getMessage());
+                DatabaseReference userProductRef = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
+
+                userProductRef.get().addOnCompleteListener(userTask -> {
+                    if (userTask.isSuccessful() && userTask.getResult().exists()) {
+                        List<String> productsForSale = new ArrayList<>();
+
+                        // Recupera la lista attuale dei prodotti in vendita
+                        for (DataSnapshot snapshot : userTask.getResult().getChildren()) {
+                            String productId = snapshot.getValue(String.class);
+                            if (productId != null && !productId.equals(pid)) {
+                                productsForSale.add(productId);
                             }
-                        });
+                        }
+
+                        // Aggiorna la lista senza il prodotto rimosso
+                        userProductRef.setValue(productsForSale)
+                                .addOnSuccessListener(aVoid -> System.out.println("Prodotto rimosso con successo dalla lista dell'utente."))
+                                .addOnFailureListener(e -> System.err.println("Errore durante l'aggiornamento della lista: " + e.getMessage()));
+                    } else {
+                        System.out.println("Nessun prodotto trovato nella lista dell'utente.");
+                    }
+                });
             } else {
-                System.out.println("Error getting data: " + task.getException().getMessage());
+                System.err.println("Errore nell'eliminazione del prodotto: " + task.getException());
             }
         });
+    }
+
+
+    private void removeFunctionProduct(String vidm){
+
     }
 
     //non vi servono
