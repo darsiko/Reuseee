@@ -10,10 +10,9 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 
-public class Messaggio{
+public class Messaggio {
     private String id="";
     private String idMittente;
     private String dataora;
@@ -130,5 +129,4 @@ public class Messaggio{
     public boolean getTipo(){
         return tipo;
     }
-
 }
