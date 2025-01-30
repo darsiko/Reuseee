@@ -82,24 +82,36 @@ public class Chat {
                 if (task.getResult().exists()) {
                     DatabaseReference refU2 = FirebaseDatabase.getInstance().getReference("Users").child(idUtente2).child("chats");
                     refU2.get().addOnCompleteListener(task2 -> {
-                        for (DataSnapshot snapshot1 : task.getResult().getChildren()) {
-                            for (DataSnapshot snapshot2 : task2.getResult().getChildren()) {
-                                String chatId1 = snapshot1.getValue(String.class);
-                                String chatId2 = snapshot2.getValue(String.class);
-                                if (chatId1 != null && chatId1.equals(chatId2)){
-                                    Chat c=new Chat(snapshot2.getValue(String.class));
-                                    this.id=c.getId();
-                                    this.idUtente1=c.getIdUtente1();
-                                    this.idUtente2=c.getIdUtente2();
-                                    this.messaggi=c.getMessaggi();
-                                    System.out.println("La Chat esiste già");
-                                    return;
+                        if(task.isSuccessful()) {
+                            if (task.getResult().exists()){
+                                for (DataSnapshot snapshot1 : task.getResult().getChildren()) {
+                                    for (DataSnapshot snapshot2 : task2.getResult().getChildren()) {
+                                        String chatId1 = snapshot1.getValue(String.class);
+                                        String chatId2 = snapshot2.getValue(String.class);
+                                        if (chatId1 != null && chatId1.equals(chatId2)) {
+                                            Chat c = new Chat(snapshot2.getValue(String.class));
+                                            this.id = c.getId();
+                                            this.idUtente1 = c.getIdUtente1();
+                                            this.idUtente2 = c.getIdUtente2();
+                                            this.messaggi = c.getMessaggi();
+                                            System.out.println("La Chat esiste già");
+                                            return;
+                                        }
+                                    }
                                 }
+                                uploadChatSupporto();
+                            }else {
+                                uploadChatSupporto();
                             }
+                        }else{
+                            uploadChatSupporto();
                         }
-                        uploadChatSupporto();
                     });
+                }else{
+                    uploadChatSupporto();
                 }
+            }else{
+                uploadChatSupporto();
             }
         });
     }
