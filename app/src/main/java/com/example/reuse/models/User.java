@@ -183,32 +183,30 @@ public class User {
 
     //rimuovi oggetto dalla lista di quelli venduti
     public void removeProductForSale(String pid, String uid){
-        DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(uid).child("productsForSale");
-        dbr2.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Recupera i dati esistenti (se presenti)
-                List<String> productsForSale = new ArrayList<>();
-                if (task.getResult().exists()) {
-                    productsForSale = (List<String>) task.getResult().getValue();
+
+        Product product= new Product(pid);
+        product.setId(pid);
+        User user=new User(uid);
+        if(product.getId()=="" || product.getId()==null){
+            System.out.println("Errore rimozione oggetto");
+        }else{
+            DatabaseReference productRef=FirebaseDatabase.getInstance().getReference("Products").child(product.getId());
+            productRef.removeValue().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    DatabaseReference userProductRef=FirebaseDatabase.getInstance().getReference("Users").child(product.getIdVenditore()).child("productsForSale").child(product.getId());
+                    userProductRef.removeValue().addOnSuccessListener(unused -> {
+                                // Operazione riuscita
+                                System.out.println("Prodotto eliminato con successo!");
+                            })
+                            .addOnFailureListener(e -> {
+                                // Operazione fallita
+                                System.out.println("Errore durante l'eliminazione del prodotto: " + e.getMessage());
+                            });
+                } else {
+                    System.err.println("Errore nell'eliminazione del prodotto: " + task.getException());
                 }
-                // Aggiungi il nuovo productId alla lista
-                productsForSale.remove(pid);
-                // Aggiorna la lista nel database
-                dbr2.setValue(productsForSale)
-                        .addOnCompleteListener(updateTask -> {
-                            if (updateTask.isSuccessful()) {
-                                System.out.println("Product removed successfully!");
-                                //elima prodotto dal database
-                                Product product=new Product(pid);
-                                product.delete(pid);
-                            } else {
-                                System.out.println("Failed to remove product: " + updateTask.getException().getMessage());
-                            }
-                        });
-            } else {
-                System.out.println("Error getting data: " + task.getException().getMessage());
-            }
-        });
+            });
+        }
     }
 
     //non vi servono
