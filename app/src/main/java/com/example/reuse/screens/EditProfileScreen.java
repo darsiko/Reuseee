@@ -141,7 +141,7 @@ public class EditProfileScreen extends Fragment {
                         String username = snapshot.child("username").getValue(String.class);
                         String country = snapshot.child("stato").getValue(String.class);
                         String city = snapshot.child("citta").getValue(String.class);
-                        String cap = snapshot.child("cap").getValue(String.class);
+                        Integer cap = snapshot.child("cap").getValue(int.class);
                         String indirizzo = snapshot.child("indirizzo").getValue(String.class);
                         String telefono = snapshot.child("telefono").getValue(String.class);
                         String date = snapshot.child("data").getValue(String.class);
@@ -152,7 +152,7 @@ public class EditProfileScreen extends Fragment {
                         userNameInput.setHint(username);
                         countryInput.setHint(country);
                         cityInput.setHint(city);
-                        capInput.setHint(cap);
+                        capInput.setHint(cap.toString());
                         indirizzoInput.setHint(indirizzo);
                         telefonoInput.setHint(telefono);
                         dateEditText.setHint(date);
