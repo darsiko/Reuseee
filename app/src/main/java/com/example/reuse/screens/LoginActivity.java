@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity {
     private SharedPreferences sharedPreferences;
     FirebaseUser currentUser;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         signUp = (Button) findViewById(R.id.sign_up_button);
         guestLogin = (TextView) findViewById(R.id.guest_login);
 
+
         sharedPreferences = getSharedPreferences("LoginPrefs", MODE_PRIVATE);
         boolean isRemembered = sharedPreferences.getBoolean("rememberMe", false);
         if (isRemembered) {
@@ -69,6 +71,9 @@ public class LoginActivity extends AppCompatActivity {
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
+
                 String txt_email=email.getText().toString();
                 String txt_password=password.getText().toString();
                 if (checkBox.isChecked()) {
