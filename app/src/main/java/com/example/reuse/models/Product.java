@@ -179,18 +179,6 @@ public class Product implements Parcelable {
         // Inizializza Firebase Realtime Database
         databaseReference = FirebaseDatabase.getInstance().getReference("Products").child(pid).child("imageUrl");
         if (imageUri != null) {
-
-            /*ref.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> ref.getDownloadUrl()
-                            .addOnSuccessListener(uri -> {
-                                String downloadUrl = uri.toString();
-                                // Salva l'URL nel Realtime Database
-                                databaseReference.setValue(downloadUrl);
-                                this.imageUrl=downloadUrl;
-                            }))
-                    .addOnFailureListener(e -> {
-                        //Toast.makeText(MainActivity.this, "Caricamento fallito: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });*/
             ref.putFile(imageUri)
                     .addOnSuccessListener(taskSnapshot -> {
                         // Wait for the URL to be obtained

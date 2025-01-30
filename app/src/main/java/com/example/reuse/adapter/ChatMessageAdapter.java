@@ -11,11 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reuse.R;
-import com.example.reuse.models.Message;
+import com.example.reuse.models.Messaggio;
 import com.example.reuse.models.Product;
 import com.example.reuse.models.User;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -24,17 +25,18 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     private static final int VIEW_TYPE_RECEIVED = 2;
 
     private Context context;
-    private List<Message> messageList;
+    private List<Messaggio> messageList = new ArrayList<>();
 
-    public ChatMessageAdapter(Context context, List<Message> messageList) {
+    public ChatMessageAdapter(Context context, List<Messaggio> messageList) {
         this.context = context;
-        this.messageList = messageList;
+        this.messageList.addAll(messageList);
     }
 
     @Override
     public int getItemViewType(int position) {
-        Message message = messageList.get(position);
-        return message.isSent() ? VIEW_TYPE_SENT : VIEW_TYPE_RECEIVED;
+        Messaggio message = messageList.get(position);
+        return 1;
+        //return message.isSent() ? VIEW_TYPE_SENT : VIEW_TYPE_RECEIVED;
     }
 
     @NonNull
@@ -51,7 +53,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-        Message message = messageList.get(position);
+        Messaggio message = messageList.get(position);
 
         if (holder instanceof SentMessageViewHolder) {
             ((SentMessageViewHolder) holder).bind(message);
@@ -66,7 +68,7 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
         return messageList.size();
     }
 
-    public void updateList(List<Message> chatList) {
+    public void updateList(List<Messaggio> chatList) {
         this.messageList.clear();
         this.messageList.addAll(chatList);
         notifyDataSetChanged();
@@ -82,9 +84,9 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             messageTimestamp = itemView.findViewById(R.id.sent_message_timestamp);
         }
 
-        void bind(Message message) {
-            messageContent.setText(message.getText());
-            messageTimestamp.setText(formatTimestamp(message.getTimestamp()));
+        void bind(Messaggio message) {
+            messageContent.setText(message.getContenuto());
+            messageTimestamp.setText(message.getDataora());
         }
     }
 
@@ -99,10 +101,10 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             messageTimestamp = itemView.findViewById(R.id.received_message_timestamp);
         }
 
-        void bind(Message message) {
-            messageContent.setText(message.getText());
-            messageTimestamp.setText(formatTimestamp(message.getTimestamp()));
-            userAvatarResId.setImageResource(message.getUserAvatarResId());
+        void bind(Messaggio message) {
+            messageContent.setText(message.getContenuto());
+            messageTimestamp.setText(message.getDataora());
+            //userAvatarResId.setImageResource(message.getUserAvatarResId());
 
         }
     }

@@ -16,8 +16,8 @@ public class Chat {
     private String id="";
     private String idUtente1;
     private String idUtente2;
-    private List<Messaggio> messaggi;
-    private Scambio scambio;
+    private List<Messaggio> messaggi = new ArrayList<>();
+    private  Scambio scambio;
 
     //costruttore se servono metodi anche con oggetto vuoto
     public Chat() {
@@ -27,12 +27,19 @@ public class Chat {
         this.messaggi=new ArrayList<>();
     }
     //costruttore manuale
-    public Chat(String idUtente1, String idUtente2, List<Messaggio> messaggi){
-        this.idUtente1=idUtente1;
-        this.idUtente2=idUtente2;
-        this.messaggi=messaggi;
+    public Chat(String idUtente1, String idUtente2, List<Messaggio> messaggi) {
+        this.idUtente1 = idUtente1;
+        this.idUtente2 = idUtente2;
+        this.messaggi = messaggi;
     }
 
+    public void copy(final Chat other){
+        this.id = other.id;
+        this.idUtente1 = other.idUtente1;
+        this.idUtente2 = other.idUtente2;
+        this.messaggi.addAll(other.messaggi);
+        this.scambio = other.scambio;
+    }
 
 
     //UTILIZZARE
@@ -48,9 +55,15 @@ public class Chat {
 
                 this.messaggi = new ArrayList<>();
                 for (DataSnapshot mSnapshot : snapshot.child("chats").getChildren()) {
+
+                    String content = mSnapshot.child("contenuto").getValue(String.class);
+                    addMessaggio(idUtente1, content);
+
+                    /*
                     String mid = mSnapshot.getKey();
                     Messaggio m = new Messaggio(mid, this.id);
                     messaggi.add(m);
+                     */
                 }
                 if (snapshot.hasChild("idOfferente")) {
                     String idOfferente=snapshot.child("idOfferente").getValue(String.class);
@@ -133,7 +146,7 @@ public class Chat {
     }
 
 
-    //funzione di supporto
+
     private void uploadChatSupporto(){
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
         id = dbRef.push().getKey();
@@ -141,12 +154,10 @@ public class Chat {
         ref.child("idUtente1").setValue(idUtente1);
         ref.child("idUtente2").setValue(idUtente2);
         ref.child("messaggi").setValue(messaggi);
-
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(idUtente1).child("chats");
         dbr.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<String> chats = new ArrayList<>();
-
                 // Retrieve the existing list, if any
                 if (task.getResult().exists()) {
                     for (DataSnapshot snapshot : task.getResult().getChildren()) {
@@ -160,12 +171,15 @@ public class Chat {
                 dbr.setValue(chats)
                         .addOnCompleteListener(updateTask -> {
                             if (updateTask.isSuccessful()) {
+                                System.out.println("Product added to 'productsForSale' successfully.");
                                 System.out.println("Chat added successfully.");
                             } else {
+                                System.out.println("Failed to update 'productsForSale': " + updateTask.getException().getMessage());
                                 System.out.println("Failed to update chats: " + updateTask.getException().getMessage());
                             }
                         });
             }else{
+                System.out.println("Failed to retrieve 'productsForSale': " + task.getException().getMessage());
                 System.out.println("Failed to retrieve chats: " + task.getException().getMessage());
             }
         });
@@ -173,7 +187,6 @@ public class Chat {
         dbr2.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 List<String> chats = new ArrayList<>();
-
                 // Retrieve the existing list, if any
                 if (task.getResult().exists()) {
                     for (DataSnapshot snapshot : task.getResult().getChildren()) {
@@ -187,19 +200,19 @@ public class Chat {
                 dbr2.setValue(chats)
                         .addOnCompleteListener(updateTask -> {
                             if (updateTask.isSuccessful()) {
+                                System.out.println("Product added to 'productsForSale' successfully.");
                                 System.out.println("Chat added successfully.");
                             } else {
+                                System.out.println("Failed to update 'productsForSale': " + updateTask.getException().getMessage());
                                 System.out.println("Failed to update chats: " + updateTask.getException().getMessage());
                             }
                         });
             }else{
+                System.out.println("Failed to retrieve 'productsForSale': " + task.getException().getMessage());
                 System.out.println("Failed to retrieve chats: " + task.getException().getMessage());
             }
         });
     }
-
-    //UTILIZZARE
-    //funzione per cancellare la chat (controllare id dell'oggetto)
     public void deleteChat(){
         if(id=="" || id==null){
             System.out.println("risulta id nullo" + id);
@@ -220,7 +233,7 @@ public class Chat {
 
     }
 
-    //funzione di supporto
+
     private void deleteChatSupporto(DatabaseReference dbref){
         dbref.removeValue().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
@@ -230,7 +243,7 @@ public class Chat {
         });
     }
 
-    //funzione di supporto
+
     private void deleteChatSupportoLista(boolean t){
         String idUtente;
         if(t){
@@ -304,5 +317,29 @@ public class Chat {
     public Scambio getScambio(){
         return scambio;
     }
+
+    public void checkOfferta(CheckOffertaCallback callback) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats").child(id);
+
+        ref.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult().exists()) {
+                DataSnapshot dataSnapshot = task.getResult();
+                if (dataSnapshot.child("ifOfferente").exists()) {
+                    System.out.println("Offerta già esistente");
+                    callback.onResult(true); // Invoca il callback con true
+                } else {
+                    System.out.println("Nessuna offerta già esistente");
+                    callback.onResult(false); // Invoca il callback con false
+                }
+            } else {
+                System.out.println("Nessuna chat trovata");
+                callback.onResult(false); // Anche in caso di errore restituisce false
+            }
+        });
+    }
+    public interface CheckOffertaCallback {
+        void onResult(boolean exists);
+    }
+
 
 }
