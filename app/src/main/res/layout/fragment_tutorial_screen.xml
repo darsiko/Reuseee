@@ -43,53 +43,16 @@
 
             <TextView
                 android:id="@+id/tutorialName"
-                android:layout_gravity="center"
-                android:layout_width="190dp"
-                android:layout_marginLeft="40dp"
-                android:textSize="24dp"
-                android:textStyle="bold"
+                android:layout_width="277dp"
                 android:layout_height="wrap_content"
-                android:text="Sneakers Verdi" />
+                android:layout_gravity="center"
+                android:layout_marginLeft="40dp"
+                android:text="Sneakers Verdi"
+                android:textSize="24dp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <!-- Search Bar -->
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/search_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="16dp">
-
-            <LinearLayout
-                android:theme="@style/DarkSearch"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp">
-
-                <!-- Search Input -->
-                <EditText
-                    android:id="@+id/editTextText"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Search"
-                    android:inputType="text"
-                    android:drawablePadding="8dp"
-                    android:background="@android:color/transparent"
-                    android:textSize="16sp"
-                    android:padding="12dp"/>
-
-                <!-- Menu Button -->
-                <ImageButton
-                    android:id="@+id/menuButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:src="@drawable/baseline_menu_24"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Menu"
-                    android:backgroundTint="@color/secondary" />
-            </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
         <!-- Product Image with Play Button -->
         <FrameLayout

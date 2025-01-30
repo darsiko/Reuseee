@@ -3,6 +3,7 @@ package com.example.reuse.models;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -43,16 +44,6 @@ public class Product implements Parcelable {
         this.imageUrl=imageUrl;
         this.idOrdine=idOrdine;
     }
-    public Product(String prodId,String idVenditore, String nome, String descrizione, double prezzo, boolean baratto, String imageUrl, String idOrdine){
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(prodId);
-        this.idVenditore=dbr.child("idVenditore").get().toString();
-        this.nome=dbr.child("nome").get().toString();
-        this.descrizione=dbr.child("descrizione").get().toString();
-        this.prezzo=Double.parseDouble(dbr.child("prezzo").get().toString());
-        this.baratto= Boolean.parseBoolean(dbr.child("baratto").get().toString());
-        this.imageUrl=dbr.child("imageUrl").get().toString();
-        this.idOrdine=dbr.child("idOrdine").get().toString();
-    }
     //costruttore per aggiunta oggetto in vendita
     public Product(String nome, String descrizione, double prezzo, boolean baratto){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -65,15 +56,22 @@ public class Product implements Parcelable {
         this.idOrdine="";
     }
     //download dell'oggetto dal database
+
     public Product(String pid){
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Products").child(pid);
-        this.idVenditore=dbr.child("idVenditore").get().toString();
-        this.nome=dbr.child("nome").get().toString();
-        this.descrizione=dbr.child("descrizione").get().toString();
-        this.prezzo=Double.parseDouble(dbr.child("prezzo").get().toString());
-        this.baratto= Boolean.parseBoolean(dbr.child("baratto").get().toString());
-        this.imageUrl=dbr.child("imageUrl").get().toString();
-        this.idOrdine=dbr.child("idOrdine").get().toString();
+        this.id=pid;
+        dbr.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                DataSnapshot snapshot = task.getResult();
+                this.idVenditore = snapshot.child("idVenditore").getValue(String.class);
+                this.nome= snapshot.child("nome").getValue(String.class);
+                this.descrizione = snapshot.child("descrizione").getValue(String.class);
+                this.prezzo = snapshot.child("prezzo").getValue(Double.class);
+                this.baratto= snapshot.child("baratto").getValue(Boolean.class);
+                this.imageUrl = snapshot.child("imageUrl").getValue(String.class);
+
+            }
+        });
     }
 
     protected Product(Parcel in) {

@@ -290,21 +290,24 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
         super.onResume();
         loadProducts();
     }
-    private void loadProducts(){
+    private void loadProducts() {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 productList.clear();
-                for(DataSnapshot snapshot : dataSnapshot.getChildren()){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Product product = snapshot.getValue(Product.class);
-                    if(product!=null) productList.add(product);
+                    if (product != null) {
+                        product.setId(snapshot.getKey()); // Set product ID from Firebase key
+                        productList.add(product);
+                    }
                 }
                 adapter.updateList(productList);
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("ProductBoughtScreen", "Error fetching data: " + error.getMessage());
+                Log.e("ProductList", "Error fetching data: " + error.getMessage());
                 Toast.makeText(getContext(), "Failed to load products.", Toast.LENGTH_SHORT).show();
             }
         });
@@ -355,7 +358,8 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
             @Override
             public void onUserLoaded(User user) {
                 // Populate the bundle with user and product details
-                bundle.putString("prodId", product.getId());
+                // how to retrive the id of the product from list?
+                bundle.putString("productId", product.getId());
                 bundle.putString("sellerId", product.getIdVenditore());
                 bundle.putBoolean("baratto", product.isBaratto());
                 bundle.putString("venditore", user.getUsername());
@@ -387,7 +391,6 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
                     navigateToDetailFragment(bundle);
                 });
             }
-
             @Override
             public void onError(Exception e) {
                 // Handle any errors during user data loading

@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.reuse.R;
 import com.example.reuse.models.Message;
+import com.example.reuse.models.Product;
 import com.example.reuse.models.User;
 
 import java.text.SimpleDateFormat;
@@ -63,6 +64,12 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemCount() {
         return messageList.size();
+    }
+
+    public void updateList(List<Message> chatList) {
+        this.messageList.clear();
+        this.messageList.addAll(chatList);
+        notifyDataSetChanged();
     }
 
     // ViewHolder for sent messages

@@ -16,6 +16,7 @@ import android.widget.Toast;
 
 import com.example.reuse.R;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.User;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -24,8 +25,7 @@ public class DetailPayment extends Fragment {
     TextView textPrezzo, etCardNumber, etExpiryDate, etCVC;
     RadioButton rbCreditCard;
     Button btnPayNow;
-    Product purchasedProduct;
-
+    String prodId, idVenditore;
     public DetailPayment() {
         // Costruttore vuoto richiesto per i Fragments
     }
@@ -43,22 +43,18 @@ public class DetailPayment extends Fragment {
         rbCreditCard = view.findViewById(R.id.rbCreditCard);
         Bundle args = getArguments();
         if (args != null) {
-            String prodId = args.getString("prodId");
+            prodId = args.getString("productId");
             String prezzo = args.getString("prezzo");
             String nome = args.getString("nome");
-            String idVenditore = args.getString("sellerId");
+            idVenditore = args.getString("sellerId");
             String descrizione = args.getString("descrizione");
             String imgUrl = args.getString("imageProd");
             Boolean isBaratto = args.getBoolean("baratto");
             String idOrdine = args.getString("idOrdine");
-            textPrezzo.setText(prezzo+"€");
-            double price = 0;
-            try {
-                price = Double.parseDouble(prezzo);
-            } catch (NumberFormatException e) {
-                Toast.makeText(getContext(), "Invalid price format", Toast.LENGTH_SHORT).show();
-            }
-            purchasedProduct = new Product(prodId ,idVenditore, nome, descrizione, price, isBaratto, imgUrl, idOrdine );
+
+        textPrezzo.setText(prezzo+"€");
+
+
         }
         btnPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -66,12 +62,22 @@ public class DetailPayment extends Fragment {
                 if (!validateFields()) {
                     return; // Stop the payment process if validation fails
                 }
+                new User(idVenditore, new User.UserCallback() {
+                    @Override
+                    public void onUserLoaded(User user) {
 
+                        user.removeProductForSale(prodId, idVenditore);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
                 // Create a Product object for the purchased item
 
                 HomeScreen homeScreen = new HomeScreen();
 
-                onDeleteProductClick(purchasedProduct);
                 // Perform the fragment transaction
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, homeScreen);

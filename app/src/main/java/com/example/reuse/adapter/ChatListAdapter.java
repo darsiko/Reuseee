@@ -70,7 +70,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.ChatLi
         }
         //holder.userAvatar.setImageResource(user.getUserAvatarResId());
 
-        //holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(user));
+        holder.itemView.setOnClickListener(v -> onItemClickListener.onItemClick(user));
     }
 
     @Override
