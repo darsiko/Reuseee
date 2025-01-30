@@ -21,7 +21,12 @@ public class Chat {
 
 
     //costruttore se servono metodi anche con oggetto vuoto
-    public Chat() {}
+    public Chat() {
+        this.id="";
+        this.idUtente1="";
+        this.idUtente2="";
+        this.messaggi=new ArrayList<>();
+    }
     //costruttore manuale
     public Chat(String idUtente1, String idUtente2, List<Messaggio> messaggi){
         this.idUtente1=idUtente1;
@@ -40,7 +45,7 @@ public class Chat {
     //crea oggetto chat a partire dall'id (prendetelo dalla lista delle chat dell'utente)
     public Chat(String id){
         this.id=id;
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Chats").child(id);
+        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Chats").child(this.id);
         dbr.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DataSnapshot snapshot = task.getResult();
@@ -48,7 +53,7 @@ public class Chat {
                 this.idUtente2 = snapshot.child("idUtente2").getValue(String.class);
 
                 this.messaggi = new ArrayList<>();
-                for (DataSnapshot mSnapshot : snapshot.child("messaggi").getChildren()) {
+                for (DataSnapshot mSnapshot : snapshot.child("chats").getChildren()) {
                     String mid = mSnapshot.getKey();
                     Messaggio m = new Messaggio(mid, this.id);
                     messaggi.add(m);
@@ -155,4 +160,18 @@ public class Chat {
 
     //ancora da implementare
     public String trovaId(String idUtente1, String idUtente2){ return "";}
+
+
+    public String getId(){
+        return id;
+    }
+    public String getIdUtente1(){
+        return idUtente1;
+    }
+    public String getIdUtente2(){
+        return idUtente2;
+    }
+    public List<Messaggio> getMessaggi(){
+        return messaggi;
+    }
 }

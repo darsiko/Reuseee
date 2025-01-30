@@ -52,6 +52,15 @@ public class Messaggio{
         this.contenuto=contenuto;
     }
 
+    //costruttore manuale con id del messaggio stesso
+    public Messaggio(String idMittente, String dataora, boolean tipo, String contenuto, String id){
+        this.id=id;
+        this.idMittente=idMittente;
+        this.dataora=dataora;
+        this.tipo=tipo;
+        this.contenuto=contenuto;
+    }
+
     //costruttore data automatica
     public Messaggio(String idMittente, boolean tipo, String contenuto){
         this.idMittente=idMittente;
@@ -105,4 +114,21 @@ public class Messaggio{
         messaggio.child("contenuto").setValue(contenuto);
         return mid;
     }
+
+    public String getId(){
+        return id;
+    }
+    public String getIdMittente(){
+        return idMittente;
+    }
+    public String getDataora(){
+        return dataora;
+    }
+    public String getContenuto(){
+        return contenuto;
+    }
+    public boolean getTipo(){
+        return tipo;
+    }
+
 }
