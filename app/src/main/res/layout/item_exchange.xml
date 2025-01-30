@@ -12,7 +12,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_gravity="center_vertical"
-        android:src="@drawable/user"
+        android:src="@drawable/shoes"
         android:scaleType="centerCrop"
         android:layout_marginEnd="16dp"
         android:background="@drawable/circle_background" />
@@ -30,7 +30,7 @@
             android:id="@+id/contact_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Nome Contatto"
+            android:text="Nome Prodotto"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@color/primary" />
@@ -40,7 +40,7 @@
             android:id="@+id/contact_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Status: Attiva"
+            android:text="Prezzo: 30€"
             android:textSize="14sp"
             android:textColor="@color/secondary" />
     </LinearLayout>
