@@ -17,9 +17,7 @@ public class Chat {
     private String idUtente1;
     private String idUtente2;
     private List<Messaggio> messaggi;
-
-
-
+    private Scambio scambio;
 
     //costruttore se servono metodi anche con oggetto vuoto
     public Chat() {
@@ -34,11 +32,6 @@ public class Chat {
         this.idUtente2=idUtente2;
         this.messaggi=messaggi;
     }
-
-
-
-
-
 
 
 
@@ -59,6 +52,28 @@ public class Chat {
                     Messaggio m = new Messaggio(mid, this.id);
                     messaggi.add(m);
                 }
+                if (snapshot.hasChild("idOfferente")) {
+                    String idOfferente=snapshot.child("idOfferente").getValue(String.class);
+                    double soldiOfferente=snapshot.child("soldiOfferente").getValue(Double.class);
+                    double soldiRicevente=snapshot.child("soldiRicevente").getValue(Double.class);
+                    List<String> listaOfferente=new ArrayList<>();
+                    for (DataSnapshot oSnapshot : snapshot.child("listaOfferente").getChildren()) {
+                        String pid = oSnapshot.getValue(String.class);
+                        if (pid != null) {
+                            listaOfferente.add(pid);
+                        }
+                    }
+                    List<String> listaRicevente=new ArrayList<>();
+                    for (DataSnapshot rSnapshot : snapshot.child("listaRicevente").getChildren()) {
+                        String pid = rSnapshot.getValue(String.class);
+                        if (pid != null) {
+                            listaRicevente.add(pid);
+                        }
+                    }
+                    this.scambio=new Scambio(idOfferente, soldiOfferente, soldiRicevente, listaOfferente, listaRicevente);
+                }
+
+
             }
         });
     }
@@ -117,6 +132,8 @@ public class Chat {
         });
     }
 
+
+    //funzione di supporto
     private void uploadChatSupporto(){
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
         id = dbRef.push().getKey();
@@ -143,13 +160,13 @@ public class Chat {
                 dbr.setValue(chats)
                         .addOnCompleteListener(updateTask -> {
                             if (updateTask.isSuccessful()) {
-                                System.out.println("Product added to 'productsForSale' successfully.");
+                                System.out.println("Chat added successfully.");
                             } else {
-                                System.out.println("Failed to update 'productsForSale': " + updateTask.getException().getMessage());
+                                System.out.println("Failed to update chats: " + updateTask.getException().getMessage());
                             }
                         });
             }else{
-                System.out.println("Failed to retrieve 'productsForSale': " + task.getException().getMessage());
+                System.out.println("Failed to retrieve chats: " + task.getException().getMessage());
             }
         });
         DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(idUtente2).child("chats");
@@ -170,17 +187,19 @@ public class Chat {
                 dbr2.setValue(chats)
                         .addOnCompleteListener(updateTask -> {
                             if (updateTask.isSuccessful()) {
-                                System.out.println("Product added to 'productsForSale' successfully.");
+                                System.out.println("Chat added successfully.");
                             } else {
-                                System.out.println("Failed to update 'productsForSale': " + updateTask.getException().getMessage());
+                                System.out.println("Failed to update chats: " + updateTask.getException().getMessage());
                             }
                         });
             }else{
-                System.out.println("Failed to retrieve 'productsForSale': " + task.getException().getMessage());
+                System.out.println("Failed to retrieve chats: " + task.getException().getMessage());
             }
         });
     }
 
+    //UTILIZZARE
+    //funzione per cancellare la chat (controllare id dell'oggetto)
     public void deleteChat(){
         if(id=="" || id==null){
             System.out.println("risulta id nullo" + id);
@@ -201,6 +220,7 @@ public class Chat {
 
     }
 
+    //funzione di supporto
     private void deleteChatSupporto(DatabaseReference dbref){
         dbref.removeValue().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
@@ -210,6 +230,7 @@ public class Chat {
         });
     }
 
+    //funzione di supporto
     private void deleteChatSupportoLista(boolean t){
         String idUtente;
         if(t){
@@ -255,9 +276,18 @@ public class Chat {
         m.addDatabase(idMittente, imageUri, id);
     }
 
+    public void uploadScambio(Scambio scambio){
+        this.scambio=scambio;
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats").child(id);
+        ref.child("idOfferente").setValue(scambio.getIdOfferente());
+        ref.child("soldiOfferente").setValue(scambio.getSoldiOfferente());
+        ref.child("soldiRicevente").setValue(scambio.getSoldiRicevente());
+        ref.child("idOfferente").setValue(scambio.getIdOfferente());
+        ref.child("listaOfferente").setValue(scambio.getListaOfferente());
+        ref.child("listaRicevente").setValue(scambio.getListaRicevente());
+    }
 
-    //ancora da implementare
-    public String trovaId(String idUtente1, String idUtente2){ return "";}
+
 
     public String getId(){
         return id;
@@ -271,4 +301,8 @@ public class Chat {
     public List<Messaggio> getMessaggi(){
         return messaggi;
     }
+    public Scambio getScambio(){
+        return scambio;
+    }
+
 }

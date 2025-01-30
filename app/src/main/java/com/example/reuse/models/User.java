@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class User {
+    private String id="";
     private String username, nome, cognome, stato, citta, indirizzo, data, telefono, imageUrl;
     private int cap;
     private List<String> productsForSale = new ArrayList<>();
@@ -34,6 +35,7 @@ public class User {
         dbr.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DataSnapshot snapshot = task.getResult();
+                this.id=uid;
                 this.username = snapshot.child("username").getValue(String.class);
                 this.nome = snapshot.child("nome").getValue(String.class);
                 this.cognome = snapshot.child("cognome").getValue(String.class);
@@ -74,6 +76,7 @@ public class User {
     }
 
     public User(final User other){
+        this.id=other.id;
         this.username=other.getUsername();
         this.nome=other.getNome();
         this.cognome=other.getCognome();
@@ -95,6 +98,7 @@ public class User {
         dbr.get().addOnCompleteListener(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 DataSnapshot snapshot = task.getResult();
+                this.id=uid;
                 this.username = snapshot.child("username").getValue(String.class);
                 this.nome = snapshot.child("nome").getValue(String.class);
                 this.cognome = snapshot.child("cognome").getValue(String.class);
@@ -168,6 +172,7 @@ public class User {
 
     //update per i dati del profilo
     public void updateProfilo(String uid){
+        this.id=uid;
         updateUsername(uid);
         updateNome(uid);
         updateCognome(uid);
