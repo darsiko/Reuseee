@@ -75,6 +75,32 @@ public class Chat {
     //Chat c=new Chat(idUtente1, idUtente2);
     //c.uploadChat() per caricare la chat nel database
     public void uploadChat(){
+        //check se esiste già chat tra utenti
+        DatabaseReference refU1 = FirebaseDatabase.getInstance().getReference("Users").child(idUtente1).child("chats");
+        refU1.get().addOnCompleteListener(task -> {
+            if(task.isSuccessful()){
+                if (task.getResult().exists()) {
+                    DatabaseReference refU2 = FirebaseDatabase.getInstance().getReference("Users").child(idUtente2).child("chats");
+                    refU2.get().addOnCompleteListener(task2 -> {
+                        for (DataSnapshot snapshot1 : task.getResult().getChildren()) {
+                            for (DataSnapshot snapshot2 : task2.getResult().getChildren()) {
+                                if (snapshot1.getValue(String.class)==snapshot2.getValue(String.class)){
+                                    Chat c=new Chat(snapshot2.getValue(String.class));
+                                    this.id=c.getId();
+                                    this.idUtente1=c.getIdUtente1();
+                                    this.idUtente2=c.getIdUtente2();
+                                    this.messaggi=c.getMessaggi();
+                                    System.out.println("La Chat esiste già");
+                                    return;
+                                }
+                            }
+                        }
+                    });
+                }
+            }
+        });
+
+        //se non esiste
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
         id = dbRef.push().getKey();
         DatabaseReference ref=dbRef.child(id);
