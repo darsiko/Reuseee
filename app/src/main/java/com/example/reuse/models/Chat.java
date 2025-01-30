@@ -84,7 +84,9 @@ public class Chat {
                     refU2.get().addOnCompleteListener(task2 -> {
                         for (DataSnapshot snapshot1 : task.getResult().getChildren()) {
                             for (DataSnapshot snapshot2 : task2.getResult().getChildren()) {
-                                if (snapshot1.getValue(String.class)==snapshot2.getValue(String.class)){
+                                String chatId1 = snapshot1.getValue(String.class);
+                                String chatId2 = snapshot2.getValue(String.class);
+                                if (chatId1 != null && chatId1.equals(chatId2)){
                                     Chat c=new Chat(snapshot2.getValue(String.class));
                                     this.id=c.getId();
                                     this.idUtente1=c.getIdUtente1();
@@ -95,12 +97,14 @@ public class Chat {
                                 }
                             }
                         }
+                        uploadChatSupporto();
                     });
                 }
             }
         });
+    }
 
-        //se non esiste
+    public void uploadChatSupporto(){
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
         id = dbRef.push().getKey();
         DatabaseReference ref=dbRef.child(id);
@@ -162,11 +166,6 @@ public class Chat {
                 System.out.println("Failed to retrieve 'productsForSale': " + task.getException().getMessage());
             }
         });
-
-
-
-        //FirebaseDatabase.getInstance().getReference("Users").child(idUtente1).child("chats").push().setValue(id);
-        //FirebaseDatabase.getInstance().getReference("Users").child(idUtente2).child("chats").push().setValue(id);
     }
 
 
