@@ -1,28 +1,32 @@
 package com.example.reuse.models;
-
-import static java.security.AccessController.getContext;
-
 import android.net.Uri;
-import android.util.Log;
-import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class User {
-    private String username, nome, cognome, stato, citta, indirizzo, data, telefono, imageUrl;
+
+    private String username;
+    private String nome;
+    private String cognome;
+    private String stato;
+    private String citta;
     private int cap;
+    private String indirizzo;
+    private String data;
+    private String telefono;
     private List<String> productsForSale;
+    private List<String> chats;
+    private String imageUrl;
+
 
     //costruttori
     public User(){}
@@ -57,6 +61,13 @@ public class User {
                         this.productsForSale.add(pid);
                     }
                 }
+                this.chats = new ArrayList<>();
+                for (DataSnapshot chatSnapshot : snapshot.child("chats").getChildren()) {
+                    String cid = chatSnapshot.getValue(String.class);
+                    if (cid != null) {
+                        this.chats.add(cid);
+                    }
+                }
 
                 // Invoke the callback once data is loaded
                 callback.onUserLoaded(this);
@@ -65,21 +76,6 @@ public class User {
             }
         });
     }
-
-    public User(final User other){
-        this.username=other.getUsername();
-        this.nome=other.getNome();
-        this.cognome=other.getCognome();
-        this.stato=other.getStato();
-        this.citta=other.getCitta();
-        this.indirizzo=other.getIndirizzo();
-        this.data=other.getData();
-        this.telefono=other.getTelefono();
-        this.imageUrl=other.imageUrl;
-        this.cap=other.cap;
-        productsForSale.addAll(other.productsForSale);
-    }
-
     public User(String uid) {
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
 
@@ -109,10 +105,17 @@ public class User {
                         this.productsForSale.add(pid);
                     }
                 }
+
+                this.chats = new ArrayList<>();
+                for (DataSnapshot chatSnapshot : snapshot.child("chats").getChildren()) {
+                    String cid = chatSnapshot.getValue(String.class);
+                    if (cid != null) {
+                        this.chats.add(cid);
+                    }
+                }
             }
         });
     }
-
     public interface UserCallback {
         void onUserLoaded(User user);
         void onError(Exception e);
@@ -127,13 +130,14 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale=new ArrayList<>();
+        this.chats=new ArrayList<>();
         this.stato=stato;
         this.citta=citta;
         this.imageUrl="imageUrl";
     }
 
     //costruttore
-    public User(String username, String nome, String cognome, String telefono, String stato, String citta, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale){
+    public User(String username, String nome, String cognome, String telefono, String stato, String citta, int cap, String indirizzo, String data, String imageUrl, List<String> productsForSale, List<String> chats){
         this.username=username;
         this.nome=nome;
         this.cognome=cognome;
@@ -144,8 +148,10 @@ public class User {
         this.indirizzo=indirizzo;
         this.data=data;
         this.productsForSale=productsForSale;
+        this.chats=chats;
         this.imageUrl=imageUrl;
     }
+
 
     //update per i dati del profilo
     public void updateProfilo(String uid){
@@ -160,6 +166,7 @@ public class User {
         updateImageUrl(uid);
         updateData(uid);
     }
+
 
     //rimuovi oggetto dalla lista di quelli venduti
     public void removeProductForSale(String pid, String uid){
@@ -234,6 +241,8 @@ public class User {
     }
 
 
+
+
     //getter e setter dell'oggetto (non dal database)
     public List<String> getProductsForSale() {
         return productsForSale;
@@ -245,6 +254,10 @@ public class User {
     // Metodo per rimuovere un prodotto
     public void removeProduct(String product) {
         productsForSale.remove(product);
+    }
+
+    public List<String> getChats() {
+        return chats;
     }
 
     public String getUsername() {
