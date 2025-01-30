@@ -6,28 +6,19 @@
     android:orientation="horizontal"
     android:padding="16dp">
 
-    <!-- Immagine del profilo -->
-    <ImageView
-        android:id="@+id/profile_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:layout_gravity="center_vertical"
-        android:src="@drawable/shoes"
-        android:scaleType="centerCrop"
-        android:layout_marginEnd="16dp"
-        android:background="@drawable/circle_background" />
 
     <!-- Layout verticale per nome e stato -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_weight="1"
         android:orientation="vertical"
         android:gravity="center_vertical">
 
         <!-- Nome del contatto -->
         <TextView
-            android:id="@+id/contact_name"
+            android:id="@+id/productNamee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Nome Prodotto"
@@ -37,7 +28,7 @@
 
         <!-- Stato -->
         <TextView
-            android:id="@+id/contact_status"
+            android:id="@+id/productPricee"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Prezzo: 30€"

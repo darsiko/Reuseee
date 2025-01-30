@@ -108,7 +108,8 @@ public class DetailProdScreen extends Fragment {
                 if(currentBundle != null){
                     Bundle chatBundle = new Bundle();
                     String sellerId = currentBundle.getString("sellerId");
-                    String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+                    chatBundle.putString("sellerId", sellerId);
 
                     Chat chat = new Chat(currentUserId, sellerId);
                     chat.uploadChat();

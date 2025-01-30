@@ -50,6 +50,10 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
 
         adapter = new ChatListAdapter(getContext(), userList, this);
         recyclerViewUsers.setAdapter(adapter);
+        Bundle bundle = getArguments();
+        if(!bundle.isEmpty()){
+            sellerId = bundle.getString("sellerId");
+        }
 
         newLoadUsers();
 
@@ -146,7 +150,10 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
 
         // You can now pass the product data to a new fragment or activity, e.g.
         Bundle bundle = new Bundle();
+
         bundle.putString("name", user.getUsername());
+        bundle.putString("sellerId", sellerId);
+        System.out.println("sellerId"+sellerId);
 
         ChatScreen chatScreen = new ChatScreen();
         chatScreen.setArguments(bundle);

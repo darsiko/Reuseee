@@ -108,11 +108,6 @@
                 android:layout_height="400dp"
                 android:layout_gravity="center"></androidx.recyclerview.widget.RecyclerView>
 
-            <Button
-                android:id="@+id/buttonAddutente1"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:text="+" />
         </LinearLayout>
 
         <LinearLayout
@@ -127,11 +122,6 @@
                 android:layout_width="match_parent"
                 android:layout_gravity="center"
                 android:layout_height="400dp"></androidx.recyclerview.widget.RecyclerView>
-            <Button
-                android:id="@+id/buttonAddutente2"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:text="+"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -148,10 +138,22 @@
             android:gravity="center">
 
             <Button
-
+                android:id="@+id/accetta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Annulla"></Button>
+                android:text="Accetta"></Button>
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/ignora"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ignora"></Button>
         </LinearLayout>
 
         <LinearLayout
@@ -161,9 +163,10 @@
             android:gravity="center">
 
             <Button
+                android:id="@+id/nuovaofferta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="COnferma"></Button>
+                android:text="NUova Offerta"></Button>
         </LinearLayout>
     </LinearLayout>
     <!-- Space for the remaining part of the screen (3/4 of the height) -->

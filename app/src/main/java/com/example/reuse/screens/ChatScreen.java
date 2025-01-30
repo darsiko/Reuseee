@@ -12,18 +12,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.reuse.R;
-import com.example.reuse.adapter.ChatListAdapter;
 import com.example.reuse.adapter.ChatMessageAdapter;
-import com.example.reuse.adapter.ProductAdapter;
-import com.example.reuse.models.Chat;
 import com.example.reuse.models.Message;
-import com.example.reuse.models.Product;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -42,7 +37,7 @@ public class ChatScreen extends Fragment {
     TextView textView;
     LinearLayout exchangeOption;
     LinearLayout goBack;
-
+    String sellerId, currentUserId, userName;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,8 +50,10 @@ public class ChatScreen extends Fragment {
         exchangeOption = view.findViewById(R.id.btnExchange);
         Bundle args = getArguments();
         if (args != null) {
-            String userName = args.getString("name", ""); // Default to empty if not found
+           userName = args.getString("name", ""); // Default to empty if not found
             textView.setText("Chat con "+userName); // Set the username to the TextView
+            sellerId = args.getString("sellerId");
+            currentUserId = args.getString("currentUser");
         }
 
         goBack.setOnClickListener(new View.OnClickListener() {
@@ -74,12 +71,20 @@ public class ChatScreen extends Fragment {
         exchangeOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ExchangeFragmentScreen exchangeFragmentScreen = new ExchangeFragmentScreen();
+                CurrentExchangeFragment CexchangeFragmentScreen = new CurrentExchangeFragment();
+                NewExchangeFragmentScreen exchangeFragmentScreen = new NewExchangeFragmentScreen();
+                Bundle b = new Bundle();
+                b.putString("sellerId", sellerId);
+                System.out.println("sellessssrId"+sellerId);
+                exchangeFragmentScreen.setArguments(b);
+
+                FirebaseDatabase.getInstance().getReference().child("Chats");
 
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
                 transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
                 transaction.commit();
+
             }
         });
         // Inflate the layout for this fragment

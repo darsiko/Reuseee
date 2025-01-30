@@ -53,8 +53,6 @@ public class DetailPayment extends Fragment {
             String idOrdine = args.getString("idOrdine");
 
         textPrezzo.setText(prezzo+"€");
-
-
         }
         btnPayNow.setOnClickListener(new View.OnClickListener() {
             @Override
