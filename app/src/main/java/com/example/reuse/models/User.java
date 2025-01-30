@@ -1,32 +1,27 @@
 package com.example.reuse.models;
+
+import static java.security.AccessController.getContext;
+
 import android.net.Uri;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-
-
 public class User {
-
-    private String username;
-    private String nome;
-    private String cognome;
-    private String stato;
-    private String citta;
+    private String username, nome, cognome, stato, citta, indirizzo, data, telefono, imageUrl;
     private int cap;
-    private String indirizzo;
-    private String data;
-    private String telefono;
-    private List<String> productsForSale;
-    private List<String> chats;
-    private String imageUrl;
-
+    private List<String> productsForSale = new ArrayList<>();
+    private List<String> chats = new ArrayList<>();
 
     //costruttori
     public User(){}
@@ -71,11 +66,28 @@ public class User {
 
                 // Invoke the callback once data is loaded
                 callback.onUserLoaded(this);
+                //QUI C'è UN ERRORE, DIOPORCO
             } else {
                 callback.onError(task.getException());
             }
         });
     }
+
+    public User(final User other){
+        this.username=other.getUsername();
+        this.nome=other.getNome();
+        this.cognome=other.getCognome();
+        this.stato=other.getStato();
+        this.citta=other.getCitta();
+        this.indirizzo=other.getIndirizzo();
+        this.data=other.getData();
+        this.telefono=other.getTelefono();
+        this.imageUrl=other.imageUrl;
+        this.cap=other.cap;
+        this.productsForSale.addAll(other.productsForSale);
+        this.chats.addAll(other.chats);
+    }
+
     public User(String uid) {
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(uid);
 
@@ -119,6 +131,7 @@ public class User {
     public interface UserCallback {
         void onUserLoaded(User user);
         void onError(Exception e);
+
     }
     //costruttore per creazione User
     public User(String username, String nome, String cognome, String telefono, String stato, String citta, int cap, String indirizzo, String data){
@@ -147,8 +160,8 @@ public class User {
         this.cap=cap;
         this.indirizzo=indirizzo;
         this.data=data;
-        this.productsForSale=productsForSale;
-        this.chats=chats;
+        this.productsForSale.addAll(productsForSale);
+        this.chats.addAll(chats);
         this.imageUrl=imageUrl;
     }
 
