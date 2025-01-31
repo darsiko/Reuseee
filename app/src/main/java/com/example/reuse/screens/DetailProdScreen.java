@@ -43,6 +43,7 @@ public class DetailProdScreen extends Fragment {
         statusVenditore = view.findViewById(R.id.sellerProductsCount);
         LinearLayout linearLayout = view.findViewById(R.id.goBackPreviusPage);
 
+
         // Restore data from bundle
         Bundle args = getArguments();
         if (args != null) {
@@ -63,6 +64,13 @@ public class DetailProdScreen extends Fragment {
                 scambia.setVisibility(View.GONE);
 
                 compra.setVisibility(View.GONE);
+            }
+
+            boolean isButtonVisible = args.getBoolean("baratto");
+            if (isButtonVisible) {
+                scambia.setVisibility(View.VISIBLE);  // Mostra il pulsante
+            } else {
+                scambia.setVisibility(View.GONE);  // Nasconde il pulsante
             }
             compra.setOnClickListener(new View.OnClickListener() {
                 @Override

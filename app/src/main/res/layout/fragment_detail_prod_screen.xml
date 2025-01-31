@@ -166,7 +166,8 @@
                     android:text="Scambia"
                     android:backgroundTint="@color/primary"
                     android:textColor="@android:color/white"
-                    android:layout_marginEnd="4dp" />
+                    android:layout_marginEnd="4dp"
+                    android:visibility="gone" />
 
                 <Button
                     android:id="@+id/contactButton"
