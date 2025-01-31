@@ -8,7 +8,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -51,8 +51,6 @@
                 android:textSize="24dp"
                 android:textStyle="bold" />
         </LinearLayout>
-
-        <!-- Search Bar -->
 
         <!-- Product Image with Play Button -->
         <FrameLayout
@@ -118,21 +116,25 @@
                     android:textColor="@android:color/darker_gray" />
             </LinearLayout>
 
-            <ImageView
-                android:id="@+id/thumbUpButton"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
-                android:src="@drawable/baseline_thumb_up_24"
-                android:contentDescription="Thumb Up"
-                android:layout_marginStart="8dp" />
         </LinearLayout>
 
         <!-- Product Description -->
-        <TextView
-            android:layout_marginTop="8dp"
-            android:layout_margin="12dp"
-            android:id="@+id/description"
+        <ScrollView
+            android:id="@+id/descriptionn"
             android:layout_width="match_parent"
-            android:layout_height="250dp" />
+            android:layout_height="337dp"
+            android:layout_margin="12dp"
+            android:layout_marginTop="8dp">
+
+            <!-- Add the TextView inside the ScrollView to display the description -->
+            <TextView
+                android:id="@+id/descriptionText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tutorial description will appear here"
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:padding="16dp"/>
+        </ScrollView>
     </LinearLayout>
 </FrameLayout>
