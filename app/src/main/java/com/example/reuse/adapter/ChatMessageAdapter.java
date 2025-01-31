@@ -14,11 +14,13 @@ import com.example.reuse.R;
 import com.example.reuse.models.Messaggio;
 import com.example.reuse.models.Product;
 import com.example.reuse.models.User;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 
 public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final int VIEW_TYPE_SENT = 1;
@@ -35,13 +37,19 @@ public class ChatMessageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
     @Override
     public int getItemViewType(int position) {
         Messaggio message = messageList.get(position);
-        return 1;
+        String cID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+        if(message.getIdMittente().equals(cID)){
+            //sono il mittente
+            return 1;
+        }
+        else return 2;
         //return message.isSent() ? VIEW_TYPE_SENT : VIEW_TYPE_RECEIVED;
     }
 
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        //IL PROBLEMA è QUI
         if (viewType == VIEW_TYPE_SENT) {
             View view = LayoutInflater.from(context).inflate(R.layout.message_item_sent, parent, false);
             return new SentMessageViewHolder(view);

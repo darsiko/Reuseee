@@ -14,18 +14,15 @@ public class Scambio {
     private String idOfferente;
     private double soldiOfferente;
     private double soldiRicevente;
-    private List<String> listaOfferente;
-    private List<String> listaRicevente;
-
-
+    private List<String> listaOfferente = new ArrayList<>();
+    private List<String> listaRicevente = new ArrayList<>();
     public Scambio(String idOfferente, double soldiOfferente, double soldiRicevente, List<String> listaOfferente,List<String> listaRicevente){
         this.idOfferente=idOfferente;
         this.soldiRicevente=soldiRicevente;
         this.soldiOfferente=soldiOfferente;
-        this.listaRicevente=listaRicevente;
-        this.listaOfferente=listaOfferente;
+        this.listaRicevente.addAll(listaRicevente);
+        this.listaOfferente.addAll(listaOfferente);
     }
-
 
     //Costruttore per nuova offerta (riempire prima di uploadare)
     public Scambio(String idOfferente){
@@ -40,8 +37,8 @@ public class Scambio {
         this.idOfferente=s.idOfferente;
         this.soldiOfferente=s.soldiOfferente;
         this.soldiRicevente=s.soldiRicevente;
-        this.listaOfferente=s.listaOfferente;
-        this.listaRicevente=s.listaRicevente;
+        this.listaOfferente.addAll(s.listaOfferente);
+        this.listaRicevente.addAll(s.listaRicevente);
     }
 
     public double getSoldiOfferente(){
@@ -73,22 +70,14 @@ public class Scambio {
         if(idProdotto!=null){
             if(!listaOfferente.contains(idProdotto)){
                 listaOfferente.add(idProdotto);
-            }else{
-                System.out.println("L'id è già presente nello scambio'");
             }
-        }else{
-            System.out.println("Id non riconosciuto");
         }
     }
     public void addListaRicevente(String idProdotto){
         if(idProdotto!=null){
             if(!listaRicevente.contains(idProdotto)){
                 listaRicevente.add(idProdotto);
-            }else{
-                System.out.println("L'id è già presente nello scambio'");
             }
-        }else{
-            System.out.println("Id non riconosciuto");
         }
     }
 
@@ -103,6 +92,4 @@ public class Scambio {
             listaRicevente.remove(idProdotto);
         }
     }
-
-
 }
