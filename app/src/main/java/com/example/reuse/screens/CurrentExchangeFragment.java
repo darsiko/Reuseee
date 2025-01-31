@@ -120,6 +120,8 @@ public class CurrentExchangeFragment extends Fragment {
         addExchangeOfferta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats").child(chatID).child("scambio");
+                dbRef.removeValue();
                 NewExchangeFragmentScreen newExchangeFragmentScreen = new NewExchangeFragmentScreen();
                 newExchangeFragmentScreen.setArguments(b);
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
@@ -127,6 +129,29 @@ public class CurrentExchangeFragment extends Fragment {
                 transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
                 transaction.commit();
             }
+        });
+
+        accetta.setOnClickListener(v -> {
+            Chat c = new Chat(chatID);
+            String input = "ACCETTO L'OFFERTA!";
+            c.addMessaggio(cID, input);
+            dbRef.removeValue();
+            ChatListScreen chatListFragment = new ChatListScreen();
+            chatListFragment.setArguments(new Bundle());
+            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, chatListFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        });
+
+        rifiuta.setOnClickListener(v -> {
+            dbRef.removeValue();
+            ChatListScreen chatListFragment = new ChatListScreen();
+            chatListFragment.setArguments(new Bundle());
+            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+            transaction.replace(R.id.fragment_container, chatListFragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
         });
         return view;
     }

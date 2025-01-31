@@ -102,7 +102,6 @@ public class ChatScreen extends Fragment {
                             String u2 = d.child("idUtente2").getValue(String.class);
                             if(u1!=null && u2!=null && (u1.equals(userId) && u2.equals(sellerId[0])) || (u1.equals(sellerId[0]) && u2.equals(userId))){
                                 chatId[0] = d.getKey();
-
                                 List<Messaggio> mex = new ArrayList<>();
                                 //gather messages list
                                 for(DataSnapshot m : d.child("messaggi").getChildren()){
@@ -114,15 +113,12 @@ public class ChatScreen extends Fragment {
                                     Messaggio temp = new Messaggio(mittente, data, false, content, mexID);
                                     mex.add(temp);
                                 }
-
-
                                 //retrieve Scambio
                                 DatabaseReference tradeRef = FirebaseDatabase.getInstance().getReference("Chats").child(chatId[0]).child("scambio");
                                 tradeRef.get().addOnSuccessListener(task2 -> {
                                     CurrentExchangeFragment exchangeFragmentScreen = new CurrentExchangeFragment();
                                     NewExchangeFragmentScreen newExchangeFragmentScreen = new NewExchangeFragmentScreen();
                                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();// Add to back stack if you want to go back to this fragment
-
                                     if(task2.getValue()!=null){
                                         //L'OFFERTA ESISTE GIà
                                         String idOff = task2.child("idOfferente").getValue(String.class);
@@ -138,23 +134,21 @@ public class ChatScreen extends Fragment {
                                             String rec = x.getKey();
                                             listaRec.add(rec);
                                         }
-                                        Scambio s = new Scambio(idOff, cashOff, cashRec, listaOffer, listaRec);
-                                        Chat c = new Chat(chatId[0], u1, u2, mex, s);
                                         Bundle b = new Bundle();
+                                        b.putString("sellerUsername", sellerUsername);
                                         b.putString("sellerId", sellerId[0]);
-                                        b.putString("chatId", c.getId());
-
+                                        b.putString("chatId", chatId[0]);
                                         exchangeFragmentScreen.setArguments(b);
                                         transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
                                     }
                                     else{
                                         //L'OFFERTA NON ESISTE
-                                        Scambio s = new Scambio(userId, 0, 0, new ArrayList<>(), new ArrayList<>());
-                                        Chat c = new Chat(chatId[0], u1, u2, mex, s);
-                                        c.uploadScambio(s);
                                         Bundle b = new Bundle();
+                                        b.putString("sellerUsername", sellerUsername);
                                         b.putString("sellerId", sellerId[0]);
-                                        b.putString("chatId", c.getId());
+                                        b.putString("chatId", chatId[0]);
+                                        b.putString("u1", u1);
+                                        b.putString("u2", u2);
                                         newExchangeFragmentScreen.setArguments(b);
                                         transaction.replace(R.id.fragment_container, newExchangeFragmentScreen);
                                     }
@@ -202,6 +196,7 @@ public class ChatScreen extends Fragment {
 
         return view;
     }
+
 
     @Override
     public void onResume() {

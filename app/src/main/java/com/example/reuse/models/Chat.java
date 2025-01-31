@@ -96,7 +96,6 @@ public class Chat {
         this.messaggi=new ArrayList<>();
     }
 
-
     //UTILIZZARE
     //Chat c=new Chat(idUtente1, idUtente2);
     //c.uploadChat() per caricare la chat nel database

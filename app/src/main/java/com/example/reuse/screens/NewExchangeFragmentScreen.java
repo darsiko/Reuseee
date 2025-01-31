@@ -18,9 +18,13 @@ import android.widget.Toast;
 import com.example.reuse.R;
 import com.example.reuse.adapter.ProductsUtente1ExchangeAdapter;
 import com.example.reuse.adapter.ProductsUtente2ExchangeAdapter;
+import com.example.reuse.models.Chat;
+import com.example.reuse.models.Messaggio;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.Scambio;
 import com.example.reuse.models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -54,7 +58,6 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         utente2 = view.findViewById(R.id.acquirente);
 
         conferma = view.findViewById(R.id.confermaa);
-
 
         //QUI INIZIA IL PROBLEMA, MA DOV'è DI PRECISO??
         EditText offerente, ricevente;
@@ -111,6 +114,7 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
             @Override
             public void onError(Exception e) {}
         });
+
         addUtente1.setOnClickListener(v ->
                 showUtente1ProductsDialog("Utente 1", productListutente1, adapterUtente1));
 
@@ -130,12 +134,14 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
             @Override
             public void onError(Exception e) {}
         });
+
         annulla.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ChatScreen chatScreen = new ChatScreen();
                 Bundle b = new Bundle();
-                //b.putString("sellerId", chat.getIdUtente2());
+                b.putString("seller", bundle.getString("sellerUsername"));
+
                 chatScreen.setArguments(b);
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
                 transaction.replace(R.id.fragment_container, chatScreen);
@@ -143,27 +149,59 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
                 transaction.commit();
             }
         });
+
         conferma.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String offerenteText = offerente.getText().toString().trim();
-                String riceventeText = ricevente.getText().toString().trim();
-                if (offerenteText.isEmpty() || riceventeText.isEmpty()) {
-                    Toast.makeText(getContext(), "Inserisci un importo valido", Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                try {
-                    double soldiOfferente = Double.parseDouble(offerenteText);
-                    double soldiRicevente = Double.parseDouble(riceventeText);
+                String cID = bundle.getString("chatId");
+                if(cID!=null){
+                    DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chats").child(cID);
+                    chatRef.get().addOnCompleteListener(task -> {
+                        if(task.isSuccessful() && task.getResult().exists()){
+                            String u1 = bundle.getString("u1");
+                            String u2 = bundle.getString("u2").toString();
+                            assert u1 != null;
+                            List<Messaggio> mex = new ArrayList<>();
+                            for(DataSnapshot m : task.getResult().child("messaggi").getChildren()){
+                                //gather single message info
+                                String mexID = m.getKey();
+                                String content = m.child("contenuto").getValue(String.class);
+                                String data = m.child("dataeora").getValue(String.class);
+                                String mittente = m.child("idMittente").getValue(String.class);
+                                Messaggio temp = new Messaggio(mittente, data, false, content, mexID);
+                                mex.add(temp);
+                            }
+                            String offerText = offerente.getText().toString();
+                            String ricevText = ricevente.getText().toString();
+                            offerText = offerText.substring(0, offerText.length()-1);
+                            ricevText = ricevText.substring(0, ricevText.length()-1);
 
-                } catch (NumberFormatException e) {
-                    Toast.makeText(getContext(), "Inserisci un numero valido", Toast.LENGTH_SHORT).show();
+                            double o = offerText.isEmpty() ? 0 : Double.parseDouble(offerText);
+                            double r = ricevText.isEmpty() ? 0 : Double.parseDouble(ricevText);
+                            List<String> myProd = new ArrayList<>();
+                            List<String> hisProd = new ArrayList<>();
+                            for(Product p : newProductListUtente1){
+                                myProd.add(p.getId());
+                            }
+                            for(Product p : newProductListUtente2){
+                                hisProd.add(p.getId());
+                            }
+                            Scambio s = new Scambio(currentUserId, o, r,myProd, hisProd);
+                            Chat c = new Chat(cID, u1, u2, mex, s);
+                            c.uploadScambio(s);
+                        }
+                    });
+                    ChatListScreen chatListFragment = new ChatListScreen();
+                    chatListFragment.setArguments(new Bundle());
+                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                    transaction.replace(R.id.fragment_container, chatListFragment);
+                    transaction.addToBackStack(null);
+                    transaction.commit();
                 }
             }
         });
         return view;
     }
-
     private void showUtente1ProductsDialog(String userType, List<Product> productList, ProductsUtente1ExchangeAdapter adapter) {
         if (productList.isEmpty()) {
             Toast.makeText(getContext(), "Non ci sono prodotti", Toast.LENGTH_SHORT).show();
@@ -233,7 +271,6 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         builder.setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss());
         builder.show();
     }
-
     @Override
     public void onItemClick(Product product) {}
 }
