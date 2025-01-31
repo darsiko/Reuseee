@@ -8,6 +8,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +54,9 @@ public class ChatScreen extends Fragment {
     LinearLayout exchangeOption;
     LinearLayout goBack; //LinearLayout trash;
 
+    private Handler handler = new Handler();
+    private Runnable runnable;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -62,33 +66,6 @@ public class ChatScreen extends Fragment {
         goBack = (LinearLayout) view.findViewById(R.id.goBackPreviusPage);
         textView = (android.widget.TextView) view.findViewById(R.id.chatUserName);
         exchangeOption = view.findViewById(R.id.btnExchange);
-
-        //trash = view.findViewById(R.id.trash);
-        /*
-        <LinearLayout
-        android:id="@+id/trash"
-        android:focusable="true"
-        android:background="?android:attr/selectableItemBackground"
-        android:clickable="true"
-
-        android:layout_width="wrap_content"
-        android:orientation="vertical"
-        android:layout_height="wrap_content">
-
-                <ImageView
-        android:layout_width="wrap_content"
-        android:layout_marginLeft="30dp"
-        android:layout_height="wrap_content"
-        android:src="@drawable/baseline_delete_24" />
-
-                <TextView
-        android:text="Elimina "
-        android:layout_gravity="start"
-        android:layout_marginLeft="20dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-            </LinearLayout>
-         */
         Bundle args = getArguments();
         String sellerName = args.getString("seller");
 
@@ -138,12 +115,11 @@ public class ChatScreen extends Fragment {
                         for(DataSnapshot s : task.getResult().getChildren()){
                             String u1 = s.child("idUtente1").getValue(String.class);
                             String u2 = s.child("idUtente2").getValue(String.class);
-                            if(u1!=null && u2!=null && u1.equals(uID) && u2.equals(otherID)){
+                            if(u1!=null && u2!=null && (u1.equals(uID) && u2.equals(otherID)) || (u1.equals(otherID) && u2.equals(uID))){
                                 chatId[0] = s.getKey();
                                 Chat c = new Chat(chatId[0]);
                                 c.addMessaggio(uID, input);
                                 messageList.clear();
-                                loadChat();
                             }
                         }
                     }
@@ -159,7 +135,22 @@ public class ChatScreen extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadChat();
+        runnable = new Runnable(){
+            @Override
+            public void run(){
+                messageList.clear();
+                loadChat();
+                handler.postDelayed(this, 1000);
+            }
+        };
+
+        handler.post(runnable);
+    }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        handler.removeCallbacks(runnable);
     }
 
     @Override
@@ -169,92 +160,6 @@ public class ChatScreen extends Fragment {
         Bundle args = getArguments();
         String sellerName = args.getString("seller");
         textView.setText("Chat con " + sellerName);
-
-        /*
-        trash.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                List<String> myChats = new ArrayList<>();
-
-                String s = args.getString("size");
-                int size = Integer.parseInt(s);
-
-                for(int i=0; i<size; ++i){
-                    myChats.add(args.getString(Integer.toString(i)));
-                }
-
-                String[] sellerID = new String[1];
-                for(String ids : myChats){
-                    DatabaseReference userRef = FirebaseDatabase.getInstance().getReference("Users").child(ids);
-                    userRef.addValueEventListener(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if(snapshot.exists()){
-                                String username = snapshot.child("username").getValue(String.class);
-                                if(username.equals(sellerName)){
-                                    sellerID[0] = ids;
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(@NonNull DatabaseError error) {}
-                    });
-                }
-
-
-                String uID = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
-                DatabaseReference chatUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(uID).child("chats");
-                Chat[] c = new Chat[1];
-                chatUserRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
-                            for(DataSnapshot temp : snapshot.getChildren()){
-                                //chat1 Williams
-                                //chat2 Pippo
-                                String chatID = temp.getValue(String.class);
-                                if(chatID!=null && !chatID.isEmpty()){
-                                    DatabaseReference u1 = FirebaseDatabase.getInstance().getReference("Chats").child(chatID).child("idUtente1");
-                                    u1.addValueEventListener(new ValueEventListener() {
-                                        @Override
-                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
-                                            if(snapshot.exists()){
-                                                if(snapshot.getValue(String.class).equals(uID)){
-                                                    DatabaseReference u2 = FirebaseDatabase.getInstance().getReference("Chats").child(chatID).child("idUtente2");
-                                                    u2.addValueEventListener(new ValueEventListener() {
-                                                        @Override
-                                                        public void onDataChange(@NonNull DataSnapshot snapshott) {
-                                                            if(snapshott.exists()){
-                                                                if(snapshott.getValue(String.class).equals(sellerID[0])){
-                                                                    //QUESTA è LA CHAT DA ELIMINARE
-                                                                    Chat temp = new Chat(chatID);
-                                                                }
-                                                            }
-                                                        }
-
-                                                        @Override
-                                                        public void onCancelled(@NonNull DatabaseError error) {}
-                                                    });
-                                                }
-                                            }
-                                        }
-
-                                        @Override
-                                        public void onCancelled(@NonNull DatabaseError error) {}
-                                    });
-                                }
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {}
-                });
-
-                getParentFragmentManager().popBackStack();
-            }
-        });
-         */
     }
 
 
@@ -287,8 +192,9 @@ public class ChatScreen extends Fragment {
                                         }
                                         String data = d.child("dataora").getValue(String.class);
                                         String content = d.child("contenuto").getValue(String.class);
+                                        String mittente = d.child("idMittente").getValue(String.class);
                                         if(!contains){
-                                            Messaggio m = new Messaggio(u1, data, false, content);
+                                            Messaggio m = new Messaggio(mittente, data, false, content);
                                             messageList.add(m);
                                         }
                                     }
@@ -301,52 +207,6 @@ public class ChatScreen extends Fragment {
                         return; // Una volta trovata la chat, non serve continuare
                     }
                 }
-            }
-        });
-    }
-
-    private void attachChatListener(String chatId){
-
-        /*
-        DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chats").child(chatId);
-
-        chatRef.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Chat c = new Chat(chatId);
-                messageList.clear();
-                messageList.addAll(c.getMessaggi());
-                adapter.updateList(messageList);
-                adapter.notifyDataSetChanged(); // Aggiorna la RecyclerView
-                recyclerViewMessages.scrollToPosition(messageList.size() - 1); // Scorri alla fine
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {}
-        });
-         */
-    }
-
-    //?????
-    private void loadChats() {
-        databaseReference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                chatList.clear();
-                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                    Messaggio message = snapshot.getValue(Messaggio.class);
-                    if (message != null) {
-                       // Set product ID from Firebase key
-                        chatList.add(message);
-                    }
-                }
-                adapter.updateList(chatList);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                Log.e("ProductList", "Error fetching data: " + error.getMessage());
-                Toast.makeText(getContext(), "Failed to load products.", Toast.LENGTH_SHORT).show();
             }
         });
     }
