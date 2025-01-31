@@ -114,8 +114,7 @@ public class ChatScreen extends Fragment {
                                     Messaggio temp = new Messaggio(mittente, data, false, content, mexID);
                                     mex.add(temp);
                                 }
-                                Bundle b = new Bundle();
-                                b.putString("sellerId", sellerId[0]);
+
 
                                 //retrieve Scambio
                                 DatabaseReference tradeRef = FirebaseDatabase.getInstance().getReference("Chats").child(chatId[0]).child("scambio");
@@ -141,6 +140,8 @@ public class ChatScreen extends Fragment {
                                         }
                                         Scambio s = new Scambio(idOff, cashOff, cashRec, listaOffer, listaRec);
                                         Chat c = new Chat(chatId[0], u1, u2, mex, s);
+                                        Bundle b = new Bundle();
+                                        b.putString("sellerId", sellerId[0]);
                                         b.putString("chatId", c.getId());
 
                                         exchangeFragmentScreen.setArguments(b);
@@ -151,6 +152,8 @@ public class ChatScreen extends Fragment {
                                         Scambio s = new Scambio(userId, 0, 0, new ArrayList<>(), new ArrayList<>());
                                         Chat c = new Chat(chatId[0], u1, u2, mex, s);
                                         c.uploadScambio(s);
+                                        Bundle b = new Bundle();
+                                        b.putString("sellerId", sellerId[0]);
                                         b.putString("chatId", c.getId());
                                         newExchangeFragmentScreen.setArguments(b);
                                         transaction.replace(R.id.fragment_container, newExchangeFragmentScreen);
