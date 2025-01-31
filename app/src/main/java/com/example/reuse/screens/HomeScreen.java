@@ -59,8 +59,6 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
     private List<Product> productList;
     private DatabaseReference databaseReference;
 
-    //public HomeScreen() {}
-
     private Handler handler = new Handler();
     private Runnable runnable;
 
@@ -77,8 +75,6 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
         databaseReference = FirebaseDatabase.getInstance().getReference("Products");
         // Initialize product list with sample data
         productList = new ArrayList<>();
-
-        //loadProducts();
 
         adapter = new ProductAdapter(getContext(), productList, this);
         recyclerView.setAdapter(adapter);
