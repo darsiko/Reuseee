@@ -27,10 +27,19 @@ public class Chat {
         this.messaggi=new ArrayList<>();
     }
     //costruttore manuale
+
+    public Chat(String cId, String u1Id, String u2Id, List<Messaggio> mex, Scambio s){
+        this.id = cId;
+        this.idUtente1 = u1Id;
+        this.idUtente2 = u2Id;
+        this.messaggi.addAll(mex);
+        this.scambio = s;
+    }
+
     public Chat(String idUtente1, String idUtente2, List<Messaggio> messaggi) {
         this.idUtente1 = idUtente1;
         this.idUtente2 = idUtente2;
-        this.messaggi = messaggi;
+        this.messaggi.addAll(messaggi);
     }
 
     public void copy(final Chat other){
@@ -55,15 +64,8 @@ public class Chat {
 
                 this.messaggi = new ArrayList<>();
                 for (DataSnapshot mSnapshot : snapshot.child("chats").getChildren()) {
-
                     String content = mSnapshot.child("contenuto").getValue(String.class);
                     addMessaggio(idUtente1, content);
-
-                    /*
-                    String mid = mSnapshot.getKey();
-                    Messaggio m = new Messaggio(mid, this.id);
-                    messaggi.add(m);
-                     */
                 }
                 if (snapshot.hasChild("idOfferente")) {
                     String idOfferente=snapshot.child("idOfferente").getValue(String.class);
@@ -111,8 +113,8 @@ public class Chat {
                 if (task.getResult().exists()) {
                     DatabaseReference refU2 = FirebaseDatabase.getInstance().getReference("Users").child(idUtente2).child("chats");
                     refU2.get().addOnCompleteListener(task2 -> {
-                        if(task.isSuccessful()) {
-                            if (task.getResult().exists()){
+                        if(task2.isSuccessful()) {
+                            if (task2.getResult().exists()){
                                 for (DataSnapshot snapshot1 : task.getResult().getChildren()) {
                                     for (DataSnapshot snapshot2 : task2.getResult().getChildren()) {
                                         String chatId1 = snapshot1.getValue(String.class);
@@ -317,14 +319,6 @@ public class Chat {
     public Scambio getScambio(){
         return scambio;
     }
-
-    //checkOfferta(result -> {
-    //    if (result) {
-    //        System.out.println("L'offerta esiste già.");
-    //    } else {
-    //        System.out.println("Nessuna offerta trovata.");
-    //    }
-    //});
     public void checkOfferta(CheckOffertaCallback callback) {
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats").child(id);
 

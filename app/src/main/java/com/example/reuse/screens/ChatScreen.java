@@ -27,6 +27,7 @@ import com.example.reuse.adapter.ProductAdapter;
 import com.example.reuse.models.Chat;
 import com.example.reuse.models.Messaggio;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.Scambio;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -64,12 +65,13 @@ public class ChatScreen extends Fragment {
         recyclerViewMessages = view.findViewById(R.id.message_recycler_view);
         databaseReference = FirebaseDatabase.getInstance().getReference("Chats");
         goBack = (LinearLayout) view.findViewById(R.id.goBackPreviusPage);
-        textView = (android.widget.TextView) view.findViewById(R.id.chatUserName);
+        textView = (TextView) view.findViewById(R.id.chatUserName);
         exchangeOption = view.findViewById(R.id.btnExchange);
         Bundle args = getArguments();
-        String sellerName = args.getString("seller");
 
-        textView.setText("Chat con "+sellerName); // Set the username to the TextView
+        String sellerUsername = args.getString("seller");
+
+        textView.setText("Chat con "+sellerUsername); // Set the username to the TextView
 
 
         goBack.setOnClickListener(new View.OnClickListener() {
@@ -78,8 +80,8 @@ public class ChatScreen extends Fragment {
                 getParentFragmentManager().popBackStack();
             }
         });
-        messageList  = new ArrayList<>();
 
+        messageList  = new ArrayList<>();
         recyclerViewMessages.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         adapter = new ChatMessageAdapter(getContext(), messageList);
         recyclerViewMessages.setAdapter(adapter);
@@ -87,12 +89,71 @@ public class ChatScreen extends Fragment {
         exchangeOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ExchangeFragmentScreen exchangeFragmentScreen = new ExchangeFragmentScreen();
+                String[] sellerId = new String[1];
+                sellerId[0] = args.getString("sellerID");
+                String[] chatId = new String[1];
+                //gather the current chat id
+                DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
+                dbRef.get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful() && task.getResult()!=null){
+                        for(DataSnapshot d : task.getResult().getChildren()){
+                            String userId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
+                            String u1 = d.child("idUtente1").getValue(String.class);
+                            String u2 = d.child("idUtente2").getValue(String.class);
+                            if(u1!=null && u2!=null && (u1.equals(userId) && u2.equals(sellerId[0])) || (u1.equals(sellerId[0]) && u2.equals(userId))){
+                                chatId[0] = d.getKey();
 
-                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
-                transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
-                transaction.commit();
+                                List<Messaggio> mex = new ArrayList<>();
+                                //gather messages list
+                                for(DataSnapshot m : d.child("messaggi").getChildren()){
+                                    //gather single message info
+                                    String mexID = m.getKey();
+                                    String content = m.child("contenuto").getValue(String.class);
+                                    String data = m.child("dataeora").getValue(String.class);
+                                    String mittente = m.child("idMittente").getValue(String.class);
+                                    Messaggio temp = new Messaggio(mittente, data, false, content, mexID);
+                                    mex.add(temp);
+                                }
+                                Bundle b = new Bundle();
+                                b.putString("sellerId", sellerId[0]);
+                                if(d.child("Scambio").exists()){
+                                    //retrieve dello scambio
+                                    Scambio s = null;
+                                    //Scambio = scambio caricato
+                                }
+                                else{
+                                    Chat c = new Chat(chatId[0], u1, u2, mex, null);
+                                    b.putString("chatId", c.getId());
+                                    //LA CHAT ORA è CORRETTA, BISOGNA INSERIRE QUI L'INSERIMENTO DEL NUOVO SCAMBIO
+                                }
+                            }
+                        }
+                    }
+                });
+                /*
+                c[0].uploadChat();
+                c[0].checkOfferta(new Chat.CheckOffertaCallback() {
+                    @Override
+                    public void onResult(boolean exists) {
+                        System.out.println(exists);
+                        CurrentExchangeFragment exchangeFragmentScreen = new CurrentExchangeFragment();
+                        NewExchangeFragmentScreen newExchangeFragmentScreen = new NewExchangeFragmentScreen();
+                        if(exists){
+                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                            exchangeFragmentScreen.setArguments(b);
+                            transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
+                            transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
+                            transaction.commit();
+                        }else{
+                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                            newExchangeFragmentScreen.setArguments(b);
+                            transaction.replace(R.id.fragment_container, newExchangeFragmentScreen);
+                            transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
+                            transaction.commit();
+                        }
+                    }
+                });
+                 */
             }
         });
 

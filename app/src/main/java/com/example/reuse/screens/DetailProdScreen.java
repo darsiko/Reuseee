@@ -109,7 +109,7 @@ public class DetailProdScreen extends Fragment {
                     Bundle chatBundle = new Bundle();
                     String sellerId = currentBundle.getString("sellerId");
 
-                    chatBundle.putString("sellerId", sellerId);
+                    chatBundle.putString("seller", sellerId);
 
                     Chat chat = new Chat(currentUserId, sellerId);
                     chat.uploadChat();
