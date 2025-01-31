@@ -3,8 +3,12 @@ package com.example.reuse.models;
 import static java.security.AccessController.getContext;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -17,7 +21,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class User {
+public class User implements Parcelable {
     private String id="";
     private String username, nome, cognome, stato, citta, indirizzo, data, telefono, imageUrl;
     private int cap;
@@ -132,6 +136,52 @@ public class User {
             }
         });
     }
+
+    protected User(Parcel in) {
+        id = in.readString();
+        username = in.readString();
+        nome = in.readString();
+        cognome = in.readString();
+        stato = in.readString();
+        citta = in.readString();
+        indirizzo = in.readString();
+        data = in.readString();
+        telefono = in.readString();
+        imageUrl = in.readString();
+        cap = in.readInt();
+        productsForSale = in.createStringArrayList();
+        chats = in.createStringArrayList();
+    }
+
+    public static final Creator<User> CREATOR = new Creator<User>() {
+        @Override
+        public User createFromParcel(Parcel in) {
+            return new User(in);
+        }
+
+        @Override
+        public User[] newArray(int size) {
+            return new User[size];
+        }
+    };
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(@NonNull Parcel dest, int i) {
+        dest.writeString(imageUrl);
+        dest.writeString(username);
+        dest.writeString(cognome);
+        dest.writeString(stato);
+        dest.writeString(citta);
+        dest.writeString(stato);
+        dest.writeString(citta);
+        dest.writeString(indirizzo);
+    }
+
     public interface UserCallback {
         void onUserLoaded(User user);
         void onError(Exception e);

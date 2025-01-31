@@ -3,6 +3,7 @@ package com.example.reuse.screens;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -11,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.example.reuse.R;
 import com.example.reuse.adapter.ProductsUtente1ExchangeAdapter;
@@ -26,9 +29,10 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
 
     private ProductsUtente1ExchangeAdapter adapterUtente1;
     private ProductsUtente2ExchangeAdapter adapterUtente2;
-    Button addUtente1, addUtente2;
+    Button addUtente1, addUtente2, annulla, conferma;
+    TextView utente1, utente2;
     RecyclerView utente1Lista, utente2Lista;
-    String utente1, utente2;
+    EditText offerente, ricevente;
     List<Product> productListutente1 = new ArrayList<>(),
             productListutente2 = new ArrayList<>(),
             newProductListUtente1,
@@ -44,6 +48,14 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         utente2Lista = view.findViewById(R.id.utente2Lista);
         utente1Lista.setLayoutManager(new LinearLayoutManager(getContext()));
         utente2Lista.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        utente1 = view.findViewById(R.id.venditore);
+        utente2 = view.findViewById(R.id.acquirente);
+
+        conferma = view.findViewById(R.id.confermaa);
+        offerente = view.findViewById(R.id.editTextOfferente);
+        ricevente = view.findViewById(R.id.editTextRicevente);
+        annulla = view.findViewById(R.id.annullaaaa);
 
         // **Ensure lists are empty at the beginning**
         productListutente1 = new ArrayList<>();
@@ -67,6 +79,7 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         new User(sellerIdS, new User.UserCallback() {
             @Override
             public void onUserLoaded(User user) {
+                utente1.setText(user.getUsername());
                 productListutente1.clear(); // Ensure list is cleared before adding new data
                 for (String s : user.getProductsForSale()) {
                     productListutente1.add(new Product(s));
@@ -86,6 +99,7 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         new User(currentUserId, new User.UserCallback() {
             @Override
             public void onUserLoaded(User user) {
+                utente2.setText(user.getUsername());
                 productListutente2.clear(); // Ensure list is cleared before adding new data
                 for (String s : user.getProductsForSale()) {
                     productListutente2.add(new Product(s));
@@ -94,6 +108,37 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
             }
             @Override
             public void onError(Exception e) {}
+        });
+        annulla.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                ChatScreen chatScreen = new ChatScreen();
+                Bundle b = new Bundle();
+                //b.putString("sellerId", chat.getIdUtente2());
+                chatScreen.setArguments(b);
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, chatScreen);
+                transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
+                transaction.commit();
+            }
+        });
+        conferma.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String offerenteText = offerente.getText().toString().trim();
+                String riceventeText = ricevente.getText().toString().trim();
+                if (offerenteText.isEmpty() || riceventeText.isEmpty()) {
+                    Toast.makeText(getContext(), "Inserisci un importo valido", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                try {
+                    double soldiOfferente = Double.parseDouble(offerenteText);
+                    double soldiRicevente = Double.parseDouble(riceventeText);
+
+                } catch (NumberFormatException e) {
+                    Toast.makeText(getContext(), "Inserisci un numero valido", Toast.LENGTH_SHORT).show();
+                }
+            }
         });
         return view;
     }

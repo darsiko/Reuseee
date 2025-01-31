@@ -66,6 +66,7 @@
                 android:gravity="center">
 
                 <EditText
+                    android:id="@+id/editTextOfferente"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:hint="30€"
@@ -79,6 +80,7 @@
                 android:gravity="center">
 
                 <EditText
+                    android:id="@+id/editTextRicevente"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
                     android:hint="30€"
@@ -148,7 +150,7 @@
             android:gravity="center">
 
             <Button
-
+                android:id="@+id/annullaaaa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Annulla"></Button>
@@ -161,9 +163,10 @@
             android:gravity="center">
 
             <Button
+                android:id="@+id/confermaa"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="COnferma"></Button>
+                android:text="Conferma"></Button>
         </LinearLayout>
     </LinearLayout>
     <!-- Space for the remaining part of the screen (3/4 of the height) -->

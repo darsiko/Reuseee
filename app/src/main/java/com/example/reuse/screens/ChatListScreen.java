@@ -8,9 +8,12 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.reuse.R;
@@ -19,6 +22,7 @@ import com.example.reuse.adapter.ProductAdapter;
 import com.example.reuse.adapter.ProductBroughtAdapter;
 import com.example.reuse.models.Chat;
 import com.example.reuse.models.Product;
+import com.example.reuse.models.Tutorial;
 import com.example.reuse.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -58,8 +62,40 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
                 newLoadUsers();
             }
         });
+        EditText searchBar = rootView.findViewById(R.id.editTextText);
+        searchBar.addTextChangedListener(new TextWatcher() {
+
+
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                filter(editable.toString());
+            }
+
+        });
+
 
         return rootView;
+    }
+    private void filter(String text) {
+        List<User> filteredList = new ArrayList<>();
+
+        for (User user : userList) {
+            if (user.getUsername().toLowerCase().contains(text.toLowerCase()) ) {
+                filteredList.add(user);
+            }
+        }
+
+        adapter.updateList(filteredList);
     }
     private boolean contains(String userName){
         for(User u : userList){
@@ -207,6 +243,8 @@ public class ChatListScreen extends Fragment implements ChatListAdapter.OnItemCl
             });
         }
     }
+
+
     @Override
     public void onItemClick(User user) {
         // For example, navigate to the product details page or display a Toast
