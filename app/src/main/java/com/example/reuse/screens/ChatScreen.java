@@ -67,10 +67,9 @@ public class ChatScreen extends Fragment {
         textView = (android.widget.TextView) view.findViewById(R.id.chatUserName);
         exchangeOption = view.findViewById(R.id.btnExchange);
         Bundle args = getArguments();
+        String sellerName = args.getString("seller");
 
-        String sellerId = args.getString("sellerId");
-
-        textView.setText("Chat con "+sellerId); // Set the username to the TextView
+        textView.setText("Chat con "+sellerName); // Set the username to the TextView
 
 
         goBack.setOnClickListener(new View.OnClickListener() {
@@ -79,8 +78,8 @@ public class ChatScreen extends Fragment {
                 getParentFragmentManager().popBackStack();
             }
         });
-
         messageList  = new ArrayList<>();
+
         recyclerViewMessages.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         adapter = new ChatMessageAdapter(getContext(), messageList);
         recyclerViewMessages.setAdapter(adapter);
@@ -88,34 +87,12 @@ public class ChatScreen extends Fragment {
         exchangeOption.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                ExchangeFragmentScreen exchangeFragmentScreen = new ExchangeFragmentScreen();
 
-                Bundle b = new Bundle();
-                b.putString("sellerId", sellerId);
-                Chat c = new Chat(sellerId, FirebaseAuth.getInstance().getUid());
-                b.putString("chatId", c.getId());
-                c.uploadChat();
-                c.checkOfferta(new Chat.CheckOffertaCallback() {
-                    @Override
-                    public void onResult(boolean exists) {
-                        System.out.println(exists);
-                        CurrentExchangeFragment exchangeFragmentScreen = new CurrentExchangeFragment();
-                        NewExchangeFragmentScreen newExchangeFragmentScreen = new NewExchangeFragmentScreen();
-                        if(exists){
-                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                            exchangeFragmentScreen.setArguments(b);
-                            transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
-                            transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
-                            transaction.commit();
-                        }else{
-                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                            newExchangeFragmentScreen.setArguments(b);
-                            transaction.replace(R.id.fragment_container, newExchangeFragmentScreen);
-                            transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
-                            transaction.commit();
-                        }
-                    }
-                });
-
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
+                transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
+                transaction.commit();
             }
         });
 
