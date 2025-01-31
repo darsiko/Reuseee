@@ -42,12 +42,13 @@ public class Chat {
         this.messaggi.addAll(messaggi);
     }
 
+
     public void copy(final Chat other){
         this.id = other.id;
         this.idUtente1 = other.idUtente1;
         this.idUtente2 = other.idUtente2;
         this.messaggi.addAll(other.messaggi);
-        this.scambio = other.scambio;
+        this.scambio = new Scambio(other.scambio);
     }
 
 
@@ -67,25 +68,23 @@ public class Chat {
                     String content = mSnapshot.child("contenuto").getValue(String.class);
                     addMessaggio(idUtente1, content);
                 }
-                if (snapshot.hasChild("idOfferente")) {
-                    String idOfferente=snapshot.child("idOfferente").getValue(String.class);
-                    double soldiOfferente=snapshot.child("soldiOfferente").getValue(Double.class);
-                    double soldiRicevente=snapshot.child("soldiRicevente").getValue(Double.class);
-                    List<String> listaOfferente=new ArrayList<>();
-                    for (DataSnapshot oSnapshot : snapshot.child("listaOfferente").getChildren()) {
+                if (snapshot.hasChild("scambio")) {
+                    Scambio s=new Scambio(snapshot.child("scambio").child("idOfferente").getValue(String.class));
+                    s.setSoldiOfferente(snapshot.child("scambio").child("soldiOfferente").getValue(Double.class));
+                    s.setSoldiRicevente(snapshot.child("scambio").child("soldiRicevente").getValue(Double.class));
+                    for (DataSnapshot oSnapshot : snapshot.child("scambio").child("listaOfferente").getChildren()) {
                         String pid = oSnapshot.getValue(String.class);
                         if (pid != null) {
-                            listaOfferente.add(pid);
+                            s.addListaOfferente(pid);
                         }
                     }
-                    List<String> listaRicevente=new ArrayList<>();
-                    for (DataSnapshot rSnapshot : snapshot.child("listaRicevente").getChildren()) {
+                    for (DataSnapshot rSnapshot : snapshot.child("scambio").child("listaRicevente").getChildren()) {
                         String pid = rSnapshot.getValue(String.class);
                         if (pid != null) {
-                            listaRicevente.add(pid);
+                            s.addListaRicevente(pid);
                         }
                     }
-                    this.scambio=new Scambio(idOfferente, soldiOfferente, soldiRicevente, listaOfferente, listaRicevente);
+                    this.scambio=new Scambio(s);
                 }
 
 
@@ -159,6 +158,9 @@ public class Chat {
         ref.child("idUtente1").setValue(idUtente1);
         ref.child("idUtente2").setValue(idUtente2);
         ref.child("messaggi").setValue(messaggi);
+        if(scambio!=null){
+            uploadScambio(scambio);
+        }
         DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(idUtente1).child("chats");
         dbr.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -296,13 +298,17 @@ public class Chat {
 
     public void uploadScambio(Scambio scambio){
         this.scambio=scambio;
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats").child(id);
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chats").child(id).child("scambio");
         ref.child("idOfferente").setValue(scambio.getIdOfferente());
         ref.child("soldiOfferente").setValue(scambio.getSoldiOfferente());
         ref.child("soldiRicevente").setValue(scambio.getSoldiRicevente());
         ref.child("idOfferente").setValue(scambio.getIdOfferente());
-        ref.child("listaOfferente").setValue(scambio.getListaOfferente());
-        ref.child("listaRicevente").setValue(scambio.getListaRicevente());
+        List<String> listaOfferente=new ArrayList<>();
+        listaOfferente.addAll(scambio.getListaOfferente());
+        List<String> listaRicevente=new ArrayList<>();
+        listaRicevente.addAll(scambio.getListaRicevente());
+        ref.child("listaOfferente").setValue(listaOfferente);
+        ref.child("listaRicevente").setValue(listaRicevente);
     }
 
 
