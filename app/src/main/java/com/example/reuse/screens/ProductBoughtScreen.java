@@ -8,6 +8,8 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -31,7 +33,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ProductBoughtScreen extends Fragment implements ProductBroughtAdapter.OnItemClickListener {
     private RecyclerView recyclerViewBrought;
@@ -129,21 +133,46 @@ public class ProductBoughtScreen extends Fragment implements ProductBroughtAdapt
         if(product.getId()=="" || product.getId()==null){
             Toast.makeText(getContext(), "Failed to find product", Toast.LENGTH_SHORT).show();
         }else{
-            DatabaseReference productRef=FirebaseDatabase.getInstance().getReference("Products").child(product.getId());
-            productRef.removeValue().addOnCompleteListener(task -> {
-                if (task.isSuccessful()) {
-                    DatabaseReference userProductRef=FirebaseDatabase.getInstance().getReference("Users").child(product.getIdVenditore()).child("productsForSale").child(product.getId());
-                    userProductRef.removeValue().addOnSuccessListener(unused -> {
-                        // Operazione riuscita
-                        System.out.println("Prodotto eliminato con successo!");
-                    })
-                    .addOnFailureListener(e -> {
-                        // Operazione fallita
-                        System.out.println("Errore durante l'eliminazione del prodotto: " + e.getMessage());
-                    });
-                } else {
-                    System.err.println("Errore nell'eliminazione del prodotto: " + task.getException());
+            //RemoveProduct
+            DatabaseReference productRef=FirebaseDatabase
+                    .getInstance()
+                    .getReference("Products")
+                    .child(product.getId());
+            productRef.removeValue();
+
+            //updateUserlistProduct
+            String idVenditore = product.getIdVenditore();
+            String productId = product.getId();
+            /*
+            DatabaseReference userProductRef=FirebaseDatabase
+                    .getInstance()
+                    .getReference("Users")
+                    .child(idVenditore)
+                    .child("productsForSale")
+                    .child(productId);
+
+             */
+            DatabaseReference userRef = FirebaseDatabase
+                    .getInstance()
+                    .getReference("Users")
+                    .child(idVenditore);
+
+            userRef.get().addOnCompleteListener(task -> {
+
+                Map<String, Object> updates = new HashMap<>();
+                //gather the updated product list
+                List<String> myUserProdList = new ArrayList<>();
+
+                for(DataSnapshot d : task.getResult().child("productsForSale").getChildren()){
+                    String itemId = d.getValue(String.class);
+                    if(itemId!=null && !itemId.equals(productId)){
+                        myUserProdList.add(itemId);
+                    }
                 }
+
+
+                updates.put("productsForSale", myUserProdList);
+                userRef.updateChildren(updates);
             });
         }
     }

@@ -73,7 +73,7 @@ public class User {
                 callback.onError(task.getException());
             }
         });
-    }
+     }
 
     public User(final User other){
         this.id=other.id;

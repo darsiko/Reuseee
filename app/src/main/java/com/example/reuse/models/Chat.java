@@ -50,7 +50,6 @@ public class Chat {
         this.scambio = other.scambio;
     }
 
-
     //UTILIZZARE
     //crea oggetto chat a partire dall'id (prendetelo dalla lista delle chat dell'utente)
     public Chat(String id){

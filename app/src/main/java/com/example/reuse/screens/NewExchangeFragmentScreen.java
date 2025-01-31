@@ -20,6 +20,7 @@ import com.example.reuse.models.User;
 import com.google.firebase.auth.FirebaseAuth;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class NewExchangeFragmentScreen extends Fragment implements ProductsUtente1ExchangeAdapter.OnItemClickListener {
 
@@ -61,7 +62,7 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         Bundle bundle = getArguments();
         assert bundle != null;
         String sellerIdS = bundle.getString("sellerId");
-        String currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        String currentUserId = Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid();
 
         new User(sellerIdS, new User.UserCallback() {
             @Override
@@ -74,15 +75,14 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
             }
 
             @Override
-            public void onError(Exception e) {
-                // Handle errors
-            }
+            public void onError(Exception e) {}
         });
         addUtente1.setOnClickListener(v ->
                 showUtente1ProductsDialog("Utente 1", productListutente1, adapterUtente1));
 
         addUtente2.setOnClickListener(v ->
                 showutente2ProductDialog("Utente 2", productListutente2, adapterUtente2));
+
         new User(currentUserId, new User.UserCallback() {
             @Override
             public void onUserLoaded(User user) {
@@ -92,13 +92,9 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
                 }
                 adapterUtente2.updateList(new ArrayList<>()); // Keep empty initially
             }
-
             @Override
-            public void onError(Exception e) {
-                // Handle errors
-            }
+            public void onError(Exception e) {}
         });
-
         return view;
     }
 

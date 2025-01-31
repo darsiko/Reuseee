@@ -124,6 +124,24 @@ public class ChatScreen extends Fragment {
                                 else{
                                     Chat c = new Chat(chatId[0], u1, u2, mex, null);
                                     b.putString("chatId", c.getId());
+                                    c.checkOfferta(new Chat.CheckOffertaCallback() {
+                                        @Override
+                                        public void onResult(boolean exists) {
+                                            System.out.println(exists);
+                                            CurrentExchangeFragment exchangeFragmentScreen = new CurrentExchangeFragment();
+                                            NewExchangeFragmentScreen newExchangeFragmentScreen = new NewExchangeFragmentScreen();
+                                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();// Add to back stack if you want to go back to this fragment
+                                            if(exists){
+                                                exchangeFragmentScreen.setArguments(b);
+                                                transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
+                                            }else{
+                                                newExchangeFragmentScreen.setArguments(b);
+                                                transaction.replace(R.id.fragment_container, newExchangeFragmentScreen);
+                                            }
+                                            transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
+                                            transaction.commit();
+                                        }
+                                    });
                                     //LA CHAT ORA è CORRETTA, BISOGNA INSERIRE QUI L'INSERIMENTO DEL NUOVO SCAMBIO
                                 }
                             }
