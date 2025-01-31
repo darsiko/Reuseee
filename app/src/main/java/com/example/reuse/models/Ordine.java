@@ -16,12 +16,6 @@ public class Ordine {
     private String pid; //id prodotto
     private String data; //data di acquisto
 
-
-
-
-
-
-
     //costruttori
     public Ordine() {
     }
@@ -46,14 +40,6 @@ public class Ordine {
         this.aid=dbr.child("idAcquirente").get().toString();
         this.data=dbr.child("data").get().toString();
     }
-
-
-
-
-
-
-
-
 
     //aggiungi ordine al database
     public void addOrdine(){
@@ -89,10 +75,6 @@ public class Ordine {
         });
     }
 
-
-
-
-
     //getter e setter dell'oggetto (non dal database)
     public String getIdAcquirente() {
         return aid;
@@ -113,4 +95,3 @@ public class Ordine {
         this.data = data;
     }
 }
-

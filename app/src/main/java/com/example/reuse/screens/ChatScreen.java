@@ -119,7 +119,6 @@ public class ChatScreen extends Fragment {
                                 chatId[0] = s.getKey();
                                 Chat c = new Chat(chatId[0]);
                                 c.addMessaggio(uID, input);
-                                messageList.clear();
                             }
                         }
                     }

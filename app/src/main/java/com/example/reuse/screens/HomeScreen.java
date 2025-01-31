@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.os.Handler;
 import android.renderscript.Sampler;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -58,7 +59,10 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
     private List<Product> productList;
     private DatabaseReference databaseReference;
 
-    public HomeScreen() {}
+    //public HomeScreen() {}
+
+    private Handler handler = new Handler();
+    private Runnable runnable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -74,7 +78,7 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
         // Initialize product list with sample data
         productList = new ArrayList<>();
 
-        loadProducts();
+        //loadProducts();
 
         adapter = new ProductAdapter(getContext(), productList, this);
         recyclerView.setAdapter(adapter);
@@ -288,12 +292,28 @@ public class HomeScreen extends Fragment implements ProductAdapter.OnItemClickLi
     @Override
     public void onResume(){
         super.onResume();
-        loadProducts();
+        runnable = new Runnable() {
+            @Override
+            public void run() {
+                productList.clear();
+                loadProducts();
+                handler.postDelayed(this, 1000);
+            }
+        };
+        handler.post(runnable);
     }
+
+    @Override
+    public void onPause(){
+        super.onPause();
+        handler.removeCallbacks(runnable);
+    }
+
     private void loadProducts() {
         databaseReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //loop
                 productList.clear();
                 for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                     Product product = snapshot.getValue(Product.class);

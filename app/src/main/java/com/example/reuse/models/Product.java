@@ -30,8 +30,6 @@ public class Product implements Parcelable {
     private String imageUrl;
     private String idOrdine;
 
-
-
     //costruttori
     public Product(){}
     //costruttore con tutti i dati
