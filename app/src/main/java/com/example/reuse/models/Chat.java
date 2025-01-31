@@ -124,7 +124,8 @@ public class Chat {
                                             this.id = c.getId();
                                             this.idUtente1 = c.getIdUtente1();
                                             this.idUtente2 = c.getIdUtente2();
-                                            this.messaggi = c.getMessaggi();
+                                            this.messaggi.addAll(c.getMessaggi());
+                                            this.scambio=new Scambio(c.getScambio());
                                             System.out.println("La Chat esiste già");
                                             return;
                                         }
