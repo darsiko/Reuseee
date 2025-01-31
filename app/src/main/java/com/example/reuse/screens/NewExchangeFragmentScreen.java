@@ -21,22 +21,23 @@ import com.example.reuse.adapter.ProductsUtente2ExchangeAdapter;
 import com.example.reuse.models.Product;
 import com.example.reuse.models.User;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 public class NewExchangeFragmentScreen extends Fragment implements ProductsUtente1ExchangeAdapter.OnItemClickListener {
-
     private ProductsUtente1ExchangeAdapter adapterUtente1;
     private ProductsUtente2ExchangeAdapter adapterUtente2;
     Button addUtente1, addUtente2, annulla, conferma;
     TextView utente1, utente2;
     RecyclerView utente1Lista, utente2Lista;
-    EditText offerente, ricevente;
     List<Product> productListutente1 = new ArrayList<>(),
             productListutente2 = new ArrayList<>(),
-            newProductListUtente1,
-            newProductListUtente2;
+            newProductListUtente1 = new ArrayList<>(),
+            newProductListUtente2 = new ArrayList<>();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -53,8 +54,17 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         utente2 = view.findViewById(R.id.acquirente);
 
         conferma = view.findViewById(R.id.confermaa);
+
+
+        //QUI INIZIA IL PROBLEMA, MA DOV'è DI PRECISO??
+        EditText offerente, ricevente;
         offerente = view.findViewById(R.id.editTextOfferente);
         ricevente = view.findViewById(R.id.editTextRicevente);
+        String offer = offerente.getText().toString();
+        String recive = ricevente.getText().toString();
+        offerente.setText(offer+"€");
+        ricevente.setText(recive+"€");
+
         annulla = view.findViewById(R.id.annullaaaa);
 
         // **Ensure lists are empty at the beginning**
@@ -79,6 +89,17 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         new User(sellerIdS, new User.UserCallback() {
             @Override
             public void onUserLoaded(User user) {
+                String chatId = bundle.getString("chatId");
+                assert chatId != null;
+                DatabaseReference chatRef = FirebaseDatabase.getInstance().getReference("Chats").child(chatId).child("scambio");
+                chatRef.get().addOnCompleteListener(task -> {
+                    if(task.isSuccessful() && task.getResult().exists()){
+                        Double cashOff = Objects.requireNonNull(task.getResult().child("soldiOfferente").getValue(Double.class));
+                        Double cashRec = Objects.requireNonNull(task.getResult().child("soldiRicevente").getValue(Double.class));
+                        offerente.setHint(cashOff.toString()+"€");
+                        ricevente.setHint(cashRec.toString()+"€");
+                    }
+                });
                 utente1.setText(user.getUsername());
                 productListutente1.clear(); // Ensure list is cleared before adding new data
                 for (String s : user.getProductsForSale()) {
@@ -143,23 +164,18 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         return view;
     }
 
-
-
     private void showUtente1ProductsDialog(String userType, List<Product> productList, ProductsUtente1ExchangeAdapter adapter) {
         if (productList.isEmpty()) {
             Toast.makeText(getContext(), "Non ci sono prodotti", Toast.LENGTH_SHORT).show();
             return;
         }
-
         // Create a list of product names
         String[] productNames = new String[productList.size()];
         for (int i = 0; i < productList.size(); i++) {
             productNames[i] = productList.get(i).getNome();
         }
-
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Seleziona un prodotto");
-
         builder.setItems(productNames, (dialog, which) -> {
             Product selectedProduct = productList.get(which);
 
@@ -181,8 +197,6 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         builder.setNegativeButton("Annulla", (dialog, which) -> dialog.dismiss());
         builder.show();
     }
-
-
     private void showutente2ProductDialog(String userType, List<Product> productList, ProductsUtente2ExchangeAdapter adapter) {
         if (productList.isEmpty()) {
             Toast.makeText(getContext(), "Non ci sono prodotti", Toast.LENGTH_SHORT).show();
@@ -220,10 +234,6 @@ public class NewExchangeFragmentScreen extends Fragment implements ProductsUtent
         builder.show();
     }
 
-
-
     @Override
-    public void onItemClick(Product product) {
-        // Handle item click, if necessary
-    }
+    public void onItemClick(Product product) {}
 }

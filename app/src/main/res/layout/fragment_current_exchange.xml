@@ -17,13 +17,13 @@
         <!-- First sub-section -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:orientation="horizontal"
             android:gravity="center">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="center">
@@ -37,7 +37,7 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="center">
@@ -60,27 +60,31 @@
             android:gravity="center">
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="center">
 
-                <EditText
+                <TextView
+                    android:id="@+id/u1Cash"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textSize="25dp"
                     android:hint="30€"
                     android:textAlignment="center"/>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_weight="1"
                 android:layout_height="match_parent"
                 android:gravity="center">
 
-                <EditText
+                <TextView
+                    android:id="@+id/u2Cash"
                     android:layout_width="100dp"
                     android:layout_height="wrap_content"
+                    android:textSize="25dp"
                     android:hint="30€"
                     android:textAlignment="center"/>
             </LinearLayout>
@@ -95,7 +99,7 @@
         android:gravity="center">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
@@ -106,12 +110,12 @@
 
                 android:layout_width="match_parent"
                 android:layout_height="400dp"
-                android:layout_gravity="center"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_gravity="center"/>
 
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:orientation="vertical"
             android:layout_height="match_parent"
@@ -121,7 +125,7 @@
                 android:id="@+id/utente2Lista"
                 android:layout_width="match_parent"
                 android:layout_gravity="center"
-                android:layout_height="400dp"></androidx.recyclerview.widget.RecyclerView>
+                android:layout_height="400dp"/>
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
@@ -132,7 +136,7 @@
         android:gravity="center">
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center">
@@ -141,23 +145,23 @@
                 android:id="@+id/accetta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Accetta"></Button>
+                android:text="Accetta"/>
         </LinearLayout>
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center">
 
             <Button
-                android:id="@+id/ignora"
+                android:id="@+id/rifiuta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ignora"></Button>
+                android:text="Rifiuta"/>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_weight="1"
             android:layout_height="match_parent"
             android:gravity="center">
@@ -166,7 +170,7 @@
                 android:id="@+id/nuovaofferta"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="NUova Offerta"></Button>
+                android:text="NUova Offerta"/>
         </LinearLayout>
     </LinearLayout>
     <!-- Space for the remaining part of the screen (3/4 of the height) -->
