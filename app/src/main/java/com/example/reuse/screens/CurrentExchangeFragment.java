@@ -145,6 +145,9 @@ public class CurrentExchangeFragment extends Fragment {
         });
 
         rifiuta.setOnClickListener(v -> {
+            Chat c = new Chat(chatID);
+            String input = "OFFERTA RIFIUTATA";
+            c.addMessaggio(cID, input);
             dbRef.removeValue();
             ChatListScreen chatListFragment = new ChatListScreen();
             chatListFragment.setArguments(new Bundle());
