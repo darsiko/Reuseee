@@ -12,12 +12,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Chat {
-
     private String id="";
     private String idUtente1;
     private String idUtente2;
     private List<Messaggio> messaggi = new ArrayList<>();
-    private  Scambio scambio;
+    private  Scambio scambio = new Scambio();
 
     //costruttore se servono metodi anche con oggetto vuoto
     public Chat() {
@@ -33,7 +32,7 @@ public class Chat {
         this.idUtente1 = u1Id;
         this.idUtente2 = u2Id;
         this.messaggi.addAll(mex);
-        this.scambio = s;
+        this.scambio = new Scambio(s);
     }
 
     public Chat(String idUtente1, String idUtente2, List<Messaggio> messaggi) {
@@ -85,8 +84,6 @@ public class Chat {
                     }
                     this.scambio=new Scambio(s);
                 }
-
-
             }
         });
     }
@@ -148,79 +145,56 @@ public class Chat {
         });
     }
 
-
-
     private void uploadChatSupporto(){
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
         id = dbRef.push().getKey();
-        DatabaseReference ref=dbRef.child(id);
-        ref.child("idUtente1").setValue(idUtente1);
-        ref.child("idUtente2").setValue(idUtente2);
-        ref.child("messaggi").setValue(messaggi);
-        if(scambio!=null){
-            uploadScambio(scambio);
+        if(id!=null){
+            DatabaseReference ref=dbRef.child(id);
+            ref.child("idUtente1").setValue(idUtente1);
+            ref.child("idUtente2").setValue(idUtente2);
+            ref.child("messaggi").setValue(messaggi);
+            if(scambio!=null){
+                uploadScambio(scambio);
+            }
+            DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(idUtente1).child("chats");
+            dbr.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    List<String> chats = new ArrayList<>();
+                    // Retrieve the existing list, if any
+                    if (task.getResult().exists()) {
+                        for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                            String chatId = snapshot.getValue(String.class);
+                            if (chatId != null) {
+                                chats.add(chatId);
+                            }
+                        }
+                    }
+                    chats.add(id);
+                    dbr.setValue(chats);
+                }
+            });
+            DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(idUtente2).child("chats");
+            dbr2.get().addOnCompleteListener(task -> {
+                if (task.isSuccessful()) {
+                    List<String> chats = new ArrayList<>();
+                    // Retrieve the existing list, if any
+                    if (task.getResult().exists()) {
+                        for (DataSnapshot snapshot : task.getResult().getChildren()) {
+                            String chatId = snapshot.getValue(String.class);
+                            if (chatId != null) {
+                                chats.add(chatId);
+                            }
+                        }
+                    }
+                    chats.add(id);
+                    dbr2.setValue(chats);
+                }
+            });
         }
-        DatabaseReference dbr = FirebaseDatabase.getInstance().getReference("Users").child(idUtente1).child("chats");
-        dbr.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                List<String> chats = new ArrayList<>();
-                // Retrieve the existing list, if any
-                if (task.getResult().exists()) {
-                    for (DataSnapshot snapshot : task.getResult().getChildren()) {
-                        String chatId = snapshot.getValue(String.class);
-                        if (chatId != null) {
-                            chats.add(chatId);
-                        }
-                    }
-                }
-                chats.add(id);
-                dbr.setValue(chats)
-                        .addOnCompleteListener(updateTask -> {
-                            if (updateTask.isSuccessful()) {
-                                System.out.println("Product added to 'productsForSale' successfully.");
-                                System.out.println("Chat added successfully.");
-                            } else {
-                                System.out.println("Failed to update 'productsForSale': " + updateTask.getException().getMessage());
-                                System.out.println("Failed to update chats: " + updateTask.getException().getMessage());
-                            }
-                        });
-            }else{
-                System.out.println("Failed to retrieve 'productsForSale': " + task.getException().getMessage());
-                System.out.println("Failed to retrieve chats: " + task.getException().getMessage());
-            }
-        });
-        DatabaseReference dbr2 = FirebaseDatabase.getInstance().getReference("Users").child(idUtente2).child("chats");
-        dbr2.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                List<String> chats = new ArrayList<>();
-                // Retrieve the existing list, if any
-                if (task.getResult().exists()) {
-                    for (DataSnapshot snapshot : task.getResult().getChildren()) {
-                        String chatId = snapshot.getValue(String.class);
-                        if (chatId != null) {
-                            chats.add(chatId);
-                        }
-                    }
-                }
-                chats.add(id);
-                dbr2.setValue(chats)
-                        .addOnCompleteListener(updateTask -> {
-                            if (updateTask.isSuccessful()) {
-                                System.out.println("Product added to 'productsForSale' successfully.");
-                                System.out.println("Chat added successfully.");
-                            } else {
-                                System.out.println("Failed to update 'productsForSale': " + updateTask.getException().getMessage());
-                                System.out.println("Failed to update chats: " + updateTask.getException().getMessage());
-                            }
-                        });
-            }else{
-                System.out.println("Failed to retrieve 'productsForSale': " + task.getException().getMessage());
-                System.out.println("Failed to retrieve chats: " + task.getException().getMessage());
-            }
-        });
+
     }
     public void deleteChat(){
-        if(id=="" || id==null){
+        if(id==null || id.isEmpty()){
             System.out.println("risulta id nullo" + id);
         }else {
             DatabaseReference dbref = FirebaseDatabase.getInstance().getReference("Chats").child(id);
@@ -239,7 +213,6 @@ public class Chat {
 
     }
 
-
     private void deleteChatSupporto(DatabaseReference dbref){
         dbref.removeValue().addOnCompleteListener(task -> {
             if(task.isSuccessful()){
@@ -248,7 +221,6 @@ public class Chat {
             }
         });
     }
-
 
     private void deleteChatSupportoLista(boolean t){
         String idUtente;
@@ -301,11 +273,8 @@ public class Chat {
         ref.child("idOfferente").setValue(scambio.getIdOfferente());
         ref.child("soldiOfferente").setValue(scambio.getSoldiOfferente());
         ref.child("soldiRicevente").setValue(scambio.getSoldiRicevente());
-        ref.child("idOfferente").setValue(scambio.getIdOfferente());
-        List<String> listaOfferente=new ArrayList<>();
-        listaOfferente.addAll(scambio.getListaOfferente());
-        List<String> listaRicevente=new ArrayList<>();
-        listaRicevente.addAll(scambio.getListaRicevente());
+        List<String> listaOfferente = new ArrayList<>(scambio.getListaOfferente());
+        List<String> listaRicevente = new ArrayList<>(scambio.getListaRicevente());
         ref.child("listaOfferente").setValue(listaOfferente);
         ref.child("listaRicevente").setValue(listaRicevente);
     }

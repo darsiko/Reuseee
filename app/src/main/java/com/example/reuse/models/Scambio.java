@@ -11,11 +11,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Scambio {
-    private String idOfferente;
-    private double soldiOfferente;
-    private double soldiRicevente;
+    private String idOfferente = "";
+    private double soldiOfferente = 0;
+    private double soldiRicevente = 0;
     private List<String> listaOfferente = new ArrayList<>();
     private List<String> listaRicevente = new ArrayList<>();
+
+    public Scambio(){}
+
     public Scambio(String idOfferente, double soldiOfferente, double soldiRicevente, List<String> listaOfferente,List<String> listaRicevente){
         this.idOfferente=idOfferente;
         this.soldiRicevente=soldiRicevente;
@@ -34,11 +37,13 @@ public class Scambio {
     }
 
     public Scambio(Scambio s){
-        this.idOfferente=s.idOfferente;
-        this.soldiOfferente=s.soldiOfferente;
-        this.soldiRicevente=s.soldiRicevente;
-        this.listaOfferente.addAll(s.listaOfferente);
-        this.listaRicevente.addAll(s.listaRicevente);
+        if(s!=null){
+            this.idOfferente=s.idOfferente;
+            this.soldiOfferente=s.soldiOfferente;
+            this.soldiRicevente=s.soldiRicevente;
+            this.listaOfferente.addAll(s.listaOfferente);
+            this.listaRicevente.addAll(s.listaRicevente);
+        }
     }
 
     public double getSoldiOfferente(){

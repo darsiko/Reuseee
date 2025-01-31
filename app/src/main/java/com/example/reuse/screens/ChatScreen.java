@@ -116,62 +116,52 @@ public class ChatScreen extends Fragment {
                                 }
                                 Bundle b = new Bundle();
                                 b.putString("sellerId", sellerId[0]);
-                                if(d.child("Scambio").exists()){
-                                    //retrieve dello scambio
-                                    Scambio s = null;
-                                    //Scambio = scambio caricato
-                                }
-                                else{
-                                    Chat c = new Chat(chatId[0], u1, u2, mex, null);
-                                    b.putString("chatId", c.getId());
-                                    c.checkOfferta(new Chat.CheckOffertaCallback() {
-                                        @Override
-                                        public void onResult(boolean exists) {
-                                            System.out.println(exists);
-                                            CurrentExchangeFragment exchangeFragmentScreen = new CurrentExchangeFragment();
-                                            NewExchangeFragmentScreen newExchangeFragmentScreen = new NewExchangeFragmentScreen();
-                                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();// Add to back stack if you want to go back to this fragment
-                                            if(exists){
-                                                exchangeFragmentScreen.setArguments(b);
-                                                transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
-                                            }else{
-                                                newExchangeFragmentScreen.setArguments(b);
-                                                transaction.replace(R.id.fragment_container, newExchangeFragmentScreen);
-                                            }
-                                            transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
-                                            transaction.commit();
+
+                                //retrieve Scambio
+                                DatabaseReference tradeRef = FirebaseDatabase.getInstance().getReference("Chats").child(chatId[0]).child("scambio");
+                                tradeRef.get().addOnSuccessListener(task2 -> {
+                                    CurrentExchangeFragment exchangeFragmentScreen = new CurrentExchangeFragment();
+                                    NewExchangeFragmentScreen newExchangeFragmentScreen = new NewExchangeFragmentScreen();
+                                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();// Add to back stack if you want to go back to this fragment
+
+                                    if(task2.getValue()!=null){
+                                        //L'OFFERTA ESISTE GIà
+                                        String idOff = task2.child("idOfferente").getValue(String.class);
+                                        double cashOff = task2.child("soldiOfferente").getValue(Double.class);
+                                        double cashRec = task2.child("soldiRicevente").getValue(Double.class);
+                                        List<String> listaOffer = new ArrayList<>();
+                                        for(DataSnapshot x : task2.child("listaOfferente").getChildren()){
+                                            String offer = x.getKey();
+                                            listaOffer.add(offer);
                                         }
-                                    });
-                                    //LA CHAT ORA è CORRETTA, BISOGNA INSERIRE QUI L'INSERIMENTO DEL NUOVO SCAMBIO
-                                }
+                                        List<String> listaRec = new ArrayList<>();
+                                        for(DataSnapshot x : task2.child("listaRicevente").getChildren()){
+                                            String rec = x.getKey();
+                                            listaRec.add(rec);
+                                        }
+                                        Scambio s = new Scambio(idOff, cashOff, cashRec, listaOffer, listaRec);
+                                        Chat c = new Chat(chatId[0], u1, u2, mex, s);
+                                        b.putString("chatId", c.getId());
+
+                                        exchangeFragmentScreen.setArguments(b);
+                                        transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
+                                    }
+                                    else{
+                                        //L'OFFERTA NON ESISTE
+                                        Scambio s = new Scambio(userId, 0, 0, new ArrayList<>(), new ArrayList<>());
+                                        Chat c = new Chat(chatId[0], u1, u2, mex, s);
+                                        c.uploadScambio(s);
+                                        b.putString("chatId", c.getId());
+                                        newExchangeFragmentScreen.setArguments(b);
+                                        transaction.replace(R.id.fragment_container, newExchangeFragmentScreen);
+                                    }
+                                    transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
+                                    transaction.commit();
+                                });
                             }
                         }
                     }
                 });
-                /*
-                c[0].uploadChat();
-                c[0].checkOfferta(new Chat.CheckOffertaCallback() {
-                    @Override
-                    public void onResult(boolean exists) {
-                        System.out.println(exists);
-                        CurrentExchangeFragment exchangeFragmentScreen = new CurrentExchangeFragment();
-                        NewExchangeFragmentScreen newExchangeFragmentScreen = new NewExchangeFragmentScreen();
-                        if(exists){
-                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                            exchangeFragmentScreen.setArguments(b);
-                            transaction.replace(R.id.fragment_container, exchangeFragmentScreen);
-                            transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
-                            transaction.commit();
-                        }else{
-                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                            newExchangeFragmentScreen.setArguments(b);
-                            transaction.replace(R.id.fragment_container, newExchangeFragmentScreen);
-                            transaction.addToBackStack(null);  // Add to back stack if you want to go back to this fragment
-                            transaction.commit();
-                        }
-                    }
-                });
-                 */
             }
         });
 
